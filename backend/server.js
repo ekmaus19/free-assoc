@@ -6,7 +6,7 @@ import LocalStrategy from 'passport-local';
 import bodyParser from 'body-parser';
 
 const models = require('./models/models');
-const { Artist, User, Event } = require('./models')
+const { Artist, User, Event } = require('./models/models')
 
 const routes = require('./routes/routes');
 const auth = require('./routes/auth');
@@ -19,7 +19,7 @@ const server = http.Server(app);
 
 app.use(session({
   secret: process.env.SECRET,
-  name: 'googleDocClone',
+  name: 'free-assoc',
   store: new MongoStore({ mongooseConnection: mongoose.connection }),
   proxy: true,
   resave: true,
@@ -39,30 +39,47 @@ mongoose.connection.on('connected', () => {
 mongoose.connect(process.env.MONGODB_URI);
 
 
-// Passport Serialize
+// Passport Serialize User
 passport.serializeUser((user, done) => {
   done(null, user.id);
 });
 
-// Passport Deserialize
+// Passport Deserialize User
 passport.deserializeUser((id, done) => {
   User.findById(id, (err, user) => {
     done(err, user);
   });
 });
 
-// Passport Strategy
-passport.use(new LocalStrategy(
+
+// Passport User Strategy
+passport.use('user', new LocalStrategy(
   (username, password, done) => {
     User.findOne({ username }, (err, user) => {
       if (err) { return done(err); }
       if (!user) {
-        return done(null, false, { message: 'Incorrect username.' });
+        return done(null, false, { message: 'Incorrect username' });
       }
       if (user.password !== password) {
-        return done(null, false, { message: 'Incorrect password.' });
+        return done(null, false, { message: 'Incorrect password' });
       }
       return done(null, user);
+    });
+  },
+));
+
+// Passport Artist Strategy
+passport.use('artist', new LocalStrategy(
+  (username, password, done) => {
+    Artist.findOne({ username }, (err, artist) => {
+      if (err) { return done(err); }
+      if (!artist) {
+        return done(null, false, { message: 'Incorrect username' });
+      }
+      if (artist.password !== password) {
+        return done(null, false, { message: 'Incorrect password' });
+      }
+      return done(null, artist);
     });
   },
 ));
@@ -74,6 +91,6 @@ app.use('/', routes);
 module.exports = app;
 
 //const server = http.createServer(app);
-server.listen(1337, '127.0.0.1');
+server.listen(3000, '127.0.0.1');
 
-console.log('Server running at http://127.0.0.1:1337/');
+console.log('Server running at http://127.0.0.1:3000/');
