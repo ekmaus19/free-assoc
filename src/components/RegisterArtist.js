@@ -7,6 +7,8 @@ const options = [
     { key: 'theater', text: 'Theater', value: 'theater' },
   ]
 
+const url = 'https://6becdea7.ngrok.io'
+
 class RegisterArtist extends Component {
   constructor(props){
     super(props);
@@ -18,7 +20,7 @@ class RegisterArtist extends Component {
       passwordRepeat:'',
       email:'',
       medium: '',
-      existingWork: [],
+      existingWork: '',
       bio: '',
       tag: [],
     }
@@ -79,36 +81,40 @@ class RegisterArtist extends Component {
     }
 
 
-  onRegister = () => {
-    fetch('http://localhost:1337/register/artist', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        username: this.state.name,
-        email: this.state.email,
-        password: this.state.password,
-        passwordRepeat: this.state.passwordRepeat
+    onRegister = () => {
+      fetch(url+ '/register/user', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username: this.state.name,
+          email: this.state.email,
+          password: this.state.password,
+          passwordRepeat: this.state.passwordRepeat,
+          medium: this.state.medium,
+          existingWork: this.state.existingWork,
+          bio: this.state.bio,
+          tag: [],
+        })
       })
-    })
-    .then((response) => response.text())
-    .then((text) => {
-      if(text === 'incomplete') {
-        alert('Please fill in all fields.')
-      } else if(text === 'passwords') {
-        alert('Passwords must match.')
-      } else if(text === 'exists') {
-        alert('Account already exists. Please log in.')
-        this.props.redirect('Home')
-      } else {
-        this.props.redirect('Home')
-      }
-    })
-    .catch((error) => {
-      console.log(error);
-    })
-  }
+      .then((response) => response.text())
+      .then((text) => {
+        if(text === 'incomplete') {
+          alert('Please fill in all fields.')
+        } else if(text === 'passwords') {
+          alert('Passwords must match.')
+        } else if(text === 'exists') {
+          alert('Account already exists. Please log in.')
+          this.props.redirect('Home')
+        } else {
+          this.props.redirect('Login')
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+    }
 
   render(){
     return (
@@ -132,7 +138,7 @@ class RegisterArtist extends Component {
         <Input style={{height:'100px'}} onChange = {this.onBioChange} className = "field" placeholder = "Text us a little about yourself..."/>
         </div>
         <br /> 
-        <Button color = 'green' className = "register-button"  animated onClick = {() => this.props.redirect('Register')}>
+        <Button color = 'green' className = "register-button"  animated onClick = {this.onRegister}>
             <Button.Content visible>Register</Button.Content>
             <Button.Content hidden>
               <Icon name='right arrow' />
