@@ -25,6 +25,10 @@ const artistSchema = mongoose.Schema({
     type: String,
     required: true
   },
+  passwordRepeat: {
+    type: String,
+    required: true
+  },
   email: {
     type: String,
     required: true
@@ -73,6 +77,14 @@ const eventSchema = mongoose.Schema({
     type: String,
     required: true
   },
+  date: {
+    type: Date,
+    required: true
+  },
+  time: {
+    type: String,
+    required: true
+  },
   city: {
     type: String,
     required: true
@@ -87,5 +99,16 @@ const eventSchema = mongoose.Schema({
   },
   latitude: String,
   longitude: String,
-  tags: Array
-})
+  tags: Array,
+  description: String,
+});
+
+const Artist = mongoose.model('Artist', artistSchema);
+const User = mongoose.model('User', userSchema);
+const Event = mongoose.model('Event', eventSchema);
+
+module.exports = {
+  Artist,
+  User,
+  Event
+};

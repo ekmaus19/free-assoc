@@ -15,7 +15,6 @@ const MongoStore = require('connect-mongo')(session);
 const mongoose = require('mongoose');
 
 const app = express();
-const server = http.Server(app);
 
 app.use(session({
   secret: process.env.SECRET,
@@ -39,18 +38,27 @@ mongoose.connection.on('connected', () => {
 mongoose.connect(process.env.MONGODB_URI);
 
 
-// Passport Serialize User
+// Passport Serialize
 passport.serializeUser((user, done) => {
-  done(null, user.id);
+  if (user) {
+  done(null, user.id)
+} else if (artist) {
+  done(null, artist.id)
+}
 });
 
-// Passport Deserialize User
+// Passport Deserialize
 passport.deserializeUser((id, done) => {
+  if (User) {
   User.findById(id, (err, user) => {
     done(err, user);
-  });
+  })
+} else if (Artist) {
+  Artist.findById(id, (err, artist) => {
+    done(err, artist);
+  })
+}
 });
-
 
 // Passport User Strategy
 passport.use('user', new LocalStrategy(
@@ -85,19 +93,11 @@ passport.use('artist', new LocalStrategy(
 ));
 
 app.use('/', auth(passport));
-app.use('/', routes);
-
+// app.use('/', routes);
 
 module.exports = app;
 
-//const server = http.createServer(app);
-<<<<<<< HEAD
+const server = http.createServer(app);
 server.listen(3000, '127.0.0.1');
 
-console.log('Server running at http://127.0.0.1:3000/');
-=======
-server.listen(3000);
-
-
-// console.log('Server running at http://127.0.0.1:1337/');
->>>>>>> 044e2ebc292cab5d8f2b7b6014a402ffe76bee6a
+console.log('Server running at http://127.0.0.1:3000');
