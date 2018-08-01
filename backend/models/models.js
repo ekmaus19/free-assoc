@@ -76,7 +76,7 @@ const eventSchema = mongoose.Schema({
   eventCreator: {
     type: String,
     required: true
-  }
+  },
   eventOrganizer: {
     type: String,
     required: true

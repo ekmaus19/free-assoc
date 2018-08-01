@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 import {Button, Icon, Input} from 'semantic-ui-react';
 
+const url = 'https://6becdea7.ngrok.io'
+
 class RegisterScreen extends Component {
   constructor(props){
     super(props);
@@ -37,7 +39,7 @@ class RegisterScreen extends Component {
   }
 
   onRegister = () => {
-    fetch('http://localhost:1337/register/user', {
+    fetch(url + '/register/user', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -49,17 +51,15 @@ class RegisterScreen extends Component {
         passwordRepeat: this.state.passwordRepeat
       })
     })
-    .then((response) => response.text())
-    .then((text) => {
-      if(text === 'incomplete') {
-        alert('Please fill in all fields.')
-      } else if(text === 'passwords') {
-        alert('Passwords must match.')
-      } else if(text === 'exists') {
-        alert('Account already exists. Please log in.')
-        this.props.redirect('Home')
-      } else {
-        this.props.redirect('Home')
+    .then((response) => {
+      console.log(response);
+      return response.json()
+    })
+    .then((responseJson) => {
+      console.log(responseJson);
+      if (responseJson.success) {
+        return responseJson
+        this.props.redirect('Login')
       }
     })
     .catch((error) => {
@@ -70,17 +70,17 @@ class RegisterScreen extends Component {
   render(){
     return (
       <div>
-        <div> 
+        <div>
         <Input onChange = {this.onNameChange} className = "field" placeholder = "Username"/>
-        <br /> 
+        <br />
         <Input onChange = {this.onEmailChange} className = "field" placeholder = "Email"/>
-        <br /> 
+        <br />
         <Input onChange = {this.onPassChange} className = "field" placeholder = "Password"/>
-        <br /> 
+        <br />
         <Input onChange = {this.onConfirmChange} className = "field" placeholder = "Confirm Password"/>
         </div>
-        <br /> 
-        <Button color = 'green' className = "register-button"  animated onClick = {() => this.redirect('Register')}>
+        <br />
+        <Button color = 'green' className = "register-button"  animated onClick={this.onRegister}>
             <Button.Content visible>Register</Button.Content>
             <Button.Content hidden>
               <Icon name='right arrow' />

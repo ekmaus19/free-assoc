@@ -5,6 +5,7 @@ import passport from 'passport';
 import LocalStrategy from 'passport-local';
 import bodyParser from 'body-parser';
 import socketIO from 'socket.io';
+import cors from 'cors';
 
 const models = require('./models/models');
 const { Artist, User, Event } = require('./models/models')
@@ -18,8 +19,6 @@ const mongoose = require('mongoose');
 const app = express();
 const server = http.createServer(app);
 const io = socketIO(server);
-
-const url = 'https://6becdea7.ngrok.io'
 
 io.on('connection', (socket) => {
 
@@ -64,6 +63,7 @@ app.use(passport.session());
 
 app.use(express.static(path.join(__dirname, 'build')));
 app.use(bodyParser.json());
+app.use(cors());
 
 mongoose.connection.on('connected', () => {
   console.log('connected to mongoDB');
@@ -130,6 +130,6 @@ app.use('/', auth(passport));
 
 module.exports = app;
 
-server.listen(1337, '127.0.0.1');
+server.listen(1337);
 
 console.log('Server running at http://127.0.0.1:1337');
