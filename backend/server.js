@@ -4,6 +4,7 @@ import session from 'express-session';
 import passport from 'passport';
 import LocalStrategy from 'passport-local';
 import bodyParser from 'body-parser';
+import socketIO from 'socket.io';
 
 const models = require('./models/models');
 const { Artist, User, Event } = require('./models/models')
@@ -15,6 +16,38 @@ const MongoStore = require('connect-mongo')(session);
 const mongoose = require('mongoose');
 
 const app = express();
+const server = http.createServer(app);
+const io = socketIO(server);
+
+const url = 'https://6becdea7.ngrok.io'
+
+io.on('connection', (socket) => {
+
+  // socket.on('map', (data, next) => {
+  //     if (!data.user || !data.artist) {
+  //       console.log('error');
+  //     } else if (data.user) {
+  //     res.send(data.user)
+  //   } else if (data.artist) {
+  //     res.send(data.artist)
+  //   }
+  // })
+
+  socket.on('createEvent', (data, next) => {
+    new Event({
+      eventName: data.eventName,
+      eventCreator: socket._activeUser.id,
+      eventOrganizer: data.eventOrganizer,
+      venueName: data.venueName,
+      date: data.date,
+      time: data.time,
+      city: data.city,
+      state: data.state,
+      country: data.country,
+    }).save((err, event) => next({err, event}))
+  })
+
+})
 
 app.use(session({
   secret: process.env.SECRET,
@@ -97,7 +130,6 @@ app.use('/', auth(passport));
 
 module.exports = app;
 
-const server = http.createServer(app);
-server.listen(3000, '127.0.0.1');
+server.listen(1337, '127.0.0.1');
 
-console.log('Server running at http://127.0.0.1:3000');
+console.log('Server running at http://127.0.0.1:1337');

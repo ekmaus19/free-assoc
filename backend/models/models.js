@@ -9,7 +9,11 @@ const connect = process.env.MONGODB_URI;
 mongoose.connect(connect);
 
 const artistSchema = mongoose.Schema({
-  name: {
+  firstName: {
+    type: String,
+    required: true
+  },
+  lastName: {
     type: String,
     required: true
   },
@@ -69,6 +73,10 @@ const eventSchema = mongoose.Schema({
     type: String,
     required: true
   },
+  eventCreator: {
+    type: String,
+    required: true
+  }
   eventOrganizer: {
     type: String,
     required: true
