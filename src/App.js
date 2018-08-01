@@ -2,7 +2,9 @@ import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
 import LoginScreen from './components/Login';
+import RegisterScreenPicker from './components/RegisterPicker';
 import RegisterScreen from './components/Register';
+import RegisterArtist from './components/RegisterArtist';
 import {Button, Icon, Input} from 'semantic-ui-react';
 
 
@@ -38,7 +40,7 @@ class App extends Component {
             <br />
           </div>
           <br/>
-          <Button color = 'green' className = "register-button"  animated onClick = {() => this.redirect('Register')}>
+          <Button color = 'green' className = "register-button"  animated onClick = {() => this.redirect('Registerpicker')}>
             <Button.Content visible>Register</Button.Content>
             <Button.Content hidden>
               <Icon name='right arrow' />
@@ -53,7 +55,9 @@ class App extends Component {
          
           </div>: null}
           {this.state.currentPage === 'Login' ? <div><LoginScreen onLogin={this.onLogin}  redirect={(e) => this.redirect(e)}/></div> : null}
-          {this.state.currentPage === 'Register' ? <div><RegisterScreen redirect={(e) => this.redirect(e)}/></div> : null}
+          {this.state.currentPage === 'Registerpicker' ? <div><RegisterScreenPicker redirect={(e) => this.redirect(e)}/></div> : null}
+          {this.state.currentPage === 'RegisterUser' ? <div><RegisterScreen redirect={(e) => this.redirect(e)}/></div> : null}
+          {this.state.currentPage === 'RegisterArtist' ? <div><RegisterArtist redirect={(e) => this.redirect(e)}/></div> : null}
 
       </div>
     );

@@ -37,7 +37,7 @@ class RegisterScreen extends Component {
   }
 
   onRegister = () => {
-    fetch('http://localhost:8888/signup', {
+    fetch('http://localhost:1337/register/user', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -70,10 +70,15 @@ class RegisterScreen extends Component {
   render(){
     return (
       <div>
-        <Input onChange = {this.onEmailChange} className = "field" placeholder = "Email"/>
+        <div> 
         <Input onChange = {this.onNameChange} className = "field" placeholder = "Username"/>
+        <br /> 
+        <Input onChange = {this.onEmailChange} className = "field" placeholder = "Email"/>
+        <br /> 
         <Input onChange = {this.onPassChange} className = "field" placeholder = "Password"/>
+        <br /> 
         <Input onChange = {this.onConfirmChange} className = "field" placeholder = "Confirm Password"/>
+        </div>
         <br /> 
         <Button color = 'green' className = "register-button"  animated onClick = {() => this.redirect('Register')}>
             <Button.Content visible>Register</Button.Content>
