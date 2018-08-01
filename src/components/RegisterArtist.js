@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 import {Button,Icon, Select,Input} from 'semantic-ui-react';
 
+const url = 'https://6becdea7.ngrok.io'
+
 const options = [
     { key: 'art', text: 'Art', value: 'art' },
     { key: 'music', text: 'Music', value: 'music' },
@@ -82,12 +84,17 @@ class RegisterArtist extends Component {
 
 
     onRegister = () => {
+<<<<<<< HEAD
       fetch(url+ '/register/user', {
+=======
+      fetch(url + '/register/artist', {
+>>>>>>> 8ad9f3e60ac2bff82ff2cae0a28c8f3b50642bad
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
+<<<<<<< HEAD
           username: this.state.name,
           email: this.state.email,
           password: this.state.password,
@@ -108,6 +115,27 @@ class RegisterArtist extends Component {
           alert('Account already exists. Please log in.')
           this.props.redirect('Home')
         } else {
+=======
+          firstName: this.state.firstName,
+          lastName: this.state.lastName,
+          medium: this.state.medium,
+          username: this.state.username,
+          password: this.state.password,
+          passwordRepeat: this.state.passwordRepeat,
+          email: this.state.email,
+          existingWork: [],
+          bio: this.state.bio
+        })
+      })
+      .then((response) => {
+        console.log(response);
+        return response.json()
+      })
+      .then((responseJson) => {
+        console.log(responseJson);
+        if (responseJson.success) {
+          return responseJson
+>>>>>>> 8ad9f3e60ac2bff82ff2cae0a28c8f3b50642bad
           this.props.redirect('Login')
         }
       })
@@ -120,25 +148,30 @@ class RegisterArtist extends Component {
     return (
       <div>
         <Input style={{width:'190px', marginRight:'20px', marginBottom:'5px'}} onChange = {this.onFirstnameChange}  placeholder='First name' />
-        <Input style={{width:'190px'}}  onChange = {this.onLastnameChange}  placeholder='Last name' />  
-        <div> 
+        <Input style={{width:'190px'}}  onChange = {this.onLastnameChange}  placeholder='Last name' />
+        <div>
         <Input onChange = {this.onUsernameChange} className = "field" placeholder = "Username"/>
-        <br /> 
+        <br />
         <Input onChange = {this.onEmailChange} className = "field" placeholder = "Email"/>
-        <br /> 
+        <br />
         <Input onChange = {this.onPassChange} className = "field" placeholder = "Password"/>
-        <br /> 
+        <br />
         <Input onChange = {this.onConfirmChange} className = "field" placeholder = "Confirm Password"/>
-        <br /> 
+        <br />
         <Select style={{width:'400px'}} onChange = {this.onMediumChange} compact options={options} className = "field" placeholder = "Medium"/>
-        <br /> 
+        <br />
         <Input onChange = {this.onSampleChange} className = "field" placeholder = "Sample Work Link"/>
-        <br /> 
-        
+        <br />
+
         <Input style={{height:'100px'}} onChange = {this.onBioChange} className = "field" placeholder = "Text us a little about yourself..."/>
         </div>
+<<<<<<< HEAD
         <br /> 
         <Button color = 'green' className = "register-button"  animated onClick = {this.onRegister}>
+=======
+        <br />
+        <Button color = 'green' className = "register-button"  animated onClick={this.onRegister}>
+>>>>>>> 8ad9f3e60ac2bff82ff2cae0a28c8f3b50642bad
             <Button.Content visible>Register</Button.Content>
             <Button.Content hidden>
               <Icon name='right arrow' />

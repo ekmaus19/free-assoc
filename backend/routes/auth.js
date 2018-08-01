@@ -38,7 +38,8 @@ module.exports = (passport) => {
 
     if (validateArtist()) {
     const artist = new models.Artist({
-      name: req.body.name,
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
       medium: req.body.medium,
       username: req.body.username,
       password: req.body.password,
