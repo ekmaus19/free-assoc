@@ -2,10 +2,8 @@ import React, {Component} from 'react';
 import {Button, Icon, Input} from 'semantic-ui-react';
 import {connect} from 'react-redux';
 
-const url = 'https://6becdea7.ngrok.io'
-
-
 const url = 'https://71e84d14.ngrok.io'
+
 class LoginScreen extends Component {
   constructor(props){
     super(props);
@@ -14,19 +12,6 @@ class LoginScreen extends Component {
       password: '',
     }
   }
-
-<<<<<<< HEAD
-  handleLogin =()=> {
-    // this.props.onLogin(this.state.name, this.state.password)
-    // this.props.login()
-=======
-  // handleLoginArtist =()=> {
-  //   this.props.onLoginArtist(this.state.username, this.state.password)
-  // }
-
-  // handleLoginUser =()=> {
-  //   this.props.onLoginUser(this.state.username, this.state.password)
-  // } 
 
   onLoginUser = () => {
     fetch(url+ '/login/user', {
@@ -50,7 +35,7 @@ class LoginScreen extends Component {
       alert('Invalid Login l')
     })
   }
-  
+
   onLoginArtist = () => {
     fetch(url+'/login/artist', {
       method: 'POST',
@@ -72,7 +57,6 @@ class LoginScreen extends Component {
     .catch((error) => {
       alert('Invalid Login')
     })
->>>>>>> master
   }
 
   onUsernameChange = (event) =>{
@@ -91,7 +75,6 @@ class LoginScreen extends Component {
 
     return (
       <div className = "login">
-            {/* {this.props.isLoggedin ? "logged in!": "not logged in"} */}
           <div className = "input-container">
             <Input onChange = {this.onUsernameChange}  className = "field" placeholder = "Username..."/>
             <br/>
@@ -130,18 +113,10 @@ class LoginScreen extends Component {
 //     }
 // }
 
-<<<<<<< HEAD
-LoginScreen = connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(LoginScreen);
-
-=======
 // LoginScreen = connect(
 //     mapStateToProps,
 //     mapDispatchToProps
 //   )(LoginScreen);
-  
->>>>>>> master
+
 
 export default LoginScreen;
