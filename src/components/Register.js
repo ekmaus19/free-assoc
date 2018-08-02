@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {Button, Icon, Input} from 'semantic-ui-react';
 
-const url = 'https://6becdea7.ngrok.io'
+const url = 'https://71e84d14.ngrok.io'
 
 class RegisterScreen extends Component {
   constructor(props){
@@ -51,14 +51,9 @@ class RegisterScreen extends Component {
         passwordRepeat: this.state.passwordRepeat
       })
     })
-    .then((response) => {
-      console.log(response);
-      return response.json()
-    })
+    .then((response) => response.json())
     .then((responseJson) => {
-      console.log(responseJson);
       if (responseJson.success) {
-        return responseJson
         this.props.redirect('Login')
       }
     })

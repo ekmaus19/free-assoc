@@ -1,19 +1,21 @@
 import React, {Component} from 'react';
 import {Button, Icon, Input} from 'semantic-ui-react';
-import {connect} from 'react-redux'
+import {connect} from 'react-redux';
+
+const url = 'https://6becdea7.ngrok.io'
 
 class LoginScreen extends Component {
   constructor(props){
     super(props);
     this.state = {
-      name: '',
+      username: '',
       password: '',
     }
   }
 
   handleLogin =()=> {
     // this.props.onLogin(this.state.name, this.state.password)
-    this.props.login()
+    // this.props.login()
   }
 
   onNameChange = (event) =>{
@@ -68,6 +70,6 @@ LoginScreen = connect(
     mapStateToProps,
     mapDispatchToProps
   )(LoginScreen);
-  
+
 
 export default LoginScreen;

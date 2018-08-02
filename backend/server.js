@@ -35,7 +35,7 @@ io.on('connection', (socket) => {
   socket.on('createEvent', (data, next) => {
     new Event({
       eventName: data.eventName,
-      eventCreator: socket._activeUser.id,
+      eventCreator: data.eventCreator,
       eventOrganizer: data.eventOrganizer,
       venueName: data.venueName,
       date: data.date,

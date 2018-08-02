@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {Button,Icon, Select,Input} from 'semantic-ui-react';
 
-const url = 'https://6becdea7.ngrok.io'
+const url = 'https://71e84d14.ngrok.io'
 
 const options = [
     { key: 'art', text: 'Art', value: 'art' },
@@ -40,7 +40,7 @@ class RegisterArtist extends Component {
 
   onUsernameChange = (event) =>{
     this.setState({
-      name: event.target.value
+      username: event.target.value
     })
   }
 
@@ -62,9 +62,9 @@ class RegisterArtist extends Component {
     })
   }
 
-  onMediumChange = (event) => {
+  onMediumChange = (event,{value}) => {
       this.setState({
-          medium: event.target.value
+          medium: value
       })
   }
 
@@ -95,18 +95,13 @@ class RegisterArtist extends Component {
           password: this.state.password,
           passwordRepeat: this.state.passwordRepeat,
           email: this.state.email,
-          existingWork: [],
+          existingWork: this.state.existingWork,
           bio: this.state.bio
         })
       })
-      .then((response) => {
-        console.log(response);
-        return response.json()
-      })
+      .then((response) => response.json())
       .then((responseJson) => {
-        console.log(responseJson);
         if (responseJson.success) {
-          return responseJson
           this.props.redirect('Login')
         }
       })

@@ -19,11 +19,13 @@ const artistSchema = mongoose.Schema({
   },
   medium: {
     type: String,
-    required: true
+    required: true,
+    enum: ['music', 'art', 'theater']
   },
   username: {
     type: String,
-    required: true
+    required: true,
+    unique: true
   },
   password: {
     type: String,
@@ -35,10 +37,11 @@ const artistSchema = mongoose.Schema({
   },
   email: {
     type: String,
-    required: true
+    required: true,
+    unique: true
   },
   existingWork: {
-    type: Array,
+    type: String,
     required: true
   },
   bio: String,
@@ -52,7 +55,8 @@ const artistSchema = mongoose.Schema({
 const userSchema = mongoose.Schema({
   username: {
     type: String,
-    required: true
+    required: true,
+    unique: true
   },
   password: {
     type: String,
@@ -64,7 +68,8 @@ const userSchema = mongoose.Schema({
   },
   email: {
     type: String,
-    required: true
+    required: true,
+    unique: true
   },
 });
 
