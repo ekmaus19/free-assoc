@@ -26,13 +26,14 @@ class LoginScreen extends Component {
     })
     .then((response) => response.json())
     .then((responseJson) => {
+      console.log(responseJson)
       responseJson.success ?
       this.redirect('Profile')
       :
       alert('Invalid Login')
     })
     .catch((error) => {
-      alert('Invalid Login l')
+      alert('Invalid Login')
     })
   }
 
@@ -49,6 +50,7 @@ class LoginScreen extends Component {
     })
     .then((response) => response.json())
     .then((responseJson) => {
+      console.log(responseJson.artist)
       responseJson.success ?
       this.redirect('Maps')
       :

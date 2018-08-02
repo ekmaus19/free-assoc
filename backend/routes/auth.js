@@ -1,4 +1,5 @@
 import express from 'express';
+import expressValidator from 'express-validator';
 
 const router = express.Router();
 const models = require('../models/models');
@@ -7,7 +8,7 @@ module.exports = (passport) => {
 
   router.post('/register/user', (req, res) => {
 
-    const validateUser = user => (req.body.password === req.body.passwordRepeat);
+    const validateUser = user => (req.body.password === req.body.passwordRepeat)
 
     if(validateUser()) {
     const user = new models.User({
@@ -32,57 +33,57 @@ module.exports = (passport) => {
 }
 });
 
-  router.post('/register/artist', (req, res) => {
+    router.post('/register/artist', (req, res) => {
 
-    const validateArtist = artist => (req.body.password === req.body.passwordRepeat);
+      const validateArtist = artist => (req.body.password === req.body.passwordRepeat);
 
-    if (validateArtist()) {
-    const artist = new models.Artist({
-      firstName: req.body.firstName,
-      lastName: req.body.lastName,
-      medium: req.body.medium,
-      username: req.body.username,
-      password: req.body.password,
-      passwordRepeat: req.body.passwordRepeat,
-      email: req.body.email,
-      existingWork: req.body.existingWork,
-      bio: req.body.bio
+      if (validateArtist()) {
+        const artist = new models.Artist({
+          firstName: req.body.firstName,
+          lastName: req.body.lastName,
+          medium: req.body.medium,
+          username: req.body.username,
+          password: req.body.password,
+          passwordRepeat: req.body.passwordRepeat,
+          email: req.body.email,
+          existingWork: req.body.existingWork,
+          bio: req.body.bio
+        });
+
+        artist.save((err, artist) => {
+          if (err) {
+            console.log(err);
+          }
+          console.log(artist);
+          res.json({
+            success: true,
+            artist: artist
+          });
+        })
+      } else {
+        console.log('passwords do not match')
+      }
     });
 
-    artist.save((err, artist) => {
-      if (err) {
-        console.log(err);
-      }
-      console.log(artist);
+    router.post('/login/user', passport.authenticate('user'), (req, res) => {
+      console.log('user logged in');
       res.json({
         success: true,
-        artist: artist
+        user: req.user,
       });
-    })
-} else {
-  console.log('passwords do not match')
-}
-});
-
-  router.post('/login/user', passport.authenticate('user'), (req, res) => {
-    console.log('user logged in');
-    res.json({
-      success: true,
-      user: req.user,
     });
-  });
 
-  router.post('/login/artist', passport.authenticate('artist'), (req, res) => {
-    console.log('artist logged in');
-    res.json({
-      success: true,
-      artist: req.artist,
+    router.post('/login/artist', passport.authenticate('artist'), (req, res) => {
+      console.log('artist logged in');
+      res.json({
+        success: true,
+        artist: req.user,
+      });
     });
-  });
 
-  router.get('/logout', (req, res) => {
-    req.logout();
-  });
+    router.get('/logout', (req, res) => {
+      req.logout();
+    });
 
-  return router;
-};
+    return router;
+  };
