@@ -2,23 +2,74 @@ import React, {Component} from 'react';
 import {Button, Icon, Input} from 'semantic-ui-react';
 import {connect} from 'react-redux'
 
+
+const url = 'https://71e84d14.ngrok.io'
 class LoginScreen extends Component {
   constructor(props){
     super(props);
     this.state = {
-      name: '',
+      username: '',
       password: '',
     }
   }
 
-  handleLogin =()=> {
-    // this.props.onLogin(this.state.name, this.state.password)
-    this.props.login()
+  // handleLoginArtist =()=> {
+  //   this.props.onLoginArtist(this.state.username, this.state.password)
+  // }
+
+  // handleLoginUser =()=> {
+  //   this.props.onLoginUser(this.state.username, this.state.password)
+  // } 
+
+  onLoginUser = () => {
+    fetch(url+ '/login/user', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        username: this.state.username,
+        password: this.state.password
+      })
+    })
+    .then((response) => response.json())
+    .then((responseJson) => {
+      responseJson.success ?
+      this.redirect('Profile')
+      :
+      alert('Invalid Login')
+    })
+    .catch((error) => {
+      alert('Invalid Login l')
+    })
+  }
+  
+  onLoginArtist = () => {
+    fetch(url+'/login/artist', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        username: this.state.username,
+        password: this.state.password
+      })
+    })
+    .then((response) => response.json())
+    .then((responseJson) => {
+      responseJson.success ?
+      this.redirect('Maps')
+      :
+      alert('Invalid Login')
+    })
+    .catch((error) => {
+      alert('Invalid Login')
+    })
   }
 
-  onNameChange = (event) =>{
+  onUsernameChange = (event) =>{
     this.setState({
-      name: event.target.value
+      username: event.target.value
     })
   }
 
@@ -32,42 +83,49 @@ class LoginScreen extends Component {
 
     return (
       <div className = "login">
-            {this.props.isLoggedin ? "logged in!": "not logged in"}
+            {/* {this.props.isLoggedin ? "logged in!": "not logged in"} */}
           <div className = "input-container">
-            <Input onChange = {this.onNameChange}  className = "field" placeholder = "Username..."/>
+            <Input onChange = {this.onUsernameChange}  className = "field" placeholder = "Username..."/>
             <br/>
             <Input onChange = {this.onPassChange}  className = "field" placeholder = "Password..."/>
             <br />
-            <Button id="login-button" onClick = {this.handleLogin} primary animated >
-              <Button.Content visible>Login</Button.Content>
-              <Button.Content hidden>
-                <Icon name='right arrow' />
-              </Button.Content>
-            </Button>
+            <br />
+            <Button color = 'blue' className = "login-button"  animated onClick = {this.onLoginArtist}>
+            <Button.Content visible>Artist Login</Button.Content>
+            <Button.Content hidden>
+              <Icon name='right arrow'   />
+            </Button.Content>
+          </Button>
+          <Button color = 'grey' className = "login-button"  animated onClick = {this.onLoginUser}>
+            <Button.Content visible>User Login</Button.Content>
+            <Button.Content hidden>
+              <Icon name='right arrow' />
+            </Button.Content>
+          </Button>
           </div>
       </div>
     );
   }
 }
 
-const mapStateToProps=(state)=>{
-    return {
-        isLoggedin: state.login.isLoggedin
-    }
-}
+// const mapStateToProps=(state)=>{
+//     return {
+//         isLoggedin: state.login.isLoggedin
+//     }
+// }
 
-const mapDispatchToProps = (dispatch) => {
-    return {
-        login: ()=> {
-            dispatch({type: "LOGIN"})
-        }
-    }
-}
+// const mapDispatchToProps = (dispatch) => {
+//     return {
+//         login: ()=> {
+//             dispatch({type: "LOGIN"})
+//         }
+//     }
+// }
 
-LoginScreen = connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(LoginScreen);
+// LoginScreen = connect(
+//     mapStateToProps,
+//     mapDispatchToProps
+//   )(LoginScreen);
   
 
 export default LoginScreen;

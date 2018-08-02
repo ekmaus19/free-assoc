@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {Button, Icon, Input} from 'semantic-ui-react';
 
-const url = 'https://6becdea7.ngrok.io'
+const url = 'https://71e84d14.ngrok.io'
 
 class RegisterScreen extends Component {
   constructor(props){
@@ -39,11 +39,7 @@ class RegisterScreen extends Component {
   }
 
   onRegister = () => {
-<<<<<<< HEAD
-    fetch(url+ '/register/user', {
-=======
     fetch(url + '/register/user', {
->>>>>>> 8ad9f3e60ac2bff82ff2cae0a28c8f3b50642bad
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -55,27 +51,10 @@ class RegisterScreen extends Component {
         passwordRepeat: this.state.passwordRepeat
       })
     })
-<<<<<<< HEAD
-    .then((response) => response.text())
-    .then((text) => {
-      if(text === 'incomplete') {
-        alert('Please fill in all fields.')
-      } else if(text === 'passwords') {
-        alert('Passwords must match.')
-      } else if(text === 'exists') {
-        alert('Account already exists. Please log in.')
-        this.props.redirect('Home')
-      } else {
-=======
-    .then((response) => {
-      console.log(response);
-      return response.json()
-    })
+    .then((response) => response.json())
     .then((responseJson) => {
       console.log(responseJson);
       if (responseJson.success) {
-        return responseJson
->>>>>>> 8ad9f3e60ac2bff82ff2cae0a28c8f3b50642bad
         this.props.redirect('Login')
       }
     })
@@ -96,13 +75,8 @@ class RegisterScreen extends Component {
         <br />
         <Input onChange = {this.onConfirmChange} className = "field" placeholder = "Confirm Password"/>
         </div>
-<<<<<<< HEAD
-        <br /> 
-        <Button color = 'green' className = "register-button"  animated onClick = {this.onRegister}>
-=======
         <br />
         <Button color = 'green' className = "register-button"  animated onClick={this.onRegister}>
->>>>>>> 8ad9f3e60ac2bff82ff2cae0a28c8f3b50642bad
             <Button.Content visible>Register</Button.Content>
             <Button.Content hidden>
               <Icon name='right arrow' />

@@ -45,7 +45,7 @@ module.exports = (passport) => {
       password: req.body.password,
       passwordRepeat: req.body.passwordRepeat,
       email: req.body.email,
-      existingWork: [],
+      existingWork: req.body.existingWork,
       bio: req.body.bio
     });
 
@@ -56,7 +56,7 @@ module.exports = (passport) => {
       console.log(artist);
       res.json({
         success: true,
-        user: artist
+        artist: artist
       });
     })
 } else {
@@ -76,7 +76,7 @@ module.exports = (passport) => {
     console.log('artist logged in');
     res.json({
       success: true,
-      user: req.artist,
+      artist: req.user,
     });
   });
 

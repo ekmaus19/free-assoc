@@ -23,6 +23,53 @@ class App extends Component {
     })
 }
 
+
+
+onLoginUser = (username, password) => {
+  fetch('http://localhost:8888/login/user', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      username: username,
+      password: password
+    })
+  })
+  .then((response) => response.json())
+  .then((responseJson) => {
+    responseJson.success ?
+    this.redirect('Profile')
+    :
+    alert('Invalid Login')
+  })
+  .catch((error) => {
+    alert('Invalid Login')
+  })
+}
+
+onLoginArtist = (username, password) => {
+  fetch('http://localhost:8888/login/artist', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      username: username,
+      password: password
+    })
+  })
+  .then((response) => response.json())
+  .then((responseJson) => {
+    responseJson.success ?
+    this.redirect('Maps')
+    :
+    alert('Invalid Login')
+  })
+  .catch((error) => {
+    alert('Invalid Login')
+  })
+}
   render() {
     return (
       <div className="App">

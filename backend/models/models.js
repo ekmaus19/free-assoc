@@ -19,7 +19,7 @@ const artistSchema = mongoose.Schema({
   },
   medium: {
     type: String,
-    required: true
+    required:true 
   },
   username: {
     type: String,
@@ -38,7 +38,7 @@ const artistSchema = mongoose.Schema({
     required: true
   },
   existingWork: {
-    type: Array,
+    type: String,
     required: true
   },
   bio: String,

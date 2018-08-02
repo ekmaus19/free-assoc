@@ -1,8 +1,6 @@
 import React, {Component} from 'react';
 import {Button,Icon, Select,Input} from 'semantic-ui-react';
 
-const url = 'https://6becdea7.ngrok.io'
-
 const options = [
     { key: 'art', text: 'Art', value: 'art' },
     { key: 'music', text: 'Music', value: 'music' },
@@ -42,7 +40,7 @@ class RegisterArtist extends Component {
 
   onUsernameChange = (event) =>{
     this.setState({
-      name: event.target.value
+      username: event.target.value
     })
   }
 
@@ -64,9 +62,10 @@ class RegisterArtist extends Component {
     })
   }
 
-  onMediumChange = (event) => {
+  onMediumChange = (event,{value}) => {
+    console.log(value)
       this.setState({
-          medium: event.target.value
+          medium: value
       })
   }
 
@@ -84,38 +83,12 @@ class RegisterArtist extends Component {
 
 
     onRegister = () => {
-<<<<<<< HEAD
-      fetch(url+ '/register/user', {
-=======
       fetch(url + '/register/artist', {
->>>>>>> 8ad9f3e60ac2bff82ff2cae0a28c8f3b50642bad
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-<<<<<<< HEAD
-          username: this.state.name,
-          email: this.state.email,
-          password: this.state.password,
-          passwordRepeat: this.state.passwordRepeat,
-          medium: this.state.medium,
-          existingWork: this.state.existingWork,
-          bio: this.state.bio,
-          tag: [],
-        })
-      })
-      .then((response) => response.text())
-      .then((text) => {
-        if(text === 'incomplete') {
-          alert('Please fill in all fields.')
-        } else if(text === 'passwords') {
-          alert('Passwords must match.')
-        } else if(text === 'exists') {
-          alert('Account already exists. Please log in.')
-          this.props.redirect('Home')
-        } else {
-=======
           firstName: this.state.firstName,
           lastName: this.state.lastName,
           medium: this.state.medium,
@@ -123,19 +96,14 @@ class RegisterArtist extends Component {
           password: this.state.password,
           passwordRepeat: this.state.passwordRepeat,
           email: this.state.email,
-          existingWork: [],
+          existingWork: this.state.existingWork,
           bio: this.state.bio
         })
       })
-      .then((response) => {
-        console.log(response);
-        return response.json()
-      })
+      .then((response) => response.json())
       .then((responseJson) => {
         console.log(responseJson);
         if (responseJson.success) {
-          return responseJson
->>>>>>> 8ad9f3e60ac2bff82ff2cae0a28c8f3b50642bad
           this.props.redirect('Login')
         }
       })
@@ -165,13 +133,8 @@ class RegisterArtist extends Component {
 
         <Input style={{height:'100px'}} onChange = {this.onBioChange} className = "field" placeholder = "Text us a little about yourself..."/>
         </div>
-<<<<<<< HEAD
-        <br /> 
-        <Button color = 'green' className = "register-button"  animated onClick = {this.onRegister}>
-=======
         <br />
         <Button color = 'green' className = "register-button"  animated onClick={this.onRegister}>
->>>>>>> 8ad9f3e60ac2bff82ff2cae0a28c8f3b50642bad
             <Button.Content visible>Register</Button.Content>
             <Button.Content hidden>
               <Icon name='right arrow' />
