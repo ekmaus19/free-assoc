@@ -1,21 +1,28 @@
 .App {
   text-align: center;
+  background-color: rgb(235,116,75 );
 }
 
 .App-logo {
   animation: App-logo-spin infinite 20s linear;
-  height: 80px;
-  margin:40px;
+  height: 60px;
+  margin:10px;
 }
 
-.App-header {
-  /* background-color: #222; */
-  height: 150px;
-  color: white;
+.menu{
+  background-color: rgb(235,116,75 );
 }
 
+
+body{
+  background-color: rgb(237,116,75 );
+}
 .App-title {
-  font-size: 2em;
+  font-size: 60px;
+  font-family: 'Advent Pro';
+  color:rgb(255,210,30);
+  font-weight:bold;
+  
 }
 
 .App-intro {
@@ -40,3 +47,9 @@ input{
 .field{
   margin: 5px;
 }
+
+h2{
+  font-style: italic
+}
+
+
