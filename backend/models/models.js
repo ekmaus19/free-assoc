@@ -20,7 +20,7 @@ const artistSchema = mongoose.Schema({
   medium: {
     type: String,
     required: true,
-    enum: ['music', 'art', 'theater']
+    enum: ['music', 'art', 'performance']
   },
   username: {
     type: String,

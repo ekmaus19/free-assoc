@@ -6,7 +6,7 @@ const url = 'https://71e84d14.ngrok.io'
 const options = [
     { key: 'art', text: 'Art', value: 'art' },
     { key: 'music', text: 'Music', value: 'music' },
-    { key: 'theater', text: 'Theater', value: 'theater' },
+    { key: 'performance', text: 'Performance', value: 'performance' },
   ]
 
 class RegisterArtist extends Component {
@@ -20,7 +20,7 @@ class RegisterArtist extends Component {
       passwordRepeat:'',
       email:'',
       medium: '',
-      existingWork: [],
+      existingWork: '',
       bio: '',
       tag: [],
     }
