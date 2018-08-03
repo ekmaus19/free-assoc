@@ -82,10 +82,6 @@ const eventSchema = mongoose.Schema({
     type: String,
     required: true
   },
-  eventOrganizer: {
-    type: String,
-    required: true
-  },
   venueName: {
     type: String,
     required: true
@@ -94,7 +90,14 @@ const eventSchema = mongoose.Schema({
     type: Date,
     required: true
   },
+  datesRange: {
+    type: Date,
+  },
   time: {
+    type: String,
+    required: true
+  },
+  streetAddress: {
     type: String,
     required: true
   },
@@ -113,7 +116,7 @@ const eventSchema = mongoose.Schema({
   latitude: String,
   longitude: String,
   tags: Array,
-  description: String,
+  about: String,
 });
 
 const Artist = mongoose.model('Artist', artistSchema);

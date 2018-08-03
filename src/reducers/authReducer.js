@@ -9,4 +9,14 @@
 //             return state;
 //     }
 //  };
+
  
+// export default (state={}, action) =>{
+//     console.log(action)
+//     switch (action.type){
+//         case "ARTISTINFO":
+//             return Object.assign({}, state, {artist:action.payload})
+//         default: 
+//             return state; 
+//     }
+// }

@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {Button, Icon, Input} from 'semantic-ui-react';
 import {connect} from 'react-redux';
 
-const url = 'https://71e84d14.ngrok.io'
+const url = 'https://18b9622c.ngrok.io'
 
 class LoginScreen extends Component {
   constructor(props){
@@ -26,11 +26,12 @@ class LoginScreen extends Component {
     })
     .then((response) => response.json())
     .then((responseJson) => {
-      console.log(responseJson)
-      responseJson.success ?
-      this.redirect('Profile')
-      :
-      alert('Invalid Login')
+      console.log(responseJson.user)
+      if (responseJson.success) {
+        this.props.redirect('Maps')
+      } else{
+        alert('Invalid Login')
+      }
     })
     .catch((error) => {
       alert('Invalid Login')
@@ -50,11 +51,12 @@ class LoginScreen extends Component {
     })
     .then((response) => response.json())
     .then((responseJson) => {
-      console.log(responseJson.artist)
-      responseJson.success ?
-      this.redirect('Maps')
-      :
-      alert('Invalid Login')
+      if (responseJson.success){
+        console.log(responseJson.artist)
+        this.props.artistInfo(responseJson.artist)
+        this.props.redirect('ArtistDash')
+
+      } else{ alert('Invalid Login') }
     })
     .catch((error) => {
       alert('Invalid Login')
@@ -76,7 +78,13 @@ class LoginScreen extends Component {
   render() {
 
     return (
+      // display: flex;
+      // align-items: right;
+      // justify-content: flex-start;
+      <div> 
+     
       <div className = "login">
+        
           <div className = "input-container">
             <Input onChange = {this.onUsernameChange}  className = "field" placeholder = "Username..."/>
             <br/>
@@ -96,7 +104,8 @@ class LoginScreen extends Component {
             </Button.Content>
           </Button>
           </div>
-      </div>
+        </div>
+      </div> 
     );
   }
 }

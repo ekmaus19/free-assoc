@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {Button,Icon, Select,Input} from 'semantic-ui-react';
 
-const url = 'https://71e84d14.ngrok.io'
+const url = 'https://18b9622c.ngrok.io'
 
 const options = [
     { key: 'art', text: 'Art', value: 'art' },

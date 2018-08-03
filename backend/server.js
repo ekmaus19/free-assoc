@@ -1,7 +1,7 @@
 import http from 'http';
 import express from 'express';
 import session from 'express-session';
-import expressValidator from 'express-validator';
+const validator = require('express-validator');
 import passport from 'passport';
 import LocalStrategy from 'passport-local';
 import bodyParser from 'body-parser';
@@ -37,13 +37,15 @@ io.on('connection', (socket) => {
     new Event({
       eventName: data.eventName,
       eventCreator: data.eventCreator,
-      eventOrganizer: data.eventOrganizer,
       venueName: data.venueName,
       date: data.date,
+      datesRange: data.datesRange,
       time: data.time,
+      streetAddress: data.streetAddress,
       city: data.city,
       state: data.state,
       country: data.country,
+      about: data.about
     }).save((err, event) => next({err, event}))
   })
 
@@ -65,6 +67,7 @@ app.use(passport.session());
 app.use(express.static(path.join(__dirname, 'build')));
 app.use(bodyParser.json());
 app.use(cors());
+app.use(validator());
 
 mongoose.connection.on('connected', () => {
   console.log('connected to mongoDB');
@@ -127,7 +130,7 @@ passport.use('artist', new LocalStrategy(
 ));
 
 app.use('/', auth(passport));
-// app.use('/', routes);
+app.use('/', routes);
 
 module.exports = app;
 
