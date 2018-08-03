@@ -117,37 +117,43 @@ class ArtistDash extends Component {
     render(){
  
         return(
-            <div> 
-                      <Container style={{display:'flex'}}> 
+            <div>
+                      <Container style={{display:'flex'}}>
                       <Button color = 'grey' className = "logout-button"  animated onClick = {this.onLogout}>
                           <Button.Content visible>Logout</Button.Content>
                           <Button.Content hidden>
                             <Icon name='right arrow'   />
                           </Button.Content>
                         </Button>
-                      </Container> 
-                <Container> 
-                  <br /> 
+                      </Container>
+                <Container>
+                  <br />
                   <br />
                 <Grid>
                     <Grid.Row>
                     <Grid.Column width={4}>
+<<<<<<< HEAD
                             <Container> 
                             <Card style={{justifyContent:'center', alignItems:'center'}}>
                               <Image style={{width:'75%', height:'75%',padding:'10px'}} src='/img/1.png' />
+=======
+                            <Container>
+                            <Card>
+                              <Image src='https://react.semantic-ui.com/images/avatar/large/matthew.png' />
+>>>>>>> master
                               <Card.Content>
                                 <Card.Header>{this.props.artist.firstName} {this.props.artist.lastName}</Card.Header>
                                 <Card.Meta>
                                   <span className='date'>Joined in 2018</span>
                                 </Card.Meta>
                                 <Card.Description>
-                                <h2> {this.props.artist.medium}</h2> 
-                                <br /> 
+                                <h2> {this.props.artist.medium}</h2>
+                                <br />
                                 {this.props.artist.bio}
 
-                                <br /> 
+                                <br />
                                 {this.props.artist.existingWork}
-                                
+
                                 </Card.Description>
                               </Card.Content>
                               <Card.Content extra>
@@ -157,7 +163,7 @@ class ArtistDash extends Component {
                                 </a>
                               </Card.Content>
                             </Card>
-                            </Container> 
+                            </Container>
                     </Grid.Column>
                     <Grid.Column width={12}>
                             <Container style={{height:'100%'}}  >

@@ -1,17 +1,24 @@
 import express from 'express';
-// import expressValidator from 'express-validator';
 
 const router = express.Router();
 const models = require('../models/models');
-// const { check, body, validationResult } = require('express-validator/check');
+const validator = require('express-validator');
+
+router.use(validator());
 
 module.exports = (passport) => {
 
   router.post('/register/user', (req, res) => {
 
-    const validateUser = user => (req.body.password === req.body.passwordRepeat)
+    req.checkBody("email", "Enter a valid email address").isEmail();
+    req.checkBody("email", "Enter email address").notEmpty();
+    req.checkBody("username", "Enter username").notEmpty();
+    req.checkBody("username", "Username must be at least 3 characters").isLength({min:3, max: 20});
+    req.checkBody("password", "Enter password").notEmpty();
+    req.checkBody("password", "Password must be at least 5 characters").isLength({min:5, max: 20});
+    req.checkBody("passwordRepeat", "Repeat password").notEmpty();
+    req.checkBody("passwordRepeat", "Passwords do not match").equals(req.body.password);
 
-    if(validateUser()) {
     const user = new models.User({
       username: req.body.username,
       password: req.body.password,
@@ -19,12 +26,11 @@ module.exports = (passport) => {
       email: req.body.email,
     });
 
-    // req.check('email', 'Invalid email').isEmail();
-    // const errors = req.validationErrors();
-    //
-    // if (errors) {
-    //   res.status(400).send("invalid form")
-    // }
+  const errors = req.validationErrors();
+  if (errors) {
+    res.status(400).send(errors)
+    return;
+  } else {
     user.save((err, user) => {
       if (err) {
         console.log(err);
@@ -35,16 +41,25 @@ module.exports = (passport) => {
         user: user
       });
     })
-} else {
-  alert('passwords do not match')
-}
+  }
 });
 
     router.post('/register/artist', (req, res) => {
 
-      const validateArtist = artist => (req.body.password === req.body.passwordRepeat);
+      req.checkBody("email", "Enter a valid email address").isEmail();
+      req.checkBody("firstName", "Enter first name").notEmpty();
+      req.checkBody("lastName", "Enter last name").notEmpty();
+      req.checkBody("email", "Enter email address").notEmpty();
+      req.checkBody("medium", "Enter medium").notEmpty();
+      req.checkBody("username", "Enter username").notEmpty();
+      req.checkBody("username", "Username must be at least 3 characters").isLength({min:3, max: 20});
+      req.checkBody("password", "Enter password").notEmpty();
+      req.checkBody("password", "Password must be at least 5 characters").isLength({min:5, max: 20});
+      req.checkBody("passwordRepeat", "Repeat password").notEmpty();
+      req.checkBody("existingWork", "Enter link to sample work").notEmpty();
+      req.checkBody("existingWork", "Enter valid link").isURL();
+      req.checkBody("passwordRepeat", "Passwords do not match").equals(req.body.password);
 
-      if (validateArtist()) {
         const artist = new models.Artist({
           firstName: req.body.firstName,
           lastName: req.body.lastName,
@@ -57,6 +72,11 @@ module.exports = (passport) => {
           bio: req.body.bio
         });
 
+        const errors = req.validationErrors();
+        if (errors) {
+          res.status(400).send(errors)
+          return;
+        } else {
         artist.save((err, artist) => {
           if (err) {
             console.log(err);
@@ -67,8 +87,6 @@ module.exports = (passport) => {
             artist: artist
           });
         })
-      } else {
-        console.log('passwords do not match')
       }
     });
 

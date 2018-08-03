@@ -1,8 +1,24 @@
 import React, {Component} from 'react';
 import {Button, Icon, Input} from 'semantic-ui-react';
+import validator from 'validator';
 
 
+<<<<<<< HEAD
 const url = 'http://7dda4690.ngrok.io'
+=======
+const required = (value) => {
+  if (!value.toString().trim().length) {
+    return 'required';
+  }
+};
+
+const email = (value) => {
+  if (!validator.isEmail(value)) {
+    return 'enter a valid email address'
+  }
+};
+
+>>>>>>> master
 class RegisterScreen extends Component {
   constructor(props){
     super(props);
@@ -66,13 +82,13 @@ class RegisterScreen extends Component {
     return (
       <div>
         <div>
-        <Input onChange = {this.onNameChange} className = "field" placeholder = "Username"/>
+        <Input onChange = {this.onNameChange} className = "field" placeholder = "Username" validations={[required]}/>
         <br />
-        <Input onChange = {this.onEmailChange} className = "field" placeholder = "Email"/>
+        <Input onChange = {this.onEmailChange} className = "field" placeholder = "Email" validations={[required, email]}/>
         <br />
-        <Input onChange = {this.onPassChange} className = "field" placeholder = "Password"/>
+        <Input onChange = {this.onPassChange} className = "field" placeholder = "Password" validations={[required]}/>
         <br />
-        <Input onChange = {this.onConfirmChange} className = "field" placeholder = "Confirm Password"/>
+        <Input onChange = {this.onConfirmChange} className = "field" placeholder = "Confirm Password" validations={[required]}/>
         </div>
         <br />
         <Button color = 'green' className = "register-button"  animated onClick={this.onRegister}>
