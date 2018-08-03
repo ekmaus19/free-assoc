@@ -32,8 +32,9 @@ io.on('connection', (socket) => {
   //     res.send(data.artist)
   //   }
   // })
-
+  console.log('connected--------')
   socket.on('createEvent', (data, next) => {
+    console.log('Sweet Jesus it worked',data)
     new Event({
       eventName: data.eventName,
       eventCreator: data.eventCreator,
