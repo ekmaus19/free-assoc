@@ -35,9 +35,7 @@ class App extends Component {
               size='large'
             >
 
-                <Menu.Item as='a' active>
-                  Home
-                </Menu.Item>
+                <Menu.Item as='a' active>Home</Menu.Item>
                 <Menu.Item as='a'>Ethos</Menu.Item>
                 <Menu.Item as='a'>About</Menu.Item>
                 <Menu.Item as='a'>Careers</Menu.Item>

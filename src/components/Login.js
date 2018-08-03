@@ -2,11 +2,7 @@ import React, {Component} from 'react';
 import {Button, Icon, Input} from 'semantic-ui-react';
 import {connect} from 'react-redux';
 
-<<<<<<< HEAD
-const url = 'https://18b9622c.ngrok.io/'
-=======
 const url = 'https://18b9622c.ngrok.io'
->>>>>>> master
 
 class LoginScreen extends Component {
   constructor(props){
@@ -57,11 +53,7 @@ class LoginScreen extends Component {
     .then((responseJson) => {
       if (responseJson.success){
         console.log(responseJson.artist)
-<<<<<<< HEAD
         this.props.artistInfo(responseJson.artist)
-=======
-        // this.props.artistinfo(responseJson.artist)
->>>>>>> master
         this.props.redirect('ArtistDash')
 
       } else{ alert('Invalid Login') }

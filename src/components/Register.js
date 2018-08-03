@@ -1,11 +1,7 @@
 import React, {Component} from 'react';
 import {Button, Icon, Input} from 'semantic-ui-react';
 
-<<<<<<< HEAD
-const url = 'https://18b9622c.ngrok.io/'
-=======
 const url = 'https://18b9622c.ngrok.io'
->>>>>>> master
 
 class RegisterScreen extends Component {
   constructor(props){
