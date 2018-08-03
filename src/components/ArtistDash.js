@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 import { Card, Icon, Header,Image, Container, Segment, Sidebar, Menu , Grid} from 'semantic-ui-react'
 
+const url = 'https://18b9622c.ngrok.io'
+
 const CardExampleCard = () => (
   <Card>
     <Image src='https://react.semantic-ui.com/images/avatar/large/matthew.png' />
@@ -21,16 +23,16 @@ const CardExampleCard = () => (
 )
 
 const SidebarExampleVisible = () => (
-    
+
     <Sidebar.Pushable as={Segment}>
-      <Sidebar 
-      as={Menu} 
-      animation='overlay' 
-      icon='labeled' 
+      <Sidebar
+      as={Menu}
+      animation='overlay'
+      icon='labeled'
       direction='right'
-      inverted 
-      vertical 
-      visible 
+      inverted
+      vertical
+      visible
       width='thin'>
         <Menu.Item as='a'>
           <Icon name='file alternate' />
@@ -42,7 +44,7 @@ const SidebarExampleVisible = () => (
         </Menu.Item>
         <Menu.Item as='a'>
           <Icon name='search' />
-            Scout 
+            Scout
         </Menu.Item>
         <Menu.Item as='a'>
           <Icon name='chat' />
@@ -52,9 +54,9 @@ const SidebarExampleVisible = () => (
           <Icon name='' />
           Map
         </Menu.Item>
-       
+
       </Sidebar>
-  
+
       <Sidebar.Pusher>
         <Segment basic >
           <Header as='h3'>Toggle Content</Header>
@@ -70,25 +72,25 @@ class ArtistDash extends Component {
    }
     render(){
         return(
-            <div> 
-                <Container> 
+            <div>
+                <Container>
                 <Grid>
                     <Grid.Row>
                     <Grid.Column width={4}>
-                            <Container> 
-                                <CardExampleCard/> 
-                            </Container> 
+                            <Container>
+                                <CardExampleCard/>
+                            </Container>
                     </Grid.Column>
                     <Grid.Column width={12}>
                             <Container>
                                  <SidebarExampleVisible />
-                            </Container> 
+                            </Container>
                     </Grid.Column>
-                   </Grid.Row> 
+                   </Grid.Row>
                 </Grid>
-                </Container> 
-       
-            </div> 
+                </Container>
+
+            </div>
         )
     }
 
@@ -97,7 +99,7 @@ class ArtistDash extends Component {
 
 // const mapStateToProps=(state)=>{
 //     return {
-//         artist: state 
+//         artist: state
 //     }
 // }
 
@@ -113,7 +115,7 @@ class ArtistDash extends Component {
 //     mapStateToProps,
 //     mapDispatchToProps
 //   )(ArtistDash);
-  
+
 
 
 export default ArtistDash

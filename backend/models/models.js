@@ -98,6 +98,10 @@ const eventSchema = mongoose.Schema({
     type: String,
     required: true
   },
+  streetAddress: {
+    type: String,
+    required: true
+  },
   city: {
     type: String,
     required: true

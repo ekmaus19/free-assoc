@@ -1,7 +1,6 @@
 import http from 'http';
 import express from 'express';
 import session from 'express-session';
-import expressValidator from 'express-validator';
 import passport from 'passport';
 import LocalStrategy from 'passport-local';
 import bodyParser from 'body-parser';
@@ -41,6 +40,7 @@ io.on('connection', (socket) => {
       venueName: data.venueName,
       date: data.date,
       time: data.time,
+      streetAddress: data.streetAddress,
       city: data.city,
       state: data.state,
       country: data.country,
@@ -127,7 +127,7 @@ passport.use('artist', new LocalStrategy(
 ));
 
 app.use('/', auth(passport));
-// app.use('/', routes);
+app.use('/', routes);
 
 module.exports = app;
 

@@ -1,8 +1,9 @@
 import express from 'express';
-import expressValidator from 'express-validator';
+// import expressValidator from 'express-validator';
 
 const router = express.Router();
 const models = require('../models/models');
+// const { check, body, validationResult } = require('express-validator/check');
 
 module.exports = (passport) => {
 
@@ -18,6 +19,12 @@ module.exports = (passport) => {
       email: req.body.email,
     });
 
+    // req.check('email', 'Invalid email').isEmail();
+    // const errors = req.validationErrors();
+    //
+    // if (errors) {
+    //   res.status(400).send("invalid form")
+    // }
     user.save((err, user) => {
       if (err) {
         console.log(err);
