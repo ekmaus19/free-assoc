@@ -15,7 +15,7 @@ class App extends Component {
     super(props)
     this.state=({
       currentPage:'Home',
-      artist:{}
+      artist:{},
     })
   }
 
@@ -74,7 +74,7 @@ class App extends Component {
           </Button>
          
           </div>: null}
-          {this.state.currentPage === 'Login' ? <div><LoginScreen onLogin={this.onLogin} artistinfo={(obj)=>this.setState({artist:obj})} redirect={(e) => this.redirect(e)}/></div> : null}
+          {this.state.currentPage === 'Login' ? <div><LoginScreen onLogin={this.onLogin} artistInfo={(obj)=>this.setState({artist:obj})} redirect={(e) => this.redirect(e)}/></div> : null}
           {this.state.currentPage === 'Registerpicker' ? <div><RegisterScreenPicker redirect={(e) => this.redirect(e)}/></div> : null}
           {this.state.currentPage === 'RegisterUser' ? <div><RegisterScreen redirect={(e) => this.redirect(e)}/></div> : null}
           {this.state.currentPage === 'RegisterArtist' ? <div><RegisterArtist redirect={(e) => this.redirect(e)}/></div> : null}

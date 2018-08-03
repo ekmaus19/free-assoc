@@ -1,24 +1,7 @@
 import React, {Component} from 'react';
-import { Card, Icon, Header,Image, Container, Segment, Sidebar, Menu , Grid} from 'semantic-ui-react'
+import { Card, Icon, Header,Image, Container, Segment, Sidebar, Menu , Grid, Button} from 'semantic-ui-react'
 
-const CardExampleCard = () => (
-  <Card>
-    <Image src='https://react.semantic-ui.com/images/avatar/large/matthew.png' />
-    <Card.Content>
-      <Card.Header>{this.props.artist}</Card.Header>
-      <Card.Meta>
-        <span className='date'>Joined in 2015</span>
-      </Card.Meta>
-      <Card.Description>Matthew is a musician living in Nashville.</Card.Description>
-    </Card.Content>
-    <Card.Content extra>
-      <a>
-        <Icon name='user' />
-        22 Friends
-      </a>
-    </Card.Content>
-  </Card>
-)
+
 
 const SidebarExampleVisible = () => (
     
@@ -71,12 +54,43 @@ class ArtistDash extends Component {
     render(){
         return(
             <div> 
+                      <Container style={{display:'flex'}}> 
+                      <Button color = 'grey' className = "home-button"  animated onClick = {this.onHome}>
+                          <Button.Content visible>Home</Button.Content>
+                          <Button.Content hidden>
+                            <Icon name='right arrow'   />
+                          </Button.Content>
+                        </Button>
+                      </Container> 
                 <Container> 
                 <Grid>
                     <Grid.Row>
                     <Grid.Column width={4}>
                             <Container> 
-                                <CardExampleCard/> 
+                            <Card>
+                              <Image src='https://react.semantic-ui.com/images/avatar/large/matthew.png' />
+                              <Card.Content>
+                                <Card.Header>{this.props.artist.firstName} {this.props.artist.lastName}</Card.Header>
+                                <Card.Meta>
+                                  <span className='date'>Joined in 2018</span>
+                                </Card.Meta>
+                                <Card.Description>
+                                <h2> {this.props.artist.medium}</h2> 
+                                <br /> 
+                                {this.props.artist.bio}
+
+                                <br /> 
+                                {this.props.artist.existingWork}
+                                
+                                </Card.Description>
+                              </Card.Content>
+                              <Card.Content extra>
+                                <a>
+                                  <Icon name='user' />
+                                  22 Friends
+                                </a>
+                              </Card.Content>
+                            </Card>
                             </Container> 
                     </Grid.Column>
                     <Grid.Column width={12}>
