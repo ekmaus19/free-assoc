@@ -13,7 +13,7 @@ const customStyles = {
     transform             : 'translate(-50%, -50%)'
   }
 };
-const renderContent=(mode) => {
+const renderContent=(mode, socket) => { //functional component
   switch (mode) {
     case 'T1':
     return (
@@ -26,7 +26,7 @@ const renderContent=(mode) => {
     return (
     <div>
     <Header as='h2'>Create Event</Header>
-    <CreateEvent />
+    <CreateEvent socket={socket}/>
 
     </div>
     )
@@ -95,7 +95,7 @@ const SidebarExampleVisible = (props) => (
 
       <Sidebar.Pusher>
         <Container style={{paddingTop:'20px',paddingLeft:'30px',paddingRight:'185px'}} basic >
-        {renderContent(props.mode)}
+        {renderContent(props.mode, props.socket)}
 
         </Container>
       </Sidebar.Pusher>
@@ -132,13 +132,9 @@ class ArtistDash extends Component {
                 <Grid>
                     <Grid.Row>
                     <Grid.Column width={4}>
-
-                            <Container>
+                            <Container> 
                             <Card style={{justifyContent:'center', alignItems:'center'}}>
                               <Image style={{width:'75%', height:'75%',padding:'10px'}} src='/img/1.png' />
-                            <Container>
-                            <Card>
-                              <Image src='https://react.semantic-ui.com/images/avatar/large/matthew.png' />
                               <Card.Content>
                                 <Card.Header>{this.props.artist.firstName} {this.props.artist.lastName}</Card.Header>
                                 <Card.Meta>
@@ -165,7 +161,7 @@ class ArtistDash extends Component {
                     </Grid.Column>
                     <Grid.Column width={12}>
                             <Container style={{height:'100%'}}  >
-                                 <SidebarExampleVisible  mode={this.state.mode} setMode={(mode)=> {this.setState({mode:mode})}}/>
+                                 <SidebarExampleVisible  socket={this.props.socket} mode={this.state.mode} setMode={(mode)=> {this.setState({mode:mode})}}/>
                             </Container>
                     </Grid.Column>
                    </Grid.Row>

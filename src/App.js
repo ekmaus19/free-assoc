@@ -7,12 +7,14 @@ import RegisterScreen from './components/Register';
 import RegisterArtist from './components/RegisterArtist';
 import ArtistDash from './components/ArtistDash';
 import {Button, Icon, Input, Menu, Container} from 'semantic-ui-react';
+import io from 'socket.io-client'
 
-
+const url = 'http://7dda4690.ngrok.io'
 
 class App extends Component {
   constructor(props){
     super(props)
+    this.socket = io(url)
     this.state=({
       currentPage:'Home',
       artist:{},
@@ -76,7 +78,7 @@ class App extends Component {
           {this.state.currentPage === 'Registerpicker' ? <div><RegisterScreenPicker redirect={(e) => this.redirect(e)}/></div> : null}
           {this.state.currentPage === 'RegisterUser' ? <div><RegisterScreen redirect={(e) => this.redirect(e)}/></div> : null}
           {this.state.currentPage === 'RegisterArtist' ? <div><RegisterArtist redirect={(e) => this.redirect(e)}/></div> : null}
-          {this.state.currentPage === 'ArtistDash' ? <div><ArtistDash artist={this.state.artist} redirect={(e) => this.redirect(e)}/></div> : null} 
+          {this.state.currentPage === 'ArtistDash' ? <div><ArtistDash socket={this.socket} artist={this.state.artist} redirect={(e) => this.redirect(e)}/></div> : null} 
       </div>
     );
   }
