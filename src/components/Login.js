@@ -2,8 +2,8 @@ import React, {Component} from 'react';
 import {Button, Icon, Input} from 'semantic-ui-react';
 import {connect} from 'react-redux';
 
-const url = 'https://18b9622c.ngrok.io'
 
+const url = 'http://7dda4690.ngrok.io'
 class LoginScreen extends Component {
   constructor(props){
     super(props);

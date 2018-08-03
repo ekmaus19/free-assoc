@@ -1,12 +1,66 @@
 import React, {Component} from 'react';
 import { Card, Icon, Header,Image, Container, Segment, Sidebar, Menu , Grid, Button} from 'semantic-ui-react'
+import {CreateEvent} from './CreateEvent.js'
 
 
+const customStyles = {
+  content : {
+    top                   : '50%',
+    left                  : '50%',
+    right                 : 'auto',
+    bottom                : 'auto',
+    marginRight           : '-50%',
+    transform             : 'translate(-50%, -50%)'
+  }
+};
+const renderContent=(mode) => {
+  switch (mode) {
+    case 'T1': 
+    return (  
+    <div>
+    <Header as='h3'>Events</Header>
+    <Image src='https://react.semantic-ui.com/images/wireframe/paragraph.png' />
+    </div>
+    )
+    case 'T2': 
+    return (  
+    <div>
+    <Header as='h2'>Create Event</Header>
+    <CreateEvent />
+ 
+    </div>
+    )
+    case 'T3': 
+    return (  
+    <div>
+    <Header as='h3'>Scout</Header>
+    <Image src='https://react.semantic-ui.com/images/wireframe/paragraph.png' />
+    </div>
+    )
+    case 'T4': 
+    return (  
+    <div>
+    <Header as='h3'>Map View</Header>
+    <Image src='/img/map.png' />
+    </div>
+    )
+    case 'T5': 
+    return (  
+    <div>
+    <Header as='h3'>Message</Header>
+    <Image src='https://react.semantic-ui.com/images/wireframe/paragraph.png' />
+    </div>
+    )
+  
+  }
 
-const SidebarExampleVisible = () => (
+}
+
+
+const SidebarExampleVisible = (props) => (
 
     <Sidebar.Pushable as={Segment}>
-      <Sidebar
+      <Sidebar 
       as={Menu}
       animation='overlay'
       icon='labeled'
@@ -15,34 +69,35 @@ const SidebarExampleVisible = () => (
       vertical
       visible
       width='thin'>
-        <Menu.Item as='a'>
+        <Menu.Item as='a' onClick={()=>{props.setMode('T1')}}>
           <Icon name='file alternate' />
           Events
         </Menu.Item>
-        <Menu.Item as='a'>
+        <Menu.Item as='a' onClick={()=>{props.setMode('T2')}}>
           <Icon name='edit' />
           New Event
         </Menu.Item>
-        <Menu.Item as='a'>
+        <Menu.Item as='a' onClick={()=>{props.setMode('T3')}}>
           <Icon name='search' />
             Scout
-        </Menu.Item>
-        <Menu.Item as='a'>
-          <Icon name='chat' />
-          Connect
-        </Menu.Item>
-        <Menu.Item as='map'>
-          <Icon name='' />
+        </Menu.Item >
+        <Menu.Item as='map' onClick={()=>{props.setMode('T4')}}>
+          <Icon name='map' />
           Map
         </Menu.Item>
 
+        <Menu.Item as='a' onClick={()=>{props.setMode('T5')}}>
+          <Icon name='chat' />
+          Connect
+        </Menu.Item>
+     
       </Sidebar>
 
       <Sidebar.Pusher>
-        <Segment basic >
-          <Header as='h3'>Toggle Content</Header>
-          <Image src='https://react.semantic-ui.com/images/wireframe/paragraph.png' />
-        </Segment>
+        <Container style={{paddingTop:'20px',paddingLeft:'30px',paddingRight:'185px'}} basic >
+        {renderContent(props.mode)}
+         
+        </Container>
       </Sidebar.Pusher>
     </Sidebar.Pushable>
   )
@@ -50,13 +105,17 @@ const SidebarExampleVisible = () => (
 class ArtistDash extends Component {
    constructor(props){
        super(props)
-   }
-
+       this.state={
+         mode:'T1',
+         visible:false,
+        }
+   } 
 
    onLogout = () => this.props.redirect('App')
-
+   
 
     render(){
+ 
         return(
             <div> 
                       <Container style={{display:'flex'}}> 
@@ -74,8 +133,8 @@ class ArtistDash extends Component {
                     <Grid.Row>
                     <Grid.Column width={4}>
                             <Container> 
-                            <Card>
-                              <Image src='https://react.semantic-ui.com/images/avatar/large/matthew.png' />
+                            <Card style={{justifyContent:'center', alignItems:'center'}}>
+                              <Image style={{width:'75%', height:'75%',padding:'10px'}} src='/img/1.png' />
                               <Card.Content>
                                 <Card.Header>{this.props.artist.firstName} {this.props.artist.lastName}</Card.Header>
                                 <Card.Meta>
@@ -101,8 +160,8 @@ class ArtistDash extends Component {
                             </Container> 
                     </Grid.Column>
                     <Grid.Column width={12}>
-                            <Container>
-                                 <SidebarExampleVisible />
+                            <Container style={{height:'100%'}}  >
+                                 <SidebarExampleVisible  mode={this.state.mode} setMode={(mode)=> {this.setState({mode:mode})}}/>
                             </Container>
                     </Grid.Column>
                    </Grid.Row>
