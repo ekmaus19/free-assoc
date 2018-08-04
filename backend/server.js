@@ -90,14 +90,13 @@ app.use('/', routes);
 
 module.exports = app;
 
+
+
 //const server = http.createServer(app);
-<<<<<<< HEAD
 server.listen(3000, '127.0.0.1');
 
 console.log('Server running at http://127.0.0.1:3000/');
-=======
-server.listen(3000);
+
 
 
 // console.log('Server running at http://127.0.0.1:1337/');
->>>>>>> 044e2ebc292cab5d8f2b7b6014a402ffe76bee6a
