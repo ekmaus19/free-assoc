@@ -46,3 +46,10 @@ bower_components
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+package-lock.json
+env.sh
+ngrok
+test_event_data.json
+/mongodb-osx-x86_64-4.0.0
+mongodb-osx-x86_64-4.0.0

@@ -9,28 +9,39 @@ const connect = process.env.MONGODB_URI;
 mongoose.connect(connect);
 
 const artistSchema = mongoose.Schema({
-  name: {
+  firstName: {
+    type: String,
+    required: true
+  },
+  lastName: {
     type: String,
     required: true
   },
   medium: {
     type: String,
-    required: true
+    required: true,
+    enum: ['music', 'art', 'performance']
   },
   username: {
     type: String,
-    required: true
+    required: true,
+    unique: true
   },
   password: {
     type: String,
     required: true
   },
-  email: {
+  passwordRepeat: {
     type: String,
     required: true
   },
+  email: {
+    type: String,
+    required: true,
+    unique: true
+  },
   existingWork: {
-    type: Array,
+    type: String,
     required: true
   },
   bio: String,
@@ -44,7 +55,8 @@ const artistSchema = mongoose.Schema({
 const userSchema = mongoose.Schema({
   username: {
     type: String,
-    required: true
+    required: true,
+    unique: true
   },
   password: {
     type: String,
@@ -56,7 +68,8 @@ const userSchema = mongoose.Schema({
   },
   email: {
     type: String,
-    required: true
+    required: true,
+    unique: true
   },
 });
 
@@ -65,11 +78,26 @@ const eventSchema = mongoose.Schema({
     type: String,
     required: true
   },
-  eventOrganizer: {
+  eventCreator: {
     type: String,
     required: true
   },
   venueName: {
+    type: String,
+    required: true
+  },
+  date: {
+    type: String,
+    required: true
+  },
+  datesRange: {
+    type: String,
+  },
+  time: {
+    type: String,
+    required: true
+  },
+  streetAddress: {
     type: String,
     required: true
   },
@@ -87,5 +115,16 @@ const eventSchema = mongoose.Schema({
   },
   latitude: String,
   longitude: String,
-  tags: Array
-})
+  tags: Array,
+  about: String,
+});
+
+const Artist = mongoose.model('Artist', artistSchema);
+const User = mongoose.model('User', userSchema);
+const Event = mongoose.model('Event', eventSchema);
+
+module.exports = {
+  Artist,
+  User,
+  Event
+};
