@@ -3,7 +3,7 @@ import {Button, Icon, Input} from 'semantic-ui-react';
 import validator from 'validator';
 
 
-const url = 'http://7dda4690.ngrok.io'
+const url = 'http://43058209.ngrok.io'
 const required = (value) => {
   if (!value.toString().trim().length) {
     return 'required';

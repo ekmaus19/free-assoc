@@ -10,7 +10,7 @@ import {
   export class CreateEvent extends React.Component {
     constructor(props) {
       super(props);
-  
+
       this.state = {
         eventName: '',
         eventCreator: '',
@@ -23,17 +23,18 @@ import {
         city: '',
         state: '',
         country: '',
-        about: ''
-
+        about: '',
+        latitude: null,
+        longitutde: null,
       };
     }
-  
+
     handleChange = (event, {name, value}) => {
       if (this.state.hasOwnProperty(name)) {
         this.setState({ [name]: value });
       }
     }
-    
+
 
   onCreate = () => {
     console.log('ON CREATE*********************',this.state)
@@ -69,7 +70,7 @@ import {
     render() {
       return (
         <Form>
-          <Form.Group> 
+          <Form.Group>
           <Form.Field control={Input} label='Event Name' placeholder='Event Name' onChange={this.eventName} />
           <Form.Field control={Input} label='Event Creator' placeholder='Event Creator' onChange={this.eventCreator} />
         </ Form.Group>
@@ -80,7 +81,7 @@ import {
             value={this.state.date}
             iconPosition="left"
             onChange={this.handleChange} />
-            <br /> 
+            <br />
           <TimeInput
             inline
             name="time"
@@ -88,8 +89,8 @@ import {
             value={this.state.time}
             iconPosition="left"
             onChange={this.handleChange} />
-             <br /> 
-         
+             <br />
+
           <DatesRangeInput
             inline
             name="datesRange"
@@ -97,7 +98,7 @@ import {
             value={this.state.datesRange}
             iconPosition="left"
             onChange={this.handleChange} />
-            <Form.Group> 
+            <Form.Group>
            <Form.Field control={Input} label='Street Address' placeholder='Street Address' onChange={this.streetAddress} />
              <Form.Field control={Input} label='City' placeholder='City' onChange={this.city}/>
              <br />
@@ -117,7 +118,7 @@ import {
       );
     }
   }
-  
+
 
 // export class CreateEvent extends Component {
 //     constructor(props){
@@ -126,12 +127,12 @@ import {
 //     }
 
 //     handleChange = (e, { value }) => this.setState({ value })
-  
+
 //     render() {
 //       const { value } = this.state
 //       return (
-       
-    
+
+
 //         <Form >
 //           <Form.Group widths={6}>
 //             <Form.Field control={Input} label='Event Name' placeholder='Event Name' />
@@ -145,8 +146,8 @@ import {
 //             <Form.Field control={Input} label='Country' placeholder='Country' />
 //             <Form.Field control={Input} label='Venue Name' placeholder='Venue Name' />
 //           </Form.Group>
-          
-    
+
+
 //           <Form.Field control={TextArea} label='About' placeholder='Tell us more about you...' />
 //           <Form.Field control={Checkbox} label='I agree to the Terms and Conditions' />
 //           <Button color = 'grey' className = "logout-button"  animated onClick = {this.onLogout}>
@@ -156,8 +157,7 @@ import {
 //                 </Button.Content>
 //             </Button>
 //         </Form>
-    
+
 //       )
 //     }
 // }
-

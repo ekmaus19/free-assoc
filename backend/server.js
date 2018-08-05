@@ -33,7 +33,18 @@ io.on('connection', (socket) => {
   //   }
   // })
   console.log('connected--------')
+  /////////////////////////////////
+  // get latitude and longitude
   socket.on('createEvent', (data, next) => {
+  //   /// ask about this
+  //   geocoder.search( { q: data.venueName + ', ' + data.streetAddress + ', ' data.city + ', ' + data.state + ', ' + data.country} )
+  //   .then((response) => {
+  //       console.log(response)
+  //   })
+  //   .catch((error) => {
+  //       console.log(error)
+  //   })
+    /////////////////////////////
     console.log('Sweet Jesus it worked',data)
     new Event({
       eventName: data.eventName,
@@ -51,6 +62,14 @@ io.on('connection', (socket) => {
   })
 
 })
+
+// socket.on('filterCategory', (data, next) => {
+//   Event.find({about: data.about}, (err, data) => {
+//     done(err, data);
+//   })
+// })
+
+// })
 
 app.use(session({
   secret: process.env.SECRET,
@@ -137,8 +156,8 @@ module.exports = app;
 
 
 
-//const server = http.createServer(app);
-server.listen(3000, '127.0.0.1');
+// const server = http.createServer(app);
+server.listen(1337, '127.0.0.1');
 
 console.log('Server running at http://127.0.0.1:3000/');
 
