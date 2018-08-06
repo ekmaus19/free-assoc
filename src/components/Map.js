@@ -148,13 +148,13 @@ export default class MainMap extends Component {
 
     return (
       <Grid columns={2} divided>
-        <Grid.Column>
-              <Grid.Row>
+        {/* <Grid.Column>
+              <Grid.Row> */}
                 <Input focus className="placeSearch" placeholder="Find a place..." onChange={this.onSearchChange}/>
                 <Button onClick={this.findPlace}>Search</Button>
-              </Grid.Row>
+              {/* </Grid.Row> */}
 
-              <Grid.Row>
+              {/* <Grid.Row> */}
                   <Map
                     center={this.state.latlng}
                     length={4}
@@ -178,14 +178,14 @@ export default class MainMap extends Component {
 
                     {marker}
                   </Map>
-                </Grid.Row>
-        </Grid.Column>
-        <Grid.Column>
+                {/* </Grid.Row> */}
+        {/* </Grid.Column> */}
+        {/* <Grid.Column> */}
           <Grid.Row><Button onClick={this.handleClick}>Find Me</Button></Grid.Row>
           <Grid.Row><Button onClick={(e) => { this.setState({about: "arts"}); this.filterCategory(e); }}>Visual Arts</Button></Grid.Row>
           <Grid.Row><Button onClick={(e) => { this.setState({about: "music"}); this.filterCategory(e); }}>Music</Button></Grid.Row>
           <Grid.Row><Button onClick={(e) => { this.setState({about: "performance"}); this.filterCategory(e); }}>Performance</Button></Grid.Row>
-        </Grid.Column>
+        {/* // </Grid.Column> */}
     </Grid>
     )
   }

@@ -10,8 +10,7 @@ import MainMap from './components/Map';
 import {Button, Icon, Input, Menu, Container, Image} from 'semantic-ui-react';
 import io from 'socket.io-client'
 
-const url = 'http://09b1c99c.ngrok.io'
->>>>>>> b1004e8303fcfbbf483a9142d10dc2d71f1bdf16
+const url = 'http://743e7254.ngrok.io'
 
 class App extends Component {
   constructor(props){
@@ -85,10 +84,7 @@ class App extends Component {
           {this.state.currentPage === 'RegisterUser' ? <div><RegisterScreen redirect={(e) => this.redirect(e)}/></div> : null}
           {this.state.currentPage === 'RegisterArtist' ? <div><RegisterArtist redirect={(e) => this.redirect(e)}/></div> : null}
           {this.state.currentPage === 'ArtistDash' ? <div><ArtistDash socket={this.socket} artist={this.state.artist} redirect={(e) => this.redirect(e)}/></div> : null}
-<<<<<<< HEAD
           {this.state.currentPage === 'MainMap' ? <div><MainMap redirect={(e) => this.redirect(e)}/></div> : null}
-=======
->>>>>>> 3c304093df7004e35984863cd308aebd4c68189e
       </div>
     );
   }
