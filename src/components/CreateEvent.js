@@ -60,18 +60,60 @@ import {
     })
   }
 
+  onEventNameChange = (event) => {
+    this.setState({
+      eventName: event.target.value
+    })
+  }
 
-  // onUsernameChange = (event) =>{
-  //   this.setState({
-  //     username: event.target.value
-  //   })
-  // }
+  onEventCreatorChange = (event) => {
+    this.setState({
+      eventCreator: event.target.value
+    })
+  }
+
+  onAddressChange = (event) => {
+    this.setState({
+      streetAddress: event.target.value
+    })
+  }
+
+  onCityChange = (event) => {
+    this.setState({
+      city: event.target.value
+    })
+  }
+
+  onStateChange = (event) => {
+    this.setState({
+      state: event.target.value
+    })
+  }
+
+  onCountryChange = (event) => {
+    this.setState({
+      country: event.target.value
+    })
+  }
+
+  onVenueNameChange = (event) => {
+    this.setState({
+      venueName: event.target.value
+    })
+  }
+
+  onAboutChange = (event) => {
+    this.setState({
+      about: event.target.value
+    })
+  }
+
     render() {
       return (
         <Form>
           <Form.Group>
-          <Form.Field control={Input} label='Event Name' placeholder='Event Name' onChange={this.eventName} />
-          <Form.Field control={Input} label='Event Creator' placeholder='Event Creator' onChange={this.eventCreator} />
+          <Form.Field control={Input} label='Event Name' placeholder='Event Name' onChange={this.onEventNameChange} />
+          <Form.Field control={Input} label='Event Creator' placeholder='Event Creator' onChange={this.onEventCreatorChange} />
         </Form.Group>
           <DateInput
             name="date"
@@ -98,14 +140,14 @@ import {
             iconPosition="left"
             onChange={this.handleChange} />
             <Form.Group>
-           <Form.Field control={Input} label='Street Address' placeholder='Street Address' onChange={this.streetAddress} />
-             <Form.Field control={Input} label='City' placeholder='City' onChange={this.city}/>
+           <Form.Field control={Input} label='Street Address' placeholder='Street Address' onChange={this.onAddressChange} />
+             <Form.Field control={Input} label='City' placeholder='City' onChange={this.onCityChange}/>
              <br />
              <br />
-             <Form.Field control={Input} label='State' placeholder='State'  onChange={this.state}/>
-             <Form.Field control={Input} label='Country' placeholder='Country' onChange={this.country}/>
-             <Form.Field control={Input} label='Venue Name' placeholder='Venue Name' onChange={this.venueName}/>
-             <Form.Field control={TextArea} label='About' placeholder='Tell us more about you...' onChange={this.about} />
+             <Form.Field control={Input} label='State' placeholder='State'  onChange={this.onStateChange}/>
+             <Form.Field control={Input} label='Country' placeholder='Country' onChange={this.onCountryChange}/>
+             <Form.Field control={Input} label='Venue Name' placeholder='Venue Name' onChange={this.onVenueNameChange}/>
+             <Form.Field control={TextArea} label='About' placeholder='Tell us more about you...' onChange={this.onAboutChange} />
             </Form.Group>
             <Button style={{display:'flex', alignItems:'center'}} color = 'pink' className = "logout-button"  animated onClick = {this.onCreate}>
              <Button.Content visible>Create Event Go!</Button.Content>
