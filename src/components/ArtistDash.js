@@ -15,43 +15,43 @@ const customStyles = {
 };
 const renderContent=(mode, socket) => { //functional component
   switch (mode) {
-    case 'T1': 
-    return (  
+    case 'T1':
+    return (
     <div>
     <Header as='h3'>Events</Header>
     <Image src='https://react.semantic-ui.com/images/wireframe/paragraph.png' />
     </div>
     )
-    case 'T2': 
-    return (  
+    case 'T2':
+    return (
     <div>
     <Header as='h2'>Create Event</Header>
     <CreateEvent socket={socket}/>
- 
+
     </div>
     )
-    case 'T3': 
-    return (  
+    case 'T3':
+    return (
     <div>
     <Header as='h3'>Scout</Header>
     <Image src='https://react.semantic-ui.com/images/wireframe/paragraph.png' />
     </div>
     )
-    case 'T4': 
-    return (  
+    case 'T4':
+    return (
     <div>
     <Header as='h3'>Map View</Header>
     <Image src='/img/map.png' />
     </div>
     )
-    case 'T5': 
-    return (  
+    case 'T5':
+    return (
     <div>
     <Header as='h3'>Message</Header>
     <Image src='https://react.semantic-ui.com/images/wireframe/paragraph.png' />
     </div>
     )
-  
+
   }
 
 }
@@ -60,7 +60,7 @@ const renderContent=(mode, socket) => { //functional component
 const SidebarExampleVisible = (props) => (
 
     <Sidebar.Pushable as={Segment}>
-      <Sidebar 
+      <Sidebar
       as={Menu}
       animation='overlay'
       icon='labeled'
@@ -80,7 +80,7 @@ const SidebarExampleVisible = (props) => (
         <Menu.Item as='a' onClick={()=>{props.setMode('T3')}}>
           <Icon name='search' />
             Scout
-        </Menu.Item >
+        </Menu.Item>
         <Menu.Item as='map' onClick={()=>{props.setMode('T4')}}>
           <Icon name='map' />
           Map
@@ -90,13 +90,13 @@ const SidebarExampleVisible = (props) => (
           <Icon name='chat' />
           Connect
         </Menu.Item>
-     
+
       </Sidebar>
 
       <Sidebar.Pusher>
         <Container style={{paddingTop:'20px',paddingLeft:'30px',paddingRight:'185px'}} basic >
         {renderContent(props.mode, props.socket)}
-         
+
         </Container>
       </Sidebar.Pusher>
     </Sidebar.Pushable>
@@ -109,13 +109,13 @@ class ArtistDash extends Component {
          mode:'T1',
          visible:false,
         }
-   } 
+   }
 
    onLogout = () => this.props.redirect('App')
-   
+
 
     render(){
- 
+
         return(
             <div>
                       <Container style={{display:'flex'}}>

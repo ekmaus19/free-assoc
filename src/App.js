@@ -9,7 +9,7 @@ import ArtistDash from './components/ArtistDash';
 import {Button, Icon, Input, Menu, Container, Image} from 'semantic-ui-react';
 import io from 'socket.io-client'
 
-const url = 'http://7dda4690.ngrok.io'
+const url = 'https://2f08ada2.ngrok.io'
 
 class App extends Component {
   constructor(props){
@@ -27,7 +27,7 @@ class App extends Component {
     })
 }
 
-  
+
 
   render() {
 
@@ -48,14 +48,14 @@ class App extends Component {
                        </header>
                     <h2 style={{marginTop:'auto', marginBottom:'auto'}}>  Free Associations  </h2>
                 </Menu.Item>
-        
+
             </Menu>
     
          <div style={{width:'25%', height:'25%',alignItems:'center',justifyContent:'center', marginLeft:'auto',marginRight:'auto', marginTop:'40px'}}>
             <Image src='/img/font.png' />
         </div> 
          {this.state.currentPage === 'Home' ?
-          <div> 
+          <div>
           <div>
             <Input size='massive' action={{icon:'search'}} onChange = {this.onNameChange}  className = "field" placeholder = "Events Near Me"/>
             <br/>
@@ -76,13 +76,13 @@ class App extends Component {
               <Icon name='right arrow' />
             </Button.Content>
           </Button>
-         
+
           </div>: null}
           {this.state.currentPage === 'Login' ? <div><LoginScreen onLogin={this.onLogin} artistInfo={(obj)=>this.setState({artist:obj})} redirect={(e) => this.redirect(e)}/></div> : null}
           {this.state.currentPage === 'Registerpicker' ? <div><RegisterScreenPicker redirect={(e) => this.redirect(e)}/></div> : null}
           {this.state.currentPage === 'RegisterUser' ? <div><RegisterScreen redirect={(e) => this.redirect(e)}/></div> : null}
           {this.state.currentPage === 'RegisterArtist' ? <div><RegisterArtist redirect={(e) => this.redirect(e)}/></div> : null}
-          {this.state.currentPage === 'ArtistDash' ? <div><ArtistDash socket={this.socket} artist={this.state.artist} redirect={(e) => this.redirect(e)}/></div> : null} 
+          {this.state.currentPage === 'ArtistDash' ? <div><ArtistDash socket={this.socket} artist={this.state.artist} redirect={(e) => this.redirect(e)}/></div> : null}
       </div>
     );
   }

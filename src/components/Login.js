@@ -3,7 +3,7 @@ import {Button, Icon, Input} from 'semantic-ui-react';
 import {connect} from 'react-redux';
 
 
-const url = 'http://7dda4690.ngrok.io'
+const url = 'https://2f08ada2.ngrok.io'
 class LoginScreen extends Component {
   constructor(props){
     super(props);
@@ -81,10 +81,10 @@ class LoginScreen extends Component {
       // display: flex;
       // align-items: right;
       // justify-content: flex-start;
-      <div> 
-     
+      <div>
+
       <div className = "login">
-        
+
           <div className = "input-container">
             <Input onChange = {this.onUsernameChange}  className = "field" placeholder = "Username..."/>
             <br/>
@@ -105,7 +105,7 @@ class LoginScreen extends Component {
           </Button>
           </div>
         </div>
-      </div> 
+      </div>
     );
   }
 }
