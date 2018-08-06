@@ -1,39 +1,49 @@
-////////////////////////////////////////////////////////////////////////////////
-// chatroom functionality start: https://itnext.io/building-a-node-js-websocket-chat-app-with-socket-io-and-react-473a0686d1e1
-////////////////////////////////////////////////////////////////////////////////
+import React from 'react';
+import io from 'socket.io-client';
+import ChatRoom from './ChatRoom';
 
-function registerHandler(onMessageReceived) {
-  socket.on('message', onMessageReceived)
+class Chat extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      socket: io(),
+      roomName: "Artist Chatroom",
+      username: ''
+    };
+  }
+
+  componentDidMount() {
+    // WebSockets Receiving Event Handlers
+    this.state.socket.on('connect', () => {
+      console.log('connected');
+      let username = prompt('enter username')
+      this.setState({username: username})
+      this.state.socket.emit('username', username)
+      this.state.socket.emit('room', this.state.roomName)
+    });
+
+    this.state.socket.on('errorMessage', message => {
+      alert(message)
+    });
+  }
+
+  join(room) {
+    console.log(room);
+    this.setState({roomName: room})
+  }
+
+  render() {
+    return (
+      <div>
+        <h1>Chat</h1>
+        <button className="btn btn-default" onClick={() => this.join("Artist Chatroom")}>
+          Join the Artist Chatroom
+        </button>
+        <ChatRoom socket = {this.props.socket} roomName = {this.state.roomName}
+          username = {this.state.username}/>
+      </div>
+    );
+  }
 }
 
-function unregisterHandler() {
-  socket.off('message')
-}
-
-socket.on('error', function (err) {
-  console.log('received socket error:')
-  console.log(err)
-})
-
-function register(name, cb) {
-  socket.emit('register', name, cb)
-}
-
-function join(chatroomName, cb) {
-  socket.emit('join', chatroomName, cb)
-}
-
-function leave(chatroomName, cb) {
-  socket.emit('leave', chatroomName, cb)
-}
-
-function message(chatroomName, msg, cb) {
-  socket.emit('message', { chatroomName, message: msg }, cb)
-}
-
-function getChatrooms(cb) {
-  socket.emit('chatrooms', null, cb)
-}
-
-function getAvailableUsers(cb) {
-  socket.emit('availableUsers', null, cb)
+export default Chat;

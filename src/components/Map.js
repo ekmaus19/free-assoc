@@ -63,6 +63,20 @@ export default class MainMap extends Component {
       this.filterCategory = this.filterCategory.bind(this)
   }
 
+// componentDidMount() {
+//   this.props.socket.emit('displayEvents', {
+//     latitude: this.state.latitude,
+//     longitude: this.state.longitude
+//   }, (res) => {
+//     console.log(res)
+//     if(res.err) {
+//       return alert('Error')
+//     } else {
+//       console.log('events displayed')
+//     }
+//   })
+// }
+
 
   onSearchChange = (event) => {
     this.setState({

@@ -10,7 +10,7 @@ import About from './components/About';
 import Ethos from './components/Ethos';
 import MainMap from './components/Map';
 import {Button, Icon, Input, Menu, Container, Image} from 'semantic-ui-react';
-import io from 'socket.io-client'
+import io from 'socket.io-client';
 
 const url = 'http://09b1c99c.ngrok.io'
 
@@ -87,7 +87,8 @@ class App extends Component {
           {this.state.currentPage === 'RegisterUser' ? <div><RegisterScreen redirect={(e) => this.redirect(e)}/></div> : null}
           {this.state.currentPage === 'RegisterArtist' ? <div><RegisterArtist redirect={(e) => this.redirect(e)}/></div> : null}
           {this.state.currentPage === 'ArtistDash' ? <div><ArtistDash socket={this.socket} artist={this.state.artist} redirect={(e) => this.redirect(e)}/></div> : null}
-          {this.state.currentPage === 'MainMap' ? <div><MainMap redirect={(e) => this.redirect(e)}/></div> : null}
+          {this.state.currentPage === 'MainMap' ? <div><MainMap socket={this.socket} redirect={(e) => this.redirect(e)}/></div> : null}
+
       </div>
     );
   }

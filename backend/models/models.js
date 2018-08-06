@@ -82,6 +82,11 @@ const eventSchema = mongoose.Schema({
     type: String,
     required: true
   },
+  medium: {
+    type: String,
+    required: true,
+    enum: ['music', 'art', 'performance']
+  },
   venueName: {
     type: String,
     required: true

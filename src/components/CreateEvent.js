@@ -99,7 +99,7 @@ const delimiters = [KeyCodes.comma, KeyCodes.enter];
         console.log(res)
         if(res.err) {
           return alert('Opps Error')
-        }else{
+        } else {
           alert('Saved')
         }
 
