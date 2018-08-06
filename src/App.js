@@ -10,7 +10,7 @@ import MainMap from './components/Map';
 import {Button, Icon, Input, Menu, Container, Image} from 'semantic-ui-react';
 import io from 'socket.io-client'
 
-const url = 'http://743e7254.ngrok.io'
+const url = 'http://666132bb.ngrok.io'
 
 class App extends Component {
   constructor(props){

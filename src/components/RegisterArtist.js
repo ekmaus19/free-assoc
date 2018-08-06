@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {Button,Icon, Select,Input} from 'semantic-ui-react';
 
 
-const url = 'http://743e7254.ngrok.io'
+const url = 'http://666132bb.ngrok.io'
 
 
 const options = [

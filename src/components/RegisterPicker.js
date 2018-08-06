@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {Button, Icon, Input} from 'semantic-ui-react';
+const url = 'http://666132bb.ngrok.io'
 
 class RegisterScreenPicker extends Component {
   constructor(props){
@@ -16,8 +17,8 @@ class RegisterScreenPicker extends Component {
               <Icon name='right arrow' />
             </Button.Content>
           </Button>
-        <br /> 
-        <br /> 
+        <br />
+        <br />
 
         <Button color = 'yellow' className = "user-button"  animated onClick = {() => this.props.redirect('RegisterUser')}>
             <Button.Content visible>Register as User</Button.Content>

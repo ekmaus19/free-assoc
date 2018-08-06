@@ -6,8 +6,8 @@ import {
     DateTimeInput,
     DatesRangeInput
   } from 'semantic-ui-calendar-react';
-
-//test change
+  const Nominatim = require('nominatim-geocoder')
+  const geocoder = new Nominatim()
 
   export class CreateEvent extends React.Component {
     constructor(props) {
@@ -39,27 +39,35 @@ import {
   //hi
   onCreate = () => {
       // console.log('ON CREATE*********************',this.state)
-      this.props.socket.emit('createEvent', {
-          eventName: this.state.eventName,
-          eventCreator: this.state.eventCreator,
-          venueName: this.state.venueName,
-          date: this.state.date,
-          time: this.state.time,
-          datesRange: this.state.datesRange,
-          streetAddress: this.state.streetAddress,
-          city: this.state.city,
-          state: this.state.state,
-          country: this.state.country,
-          about: this.state.about
-      }, (res) => {
-        console.log(res)
-        if(res.err) {
-          return alert('Opps Error')
-        }else{
-          alert('Saved')
-        }
-
-      })
+      let query = this.state.streetAddress + ', ' + this.state.city + ', ' + this.state.state + ', ' + this.state.country
+      geocoder.search( { q: query} )
+          .then((response) => {
+            this.props.socket.emit('createEvent', {
+                eventName: this.state.eventName,
+                eventCreator: this.state.eventCreator,
+                venueName: this.state.venueName,
+                date: this.state.date,
+                time: this.state.time,
+                datesRange: this.state.datesRange,
+                streetAddress: this.state.streetAddress,
+                city: this.state.city,
+                state: this.state.state,
+                country: this.state.country,
+                latitude: response[0].lat,
+                longitude: response[0].lon,
+                about: this.state.about
+            }, (res) => {
+              console.log(res)
+              if(res.err) {
+                return alert('Opps Error')
+              } else {
+                alert('Saved')
+              }
+            })
+          })
+          .catch((error) => {
+            console.log("lookit this sexy error, " +error)
+        })
     }
 
     onEventNameChange = (event) => {
