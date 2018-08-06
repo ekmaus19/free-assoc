@@ -94,7 +94,7 @@ const SidebarExampleVisible = (props) => (
       </Sidebar>
 
       <Sidebar.Pusher>
-        <Container style={{paddingTop:'20px',paddingLeft:'30px',paddingRight:'185px'}} basic >
+        <Container style={{paddingTop:'20px',paddingLeft:'30px',paddingRight:'185px',width:'100%'}} basic >
         {renderContent(props.mode, props.socket)}
 
         </Container>

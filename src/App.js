@@ -9,7 +9,7 @@ import ArtistDash from './components/ArtistDash';
 import {Button, Icon, Input, Menu, Container, Image} from 'semantic-ui-react';
 import io from 'socket.io-client'
 
-const url = 'https://2f08ada2.ngrok.io'
+const url = 'http://09b1c99c.ngrok.io'
 
 class App extends Component {
   constructor(props){
