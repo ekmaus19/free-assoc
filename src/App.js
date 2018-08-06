@@ -6,10 +6,11 @@ import RegisterScreenPicker from './components/RegisterPicker';
 import RegisterScreen from './components/Register';
 import RegisterArtist from './components/RegisterArtist';
 import ArtistDash from './components/ArtistDash';
+import MainMap from './components/Map';
 import {Button, Icon, Input, Menu, Container, Image} from 'semantic-ui-react';
 import io from 'socket.io-client'
 
-const url = 'http://09b1c99c.ngrok.io'
+const url = 'http://743e7254.ngrok.io'
 
 class App extends Component {
   constructor(props){
@@ -41,7 +42,7 @@ class App extends Component {
                 <Menu.Item as='a'>Ethos</Menu.Item>
                 <Menu.Item as='a'>About</Menu.Item>
                 <Menu.Item as='a'>Careers</Menu.Item>
-             
+
                 <Menu.Item position='right'>
                       <header style={{marginRight:'auto'}} className="App-header">
                       <img src={logo} className="App-logo" alt="logo" />
@@ -50,10 +51,10 @@ class App extends Component {
                 </Menu.Item>
 
             </Menu>
-    
+
          <div style={{width:'25%', height:'25%',alignItems:'center',justifyContent:'center', marginLeft:'auto',marginRight:'auto', marginTop:'40px'}}>
             <Image src='/img/font.png' />
-        </div> 
+        </div>
          {this.state.currentPage === 'Home' ?
           <div>
           <div>
@@ -83,6 +84,7 @@ class App extends Component {
           {this.state.currentPage === 'RegisterUser' ? <div><RegisterScreen redirect={(e) => this.redirect(e)}/></div> : null}
           {this.state.currentPage === 'RegisterArtist' ? <div><RegisterArtist redirect={(e) => this.redirect(e)}/></div> : null}
           {this.state.currentPage === 'ArtistDash' ? <div><ArtistDash socket={this.socket} artist={this.state.artist} redirect={(e) => this.redirect(e)}/></div> : null}
+          {this.state.currentPage === 'MainMap' ? <div><MainMap redirect={(e) => this.redirect(e)}/></div> : null}
       </div>
     );
   }
