@@ -1,6 +1,6 @@
 import React, { createRef, Component } from 'react'
 import { Map, TileLayer, Marker, Popup, CircleMarker, MapControl } from 'react-leaflet'
-import { Button, Input } from 'semantic-ui-react'
+import { Button, Input, Grid } from 'semantic-ui-react'
 
 // ultimately, geocoder will be in the backend. In front for testing purposes
 const Nominatim = require('nominatim-geocoder')
@@ -17,11 +17,11 @@ const findMe = {
 
 // 1. actual data
 const data = [
-  {"key": "1", "eventName":"Stand-Up Paddleboarding Lessons","time":"Ongoing","place":"1200 Clay, San Francisco","venueName":"Boardsports","tags":"Classes & Seminars, Outdoors, Arts", "lat": 37.793663, "long": -122.413103},
+  {"key": "1", "about": "music", "eventName":"Stand-Up Paddleboarding Lessons","time":"Ongoing","place":"1200 Clay, San Francisco","venueName":"Boardsports","tags":"Classes & Seminars, Outdoors, Arts", "lat": 37.793663, "long": -122.413103},
   // {"key": "2", "eventName":"Alcatraz Night Tour","time":"Mondays, Thursdays-Sundays","place":"San Francisco Bay, San Francisco","venueName":"Alcatraz Island","tags":"Tours, Outdoors, Arts"},
   // {"key": "3", "eventName":"Hiking Yoga","time":"Mondays-Saturdays","place":"Multiple addresses, San Francisco","venueName":"Multiple San Francisco Locations","tags":"Mind & Body, Outdoors, Arts"},
   // {"key": "4", "eventName":"San Francisco City Guides Walking Tours","time":"Ongoing","place":"Multiple addresses, San Francisco","venueName":"Multiple San Francisco Locations","tags":"History, Tours, Free Events, Arts"},
-  {"key": "5", "eventName":"Permanent Collection","time":"Ongoing, 10 a.m.-7 p.m.","place":"540 Broadway, San Francisco","venueName":"The Beat Museum","tags":"Museum Exhibits & Events, Art - Museums", "lat": 37.798056,"long": -122.406215}
+  {"key": "5", "about":"art", "eventName":"Permanent Collection","time":"Ongoing, 10 a.m.-7 p.m.","place":"540 Broadway, San Francisco","venueName":"The Beat Museum","tags":"Museum Exhibits & Events, Art - Museums", "lat": 37.798056,"long": -122.406215}
 ]
 
 
@@ -63,6 +63,7 @@ export default class MainMap extends Component {
       this.filterCategory = this.filterCategory.bind(this)
   }
 
+
   onSearchChange = (event) => {
     this.setState({
       searchingPlace: event.target.value
@@ -90,7 +91,10 @@ export default class MainMap extends Component {
   filterCategory(e) {
     e.preventDefault()
     console.log("Events being filetered: ", this.state);
-    Event.find({})
+
+    if(data.indexOf(this.state.about)===-1){
+
+    }
     // this.props.socket.emit('filterCategory', {
     //   about: this.state.about
     // }, (res) => {
@@ -143,37 +147,46 @@ export default class MainMap extends Component {
     ) : null
 
     return (
-    <div>
-      <Input focus className="placeSearch" placeholder="Find a place..." onChange={this.onSearchChange}/>
-      <Button onClick={this.findPlace}>Search</Button>
-      <Map
-        center={this.state.latlng}
-        length={4}
-        onLocationfound={this.handleLocationFound}
-        ref={this.mapRef}
-        // zoom={15}
-        viewport={this.state.viewport}>
-        <TileLayer
-          attribution="&amp;copy <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
-          url="https://stamen-tiles-{s}.a.ssl.fastly.net/toner/{z}/{x}/{y}{r}.png"
-        />
-        <TestMarkerList data={data}/>
+      <Grid columns={2} divided>
+        <Grid.Column>
+              <Grid.Row>
+                <Input focus className="placeSearch" placeholder="Find a place..." onChange={this.onSearchChange}/>
+                <Button onClick={this.findPlace}>Search</Button>
+              </Grid.Row>
 
-        {/* past map tile of interest -- kept for reference */}
+              <Grid.Row>
+                  <Map
+                    center={this.state.latlng}
+                    length={4}
+                    onLocationfound={this.handleLocationFound}
+                    ref={this.mapRef}
+                    // zoom={15}
+                    viewport={this.state.viewport}>
+                    <TileLayer
+                      attribution="&amp;copy <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
+                      url="https://stamen-tiles-{s}.a.ssl.fastly.net/toner/{z}/{x}/{y}{r}.png"
+                    />
+                    <TestMarkerList data={data}/>
 
-        {/* L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
-          // attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-          id: 'mapbox.comic',
-          accessToken: "pk.eyJ1IjoiZWttYXVzMTkiLCJhIjoiY2prYTAyc3JvMXppbjNrbWtmNTI5cmFheSJ9.SRlzG8UvBjRsNKoB1oY56Q"
-        }).addTo(this.map); */}
+                    {/* past map tile of interest -- kept for reference */}
 
-        {marker}
-      </Map>
-      <Button onClick={this.handleClick}>Find Me</Button>
-      <Button onClick={(e) => { this.setState({about: "arts"}); this.filterCategory(e); }}>Visual Arts</Button>
-      <Button onClick={(e) => { this.setState({about: "music"}); this.filterCategory(e); }}>Music</Button>
-      <Button onClick={(e) => { this.setState({about: "performance"}); this.filterCategory(e); }}>Performance</Button>
-    </div>
+                    {/* L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
+                      // attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+                      id: 'mapbox.comic',
+                      accessToken: "pk.eyJ1IjoiZWttYXVzMTkiLCJhIjoiY2prYTAyc3JvMXppbjNrbWtmNTI5cmFheSJ9.SRlzG8UvBjRsNKoB1oY56Q"
+                    }).addTo(this.map); */}
+
+                    {marker}
+                  </Map>
+                </Grid.Row>
+        </Grid.Column>
+        <Grid.Column>
+          <Grid.Row><Button onClick={this.handleClick}>Find Me</Button></Grid.Row>
+          <Grid.Row><Button onClick={(e) => { this.setState({about: "arts"}); this.filterCategory(e); }}>Visual Arts</Button></Grid.Row>
+          <Grid.Row><Button onClick={(e) => { this.setState({about: "music"}); this.filterCategory(e); }}>Music</Button></Grid.Row>
+          <Grid.Row><Button onClick={(e) => { this.setState({about: "performance"}); this.filterCategory(e); }}>Performance</Button></Grid.Row>
+        </Grid.Column>
+    </Grid>
     )
   }
 }
