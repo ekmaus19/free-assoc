@@ -82,26 +82,65 @@ const delimiters = [KeyCodes.comma, KeyCodes.enter];
 
 
   onCreate = () => {
-    console.log('ON CREATE*********************',this.state)
-    this.props.socket.emit('createEvent', {
-        eventName: this.state.eventName,
-        eventCreator: this.state.eventCreator,
-        venueName: this.state.venueName,
-        date: this.state.date,
-        time: this.state.time,
-        datesRange: this.state.datesRange,
-        streetAddress: this.state.streetAddress,
-        city: this.state.city,
-        state: this.state.state,
-        country: this.state.country,
-        about: this.state.about
-    }, (res) => {
-      console.log(res)
-      if(res.err) {
-        return alert('Opps Error')
-      }else{
-        alert('Saved')
-      }
+      // console.log('ON CREATE*********************',this.state)
+      this.props.socket.emit('createEvent', {
+          eventName: this.state.eventName,
+          eventCreator: this.state.eventCreator,
+          venueName: this.state.venueName,
+          date: this.state.date,
+          time: this.state.time,
+          datesRange: this.state.datesRange,
+          streetAddress: this.state.streetAddress,
+          city: this.state.city,
+          state: this.state.state,
+          country: this.state.country,
+          about: this.state.about
+      }, (res) => {
+        console.log(res)
+        if(res.err) {
+          return alert('Opps Error')
+        }else{
+          alert('Saved')
+        }
+
+      })
+    }
+
+    onEventNameChange = (event) => {
+      this.setState({
+        eventName: event.target.value
+      })
+    }
+
+    onEventCreatorChange = (event) => {
+      this.setState({
+        eventCreator: event.target.value
+      })
+    }
+
+    onAddressChange = (event) => {
+      this.setState({
+        streetAddress: event.target.value
+      })
+    }
+
+    onCityChange = (event) => {
+      this.setState({
+        city: event.target.value
+      })
+    }
+
+    onStateChange = (event) => {
+      this.setState({
+        state: event.target.value
+      })
+    }
+
+    onCountryChange = (event) => {
+      this.setState({
+        country: event.target.value
+      })
+    }
 
     })
   }
@@ -157,7 +196,8 @@ const delimiters = [KeyCodes.comma, KeyCodes.enter];
   handleChange = (e, { value }) => this.setState({ value })
 
     render() {
-      const{value,tags,suggestions} = this.state
+      
+      const {value,tags,suggestions} = this.state
       return (
         <Form>
           <Form.Group>
@@ -233,47 +273,3 @@ const delimiters = [KeyCodes.comma, KeyCodes.enter];
         </Form>
       );
     }
-  }
-
-
-// export class CreateEvent extends Component {
-//     constructor(props){
-//         super(props)
-//         this.state = {}
-//     }
-
-//     handleChange = (e, { value }) => this.setState({ value })
-
-//     render() {
-//       const { value } = this.state
-//       return (
-
-
-//         <Form >
-//           <Form.Group widths={6}>
-//             <Form.Field control={Input} label='Event Name' placeholder='Event Name' />
-//             <Form.Field control={Input} label='Event Creator' placeholder='Event Creator' />
-//             <Form.Field control={Input} label='Venue Name' placeholder='Venue Name' />
-
-//             <Form.Field control={Input} label='Time' placeholder='Time' />
-//             <Form.Field control={Input} label='Street Address' placeholder='Street Address' />
-//             <Form.Field control={Input} label='City' placeholder='City' />
-//             <Form.Field control={Input} label='State' placeholder='State' />
-//             <Form.Field control={Input} label='Country' placeholder='Country' />
-//             <Form.Field control={Input} label='Venue Name' placeholder='Venue Name' />
-//           </Form.Group>
-
-
-//           <Form.Field control={TextArea} label='About' placeholder='Tell us more about you...' />
-//           <Form.Field control={Checkbox} label='I agree to the Terms and Conditions' />
-//           <Button color = 'grey' className = "logout-button"  animated onClick = {this.onLogout}>
-//             <Button.Content visible>Create Event Go!</Button.Content>
-//                 <Button.Content hidden>
-//                     <Icon name='right arrow'   />
-//                 </Button.Content>
-//             </Button>
-//         </Form>
-
-//       )
-//     }
-// }
