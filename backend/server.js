@@ -23,15 +23,6 @@ const io = socketIO(server);
 
 io.on('connection', (socket) => {
 
-  // socket.on('map', (data, next) => {
-  //     if (!data.user || !data.artist) {
-  //       console.log('error');
-  //     } else if (data.user) {
-  //     res.send(data.user)
-  //   } else if (data.artist) {
-  //     res.send(data.artist)
-  //   }
-  // })
   console.log('connected--------')
   /////////////////////////////////
   // get latitude and longitude
@@ -59,6 +50,62 @@ io.on('connection', (socket) => {
       country: data.country,
       about: data.about
     }).save((err, event) => next({err, event}))
+  })
+
+  socket.on('displayEvents', (data, next) => {
+    event.find({}, (err, results) => {
+      if(err) console.log("error")
+      else {
+        for (var i =0; i<results.length; i++) {
+          var query = results[i].streetAddress + ', ' + results[i].city + ', ' + results[i].state
+          geocoder.search( { q: query } )
+              .then((response) => {
+                  console.log(response)
+                  results[i].latitude = response[0].latitude
+                  results[i].longitude = response[0].longitude
+              }).save((err, event) => next({err, event}))
+              .catch((error) => {
+                  console.log(error)
+            })
+        }
+      }
+    })
+  })
+
+  socket.on('username', username => {
+    if (!username || !username.trim()) {
+      return socket.emit('errorMessage', 'No username!');
+    }
+    socket.username = String(username);
+  });
+
+  socket.on('room', requestedRoom => {
+    if (!socket.username) {
+      return socket.emit('errorMessage', 'Username not set!');
+    }
+    if (!requestedRoom) {
+      return socket.emit('errorMessage', 'No room!');
+    }
+    if (socket.room) {
+      socket.leave(socket.room);
+    }
+    socket.room = requestedRoom;
+    socket.join(requestedRoom, () => {
+      socket.to(requestedRoom).emit('message', {
+        username: 'System',
+        content: `${socket.username} has joined`
+      });
+    });
+  });
+
+  socket.on('message', message => {
+    if (!socket.room) {
+      return socket.emit('errorMessage', 'No rooms joined!');
+    }
+    socket.to(socket.room).emit('message', {
+      username: socket.username,
+      content: message
+    });
   })
 
 })
@@ -154,13 +201,6 @@ app.use('/', routes);
 
 module.exports = app;
 
-
-
-// const server = http.createServer(app);
 server.listen(1337, '127.0.0.1');
 
-console.log('Server running at http://127.0.0.1:3000/');
-
-
-
-// console.log('Server running at http://127.0.0.1:1337/');
+console.log('Server running at http://127.0.0.1:1337/');

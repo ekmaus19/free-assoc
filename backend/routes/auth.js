@@ -108,6 +108,7 @@ module.exports = (passport) => {
 
     router.get('/logout', (req, res) => {
       req.logout();
+      console.log('logged out')
     });
 
     return router;

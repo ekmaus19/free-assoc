@@ -2,6 +2,8 @@ import React, {Component} from 'react';
 import { Card, Icon, Header,Image, Container, Segment, Sidebar, Menu , Grid, Button} from 'semantic-ui-react'
 import {CreateEvent} from './CreateEvent.js'
 import MainMap from './Map';
+import Chat from './Chat';
+import ChatRoom from './ChatRoom';
 
 
 const customStyles = {
@@ -53,7 +55,9 @@ const renderContent=(mode, socket) => { //functional component
     return (
       <div>
         <Header as='h3'>Message</Header>
-        <Image src='https://react.semantic-ui.com/images/wireframe/paragraph.png' />
+        {/* <Image src='https://react.semantic-ui.com/images/wireframe/paragraph.png' /> */}
+        <Chat />
+        <ChatRoom />
       </div>
     )
 
@@ -85,7 +89,7 @@ const SidebarExampleVisible = (props) => (
       <Menu.Item as='a' onClick={()=>{props.setMode('T3')}}>
         <Icon name='search' />
         Scout
-      </Menu.Item >
+      </Menu.Item>
       <Menu.Item as='map' onClick={()=>{ props.setMode('T4');}}>
         <Icon name='map' />
         Map

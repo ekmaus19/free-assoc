@@ -53,7 +53,7 @@ import {
         console.log(res)
         if(res.err) {
           return alert('Opps Error')
-        }else{
+        } else {
           alert('Saved')
         }
 
