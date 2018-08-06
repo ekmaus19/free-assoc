@@ -2,7 +2,11 @@ import React, {Component} from 'react';
 import {Button,Icon, Select,Input} from 'semantic-ui-react';
 
 
+<<<<<<< HEAD
 const url = 'http://2c6d9f7d.ngrok.io'
+=======
+const url = 'https://2f08ada2.ngrok.io'
+>>>>>>> 3c304093df7004e35984863cd308aebd4c68189e
 
 const options = [
     { key: 'art', text: 'Art', value: 'art' },

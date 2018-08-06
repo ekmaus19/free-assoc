@@ -69,11 +69,13 @@ import {
   // }
     render() {
       return (
+
         <Form>
           <Form.Group>
-          <Form.Field control={Input} label='Event Name' placeholder='Event Name' onChange={this.eventName} />
-          <Form.Field control={Input} label='Event Creator' placeholder='Event Creator' onChange={this.eventCreator} />
-        </ Form.Group>
+            <Form.Field control={Input} label='Event Name' placeholder='Event Name' onChange={this.eventName} />
+            <Form.Field control={Input} label='Event Creator' placeholder='Event Creator' onChange={this.eventCreator} />
+          </ Form.Group>
+
           <DateInput
             name="date"
             inline
