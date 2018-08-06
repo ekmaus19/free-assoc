@@ -3,6 +3,7 @@ import { Card, Icon, Header,Image, Container, Segment, Sidebar, Menu , Grid, But
 import {CreateEvent} from './CreateEvent.js'
 import MainMap from './Map';
 
+const url = 'http://09b1c99c.ngrok.io'
 
 const customStyles = {
   content : {
@@ -24,7 +25,7 @@ const renderContent=(mode, socket) => { //functional component
     return (
       <div>
         <Header as='h3'>Events</Header>
-        <Image src='https://react.semantic-ui.com/images/wireframe/paragraph.png' />
+        {/* <ExistingEvent socket={socket}/> */}
       </div>
     )
     case 'T2':
@@ -73,8 +74,8 @@ const SidebarExampleVisible = (props) => (
       vertical
       visible
       inverted
-      width='thin'>
-<<<<<<< HEAD
+      width='thin'
+      >
         <Menu.Item as='a' onClick={()=>{props.setMode('T1')}}>
           <Icon name='file alternate' />
           Events
@@ -101,34 +102,6 @@ const SidebarExampleVisible = (props) => (
 
       <Sidebar.Pusher>
         <Container style={{paddingTop:'20px',paddingLeft:'30px',paddingRight:'185px',width:'100%'}} basic >
-=======
-      <Menu.Item as='a' onClick={()=>{props.setMode('T1')}}>
-        <Icon name='file alternate' />
-        Events
-      </Menu.Item>
-      <Menu.Item as='a' onClick={()=>{props.setMode('T2')}}>
-        <Icon name='edit' />
-        New Event
-      </Menu.Item>
-      <Menu.Item as='a' onClick={()=>{props.setMode('T3')}}>
-        <Icon name='search' />
-        Scout
-      </Menu.Item >
-      <Menu.Item as='map' onClick={()=>{ props.setMode('T4');}}>
-        <Icon name='map' />
-        Map
-      </Menu.Item>
-
-      <Menu.Item as='a' onClick={()=>{props.setMode('T5')}}>
-        <Icon name='chat' />
-        Connect
-      </Menu.Item>
-
-    </Sidebar>
-
-    <Sidebar.Pusher>
-      <Container style={{paddingTop:'20px',paddingLeft:'30px',paddingRight:'185px'}} basic >
->>>>>>> ec965563934a9ea9af33770932733ea17d33f30f
         {renderContent(props.mode, props.socket)}
 
       </Container>
@@ -145,7 +118,22 @@ class ArtistDash extends Component {
     }
   }
 
-  onLogout = () => this.props.redirect('App')
+ 
+  onLogout = () => {
+    console.log('loggingout !!!')
+    fetch(url+'/logout', {
+      method: 'GET',
+    })
+    .then((response) => response.json())
+    .then((responseJson) => {
+      console.log('redirect!!!!')
+      this.props.redirect('Home')
+    })
+    .catch((error) => {
+      console.log(error);
+    })
+  }
+
 
 
   render(){
@@ -153,12 +141,7 @@ class ArtistDash extends Component {
     return(
       <div>
         <Container style={{display:'flex'}}>
-          <Button color = 'grey' className = "logout-button"  animated onClick = {this.onLogout}>
-            <Button.Content visible>Logout</Button.Content>
-            <Button.Content hidden>
-              <Icon name='right arrow'   />
-            </Button.Content>
-          </Button>
+         
         </Container>
         <Container>
           <br />
@@ -190,7 +173,16 @@ class ArtistDash extends Component {
                         22 Friends
                       </a>
                     </Card.Content>
+                    <Button style={{marginLeft:'auto', marginRight:'auto'}} color = 'grey' className = "logout-button"  animated onClick = {this.onLogout}>
+                    <Button.Content visible>Logout</Button.Content>
+                    <Button.Content hidden>
+                      <Icon name='right arrow'   />
+                    </Button.Content>
+                  </Button>
+
                   </Card>
+
+               
                 </Container>
               </Grid.Column>
               <Grid.Column width={12}>

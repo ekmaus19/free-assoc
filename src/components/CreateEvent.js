@@ -142,9 +142,6 @@ const delimiters = [KeyCodes.comma, KeyCodes.enter];
       })
     }
 
-    })
-  }
-
   onEventNameChange = (event) => {
     this.setState({
       eventName: event.target.value
@@ -273,3 +270,5 @@ const delimiters = [KeyCodes.comma, KeyCodes.enter];
         </Form>
       );
     }
+
+  }
