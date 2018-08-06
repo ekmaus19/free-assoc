@@ -78,6 +78,34 @@ const SidebarExampleVisible = (props) => (
       visible
       inverted
       width='thin'>
+<<<<<<< HEAD
+        <Menu.Item as='a' onClick={()=>{props.setMode('T1')}}>
+          <Icon name='file alternate' />
+          Events
+        </Menu.Item>
+        <Menu.Item as='a' onClick={()=>{props.setMode('T2')}}>
+          <Icon name='edit' />
+          New Event
+        </Menu.Item>
+        <Menu.Item as='a' onClick={()=>{props.setMode('T3')}}>
+          <Icon name='search' />
+            Scout
+        </Menu.Item>
+        <Menu.Item as='map' onClick={()=>{props.setMode('T4')}}>
+          <Icon name='map' />
+          Map
+        </Menu.Item>
+
+        <Menu.Item as='a' onClick={()=>{props.setMode('T5')}}>
+          <Icon name='chat' />
+          Connect
+        </Menu.Item>
+
+      </Sidebar>
+
+      <Sidebar.Pusher>
+        <Container style={{paddingTop:'20px',paddingLeft:'30px',paddingRight:'185px',width:'100%'}} basic >
+=======
       <Menu.Item as='a' onClick={()=>{props.setMode('T1')}}>
         <Icon name='file alternate' />
         Events
@@ -104,6 +132,7 @@ const SidebarExampleVisible = (props) => (
 
     <Sidebar.Pusher>
       <Container style={{paddingTop:'20px',paddingLeft:'30px',paddingRight:'185px'}} basic >
+>>>>>>> ec965563934a9ea9af33770932733ea17d33f30f
         {renderContent(props.mode, props.socket)}
 
       </Container>
