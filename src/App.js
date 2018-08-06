@@ -7,14 +7,11 @@ import RegisterScreen from './components/Register';
 import RegisterArtist from './components/RegisterArtist';
 import ArtistDash from './components/ArtistDash';
 import MainMap from './components/Map';
-import {Button, Icon, Input, Menu, Container} from 'semantic-ui-react';
+import {Button, Icon, Input, Menu, Container, Image} from 'semantic-ui-react';
 import io from 'socket.io-client'
 
-<<<<<<< HEAD
-const url = 'http://6e3e6abc.ngrok.io'
-=======
-const url = 'https://2f08ada2.ngrok.io'
->>>>>>> 3c304093df7004e35984863cd308aebd4c68189e
+const url = 'http://09b1c99c.ngrok.io'
+>>>>>>> b1004e8303fcfbbf483a9142d10dc2d71f1bdf16
 
 class App extends Component {
   constructor(props){
@@ -46,15 +43,19 @@ class App extends Component {
                 <Menu.Item as='a'>Ethos</Menu.Item>
                 <Menu.Item as='a'>About</Menu.Item>
                 <Menu.Item as='a'>Careers</Menu.Item>
+
                 <Menu.Item position='right'>
-                    <h2> Free Associations  </h2>
+                      <header style={{marginRight:'auto'}} className="App-header">
+                      <img src={logo} className="App-logo" alt="logo" />
+                       </header>
+                    <h2 style={{marginTop:'auto', marginBottom:'auto'}}>  Free Associations  </h2>
                 </Menu.Item>
 
             </Menu>
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-        </header>
-        <h1 className="App-title">AMP</h1>
+
+         <div style={{width:'25%', height:'25%',alignItems:'center',justifyContent:'center', marginLeft:'auto',marginRight:'auto', marginTop:'40px'}}>
+            <Image src='/img/font.png' />
+        </div>
          {this.state.currentPage === 'Home' ?
           <div>
           <div>
