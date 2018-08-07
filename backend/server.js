@@ -72,8 +72,6 @@ io.on('connection', (socket) => {
     })
   })
 
-  });
-
   //get documents
   socket.on('getEvents', (data, next) => {
     Event
@@ -84,10 +82,7 @@ io.on('connection', (socket) => {
 
   })
 
-
-
-
-})
+});
 
 // socket.on('filterCategory', (data, next) => {
 //   Event.find({about: data.about}, (err, data) => {

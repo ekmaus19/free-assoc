@@ -12,10 +12,7 @@ class Contact extends React.Component {
   }
 
   componentDidMount() {
-<<<<<<< HEAD:src/components/Chat.js
-=======
     console.log('WEEEEEE')
->>>>>>> master:src/components/ContactList.js
     this.state.socket.on('connect', () => {
       console.log('connected to chatroom');
       let username = prompt('enter username')
@@ -41,7 +38,7 @@ class Contact extends React.Component {
         <button className="btn btn-default" onClick={() => this.join("Artist Chatroom")}>
           Contact List
         </button>
-     
+
       </div>
     );
   }
