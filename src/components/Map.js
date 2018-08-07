@@ -6,23 +6,23 @@ import { Button, Input, Grid } from 'semantic-ui-react'
 const Nominatim = require('nominatim-geocoder')
 const geocoder = new Nominatim()
 
-
 const findMe = {
   center: [51.505, -0.09],
   zoom: 13
 }
+const url = "http://324c118e.ngrok.io";
 
 
 ////////////////////  test data to render markers on the page /////////////////////////////////////////////////
 
-// 1. actual data
-const data = [
-  {"key": "1", "about": "music", "eventName":"Stand-Up Paddleboarding Lessons","time":"Ongoing","place":"1200 Clay, San Francisco","venueName":"Boardsports","tags":"Classes & Seminars, Outdoors, Arts", "lat": 37.793663, "long": -122.413103},
-  // {"key": "2", "eventName":"Alcatraz Night Tour","time":"Mondays, Thursdays-Sundays","place":"San Francisco Bay, San Francisco","venueName":"Alcatraz Island","tags":"Tours, Outdoors, Arts"},
-  // {"key": "3", "eventName":"Hiking Yoga","time":"Mondays-Saturdays","place":"Multiple addresses, San Francisco","venueName":"Multiple San Francisco Locations","tags":"Mind & Body, Outdoors, Arts"},
-  // {"key": "4", "eventName":"San Francisco City Guides Walking Tours","time":"Ongoing","place":"Multiple addresses, San Francisco","venueName":"Multiple San Francisco Locations","tags":"History, Tours, Free Events, Arts"},
-  {"key": "5", "about":"art", "eventName":"Permanent Collection","time":"Ongoing, 10 a.m.-7 p.m.","place":"540 Broadway, San Francisco","venueName":"The Beat Museum","tags":"Museum Exhibits & Events, Art - Museums", "lat": 37.798056,"long": -122.406215}
-]
+// // 1. actual data
+// const data = [
+//   {"key": "1", "about": "music", "eventName":"Stand-Up Paddleboarding Lessons","time":"Ongoing","place":"1200 Clay, San Francisco","venueName":"Boardsports","tags":"Classes & Seminars, Outdoors, Arts", "lat": 37.793663, "long": -122.413103},
+//   // {"key": "2", "eventName":"Alcatraz Night Tour","time":"Mondays, Thursdays-Sundays","place":"San Francisco Bay, San Francisco","venueName":"Alcatraz Island","tags":"Tours, Outdoors, Arts"},
+//   // {"key": "3", "eventName":"Hiking Yoga","time":"Mondays-Saturdays","place":"Multiple addresses, San Francisco","venueName":"Multiple San Francisco Locations","tags":"Mind & Body, Outdoors, Arts"},
+//   // {"key": "4", "eventName":"San Francisco City Guides Walking Tours","time":"Ongoing","place":"Multiple addresses, San Francisco","venueName":"Multiple San Francisco Locations","tags":"History, Tours, Free Events, Arts"},
+//   {"key": "5", "about":"art", "eventName":"Permanent Collection","time":"Ongoing, 10 a.m.-7 p.m.","place":"540 Broadway, San Francisco","venueName":"The Beat Museum","tags":"Museum Exhibits & Events, Art - Museums", "lat": 37.798056,"long": -122.406215}
+// ]
 
 
 // 2. fabricated data
@@ -34,18 +34,20 @@ const data = [
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-const TestPopupMarker = ({ eventName, lat, long }) =>(
-   <Marker position={[lat, long]}>
+const TestPopupMarker = ({ eventName, latitude, longitude }) => (
+   <Marker position={[latitude, longitude]}>
      <Popup>{eventName}</Popup>
    </Marker>
  )
 
 const TestMarkerList = ({ data }) => {
-  const items = data.map(({ key, ...props}) => (
-    <TestPopupMarker key={key} {...props}></TestPopupMarker>
+  const items = data.map(({ _id, ...props}) => (
+    <TestPopupMarker key={_id} {...props}></TestPopupMarker>
   ))
   return <div style={{ display: 'none' }}>{items}</div>
 }
+
+let data
 
 export default class MainMap extends Component {
   constructor(props) {
@@ -57,12 +59,44 @@ export default class MainMap extends Component {
           lat: 51.505,
           lng: -0.09,
         },
-        viewport: findMe,
-        about: null,
+        // latlng: {this.props.latlon},
+        viewport: {
+          center: [51.505, -0.09],
+          // center: [this.props.latlon.lat, this.props.latlon.lon],
+          zoom: 13
+        },
+        medium: null,
+
+        data: [],
       }
       this.filterCategory = this.filterCategory.bind(this)
   }
 
+  componentDidMount() {
+    fetch(url+'/events', {
+      method: 'GET',
+    }).then(res => res.json())
+    .then(json => {
+      let data_use = []
+      console.log(json[1])
+      // console.log(json.[1].latitude)
+      for(var i=0; i<json.length; i++) {
+        if(json[i].latitude && json[i].longitude) {
+          json[i].latitude = parseFloat(json[i].latitude)
+          json[i].longitude = parseFloat(json[i].longitude)
+          data_use.push(json[i])
+        }
+      }
+
+      console.log('filtered data ', data_use)
+
+      this.setState({
+        data: data_use
+      })
+    }).catch((err) => {
+      console.log(err)
+    })
+  }
 
   onSearchChange = (event) => {
     this.setState({
@@ -92,18 +126,27 @@ export default class MainMap extends Component {
     e.preventDefault()
     console.log("Events being filetered: ", this.state);
 
-    if(data.indexOf(this.state.about)===-1){
-
-    }
-    // this.props.socket.emit('filterCategory', {
-    //   about: this.state.about
-    // }, (res) => {
-    //   console.log(res)
-    //   if(res.err) {
-    //     return alert('There was an error');
-    //   } else {
-    //     alert('Filter went through.')
+    fetch(url+"/filtered-data", {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        medium:  this.state.about
+      })
+    })
+    // .then(json => {
+    //   let data_use = []
+    //   for(var i=0; i<json.length; i++) {
+    //     if(json[i].latitude && json[i].longitude) {
+    //       json[i].latitude = parseFloat(json[i].latitude)
+    //       json[i].longitude = parseFloat(json[i].longitude)
+    //       data_use.push(json[i])
+    //     }
     //   }
+    //   this.setState({
+    //     data: data_use
+    //   })
     // })
   }
 
@@ -147,45 +190,45 @@ export default class MainMap extends Component {
     ) : null
 
     return (
-      <Grid columns={2} divided>
-        <Grid.Column>
-              <Grid.Row>
-                <Input focus className="placeSearch" placeholder="Find a place..." onChange={this.onSearchChange}/>
-                <Button onClick={this.findPlace}>Search</Button>
-              </Grid.Row>
-
-              <Grid.Row>
-                  <Map
-                    center={this.state.latlng}
-                    length={4}
-                    onLocationfound={this.handleLocationFound}
-                    ref={this.mapRef}
-                    // zoom={15}
-                    viewport={this.state.viewport}>
-                    <TileLayer
-                      attribution="&amp;copy <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
-                      url="https://stamen-tiles-{s}.a.ssl.fastly.net/toner/{z}/{x}/{y}{r}.png"
-                    />
-                    <TestMarkerList data={data}/>
-
-                    {/* past map tile of interest -- kept for reference */}
-
-                    {/* L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
-                      // attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-                      id: 'mapbox.comic',
-                      accessToken: "pk.eyJ1IjoiZWttYXVzMTkiLCJhIjoiY2prYTAyc3JvMXppbjNrbWtmNTI5cmFheSJ9.SRlzG8UvBjRsNKoB1oY56Q"
-                    }).addTo(this.map); */}
-
-                    {marker}
-                  </Map>
-                </Grid.Row>
-        </Grid.Column>
-        <Grid.Column>
+      <Grid >
+        <Grid.Column floated='bottom-right'>
+          <Grid.Row>
+            <Input focus className="placeSearch" placeholder="Find a place..." onChange={this.onSearchChange}/>
+            <Button onClick={this.findPlace}>Search</Button>
+          </Grid.Row>
           <Grid.Row><Button onClick={this.handleClick}>Find Me</Button></Grid.Row>
-          <Grid.Row><Button onClick={(e) => { this.setState({about: "arts"}); this.filterCategory(e); }}>Visual Arts</Button></Grid.Row>
-          <Grid.Row><Button onClick={(e) => { this.setState({about: "music"}); this.filterCategory(e); }}>Music</Button></Grid.Row>
-          <Grid.Row><Button onClick={(e) => { this.setState({about: "performance"}); this.filterCategory(e); }}>Performance</Button></Grid.Row>
-        // </Grid.Column>
+          <Grid.Row>
+            <Button.Group>
+              <Button onClick={(e) => { this.setState({about: "arts"}); this.filterCategory(e); }}>Visual Arts</Button>
+              <Button onClick={(e) => { this.setState({about: "music"}); this.filterCategory(e); }}>Music</Button>
+              <Button onClick={(e) => { this.setState({about: "performance"}); this.filterCategory(e); }}>Performance</Button>
+            </Button.Group>
+          </Grid.Row>
+          <Grid.Row>
+              <Map
+                center={this.state.latlng}
+                length={4}
+                onLocationfound={this.handleLocationFound}
+                ref={this.mapRef}
+                // zoom={15}
+                viewport={this.state.viewport}>
+                <TileLayer
+                  attribution="&amp;copy <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
+                  url="https://stamen-tiles-{s}.a.ssl.fastly.net/toner/{z}/{x}/{y}{r}.png"
+                />
+                <TestMarkerList data={this.state.data}/>
+
+                {/* past map tile of interest -- kept for reference */}
+
+                {/* L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
+                  // attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+                  id: 'mapbox.comic',
+                  accessToken: "pk.eyJ1IjoiZWttYXVzMTkiLCJhIjoiY2prYTAyc3JvMXppbjNrbWtmNTI5cmFheSJ9.SRlzG8UvBjRsNKoB1oY56Q"
+                }).addTo(this.map); */}
+                {marker}
+              </Map>
+            </Grid.Row>
+        </Grid.Column>
     </Grid>
     )
   }

@@ -25,6 +25,7 @@ import {
         city: '',
         state: '',
         country: '',
+        medium: '',
         about: ''
 
       };
@@ -53,6 +54,7 @@ import {
                 city: this.state.city,
                 state: this.state.state,
                 country: this.state.country,
+                medium: this.state.medium,
                 latitude: response[0].lat,
                 longitude: response[0].lon,
                 about: this.state.about
@@ -118,6 +120,12 @@ import {
       })
     }
 
+    onMediumChange = (event) => {
+      this.setState({
+        medium: event.target.value
+      })
+    }
+
       render() {
         return (
           <Form>
@@ -158,6 +166,8 @@ import {
                <Form.Field control={Input} label='Country' placeholder='Country' onChange={this.onCountryChange}/>
                <Form.Field control={Input} label='Venue Name' placeholder='Venue Name' onChange={this.onVenueNameChange}/>
                <Form.Field control={TextArea} label='About' placeholder='Tell us more about you...' onChange={this.onAboutChange} />
+               <Form.Field control={Input} label='Medium' placeholder='Music? Arts? Performance?' onChange={this.onMediumChange} />
+
               </Form.Group>
               <Button style={{display:'flex', alignItems:'center'}} color = 'pink' className = "logout-button"  animated onClick = {this.onCreate}>
                <Button.Content visible>Create Event Go!</Button.Content>

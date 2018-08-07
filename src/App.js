@@ -10,15 +10,19 @@ import MainMap from './components/Map';
 import {Button, Icon, Input, Menu, Container, Image} from 'semantic-ui-react';
 import io from 'socket.io-client'
 
-const url = 'http://666132bb.ngrok.io'
+const url = "http://324c118e.ngrok.io";
 
 class App extends Component {
   constructor(props){
     super(props)
     this.socket = io(url)
-    this.state=({
+    this.state = ({
       currentPage:'Home',
       artist:{},
+      latlon: {
+        lat: null,
+        lon: null,
+      }
     })
   }
 
@@ -28,16 +32,32 @@ class App extends Component {
     })
 }
 
+getLocation() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+          this.setState({
+            latlon:{
+              lat: position.coords.latitude,
+              lon: position.coords.longitude,
+            }
+          })
+        })
+
+        console.log(this.state.latlon)
+    } else {
+        // x.innerHTML = "Geolocation is not supported by this browser.";
+        console.log("something")
+    }
+}
+
 
 
   render() {
-
     return (
       <div className="App">
        <Menu className="menu"
               size='large'
             >
-
                 <Menu.Item as='a' active>Home</Menu.Item>
                 <Menu.Item as='a'>Ethos</Menu.Item>
                 <Menu.Item as='a'>About</Menu.Item>
@@ -58,7 +78,8 @@ class App extends Component {
          {this.state.currentPage === 'Home' ?
           <div>
           <div>
-            <Input size='massive' action={{icon:'search'}} onChange = {this.onNameChange}  className = "field" placeholder = "Events Near Me"/>
+            {/* <Input size='massive' action={{icon:'search'}} onChange = {this.onNameChange}  className = "field" placeholder = "Events Near Me"/> */}
+            <Button onClick = { () => { this.getLocation;  this.redirect("MainMap") } }>Events Near Me</Button>
             <br/>
             <h2>or</h2>
             <Input size='massive' action='GO!' onChange = {this.onPassChange}  className = "field" placeholder = "...City Name"/>
@@ -84,7 +105,7 @@ class App extends Component {
           {this.state.currentPage === 'RegisterUser' ? <div><RegisterScreen redirect={(e) => this.redirect(e)}/></div> : null}
           {this.state.currentPage === 'RegisterArtist' ? <div><RegisterArtist redirect={(e) => this.redirect(e)}/></div> : null}
           {this.state.currentPage === 'ArtistDash' ? <div><ArtistDash socket={this.socket} artist={this.state.artist} redirect={(e) => this.redirect(e)}/></div> : null}
-          {this.state.currentPage === 'MainMap' ? <div><MainMap redirect={(e) => this.redirect(e)}/></div> : null}
+          {this.state.currentPage === 'MainMap' ? <div><MainMap latlon={this.state.latlon} redirect={(e) => this.redirect(e)}/></div> : null}
       </div>
     );
   }
