@@ -3,7 +3,7 @@ import { Card, Icon, Header,Image, Container, Segment, Sidebar, Menu , Grid, But
 import {CreateEvent} from './CreateEvent.js'
 import MainMap from './Map';
 import Chat from './Chat';
-import ChatRoom from './ChatRoom';
+import EventHistory from './EventHistory'
 
 const url = 'http://09b1c99c.ngrok.io'
 
@@ -27,7 +27,7 @@ const renderContent=(mode, socket) => { //functional component
     return (
       <div>
         <Header as='h3'>Events</Header>
-        {/* <ExistingEvent socket={socket}/> */}
+        <EventHistory socket={socket}/>
       </div>
     )
     case 'T2':
@@ -56,16 +56,13 @@ const renderContent=(mode, socket) => { //functional component
     return (
       <div>
         <Header as='h3'>Message</Header>
-        {/* <Image src='https://react.semantic-ui.com/images/wireframe/paragraph.png' /> */}
-        <Chat />
-        <ChatRoom />
+        <Chat socket={socket}/>
       </div>
     )
 
   }
 
 }
-
 
 const SidebarExampleVisible = (props) => (
 
@@ -78,35 +75,7 @@ const SidebarExampleVisible = (props) => (
       vertical
       visible
       inverted
-      width='thin'
-      >
-        <Menu.Item as='a' onClick={()=>{props.setMode('T1')}}>
-          <Icon name='file alternate' />
-          Events
-        </Menu.Item>
-        <Menu.Item as='a' onClick={()=>{props.setMode('T2')}}>
-          <Icon name='edit' />
-          New Event
-        </Menu.Item>
-        <Menu.Item as='a' onClick={()=>{props.setMode('T3')}}>
-          <Icon name='search' />
-            Scout
-        </Menu.Item>
-        <Menu.Item as='map' onClick={()=>{props.setMode('T4')}}>
-          <Icon name='map' />
-          Map
-        </Menu.Item>
-
-        <Menu.Item as='a' onClick={()=>{props.setMode('T5')}}>
-          <Icon name='chat' />
-          Connect
-        </Menu.Item>
-
-      </Sidebar>
-
-      <Sidebar.Pusher>
-        <Container style={{paddingTop:'20px',paddingLeft:'30px',paddingRight:'185px',width:'100%'}} basic >
-
+      width='thin'>
       <Menu.Item as='a' onClick={()=>{props.setMode('T1')}}>
         <Icon name='file alternate' />
         Events
@@ -118,7 +87,7 @@ const SidebarExampleVisible = (props) => (
       <Menu.Item as='a' onClick={()=>{props.setMode('T3')}}>
         <Icon name='search' />
         Scout
-      </Menu.Item>
+      </Menu.Item >
       <Menu.Item as='map' onClick={()=>{ props.setMode('T4');}}>
         <Icon name='map' />
         Map
@@ -139,6 +108,7 @@ const SidebarExampleVisible = (props) => (
     </Sidebar.Pusher>
   </Sidebar.Pushable>
 )
+
 
 class ArtistDash extends Component {
   constructor(props){

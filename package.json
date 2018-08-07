@@ -43,6 +43,7 @@
     "passport-local": "^1.0.0",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
+    "react-grid-gallery": "^0.5.1",
     "react-leaflet": "^2.0.0",
     "react-modal": "^3.5.1",
     "react-redux": "^5.0.7",

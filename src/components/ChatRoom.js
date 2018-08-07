@@ -1,6 +1,5 @@
 import React from 'react';
-import io from 'socket.io-client';
-import Chat from './Chat';
+
 
 class ChatRoom extends React.Component {
   constructor(props) {
