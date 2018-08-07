@@ -83,12 +83,12 @@ class RegisterScreen extends Component {
         <br />
         <Input onChange = {this.onEmailChange} className = "field" placeholder = "Email" validations={[required, email]}/>
         <br />
-        <Input onChange = {this.onPassChange} className = "field" placeholder = "Password" validations={[required]}/>
+        <Input onChange = {this.onPassChange} type='password' className = "field" placeholder = "Password" validations={[required]}/>
         <br />
-        <Input onChange = {this.onConfirmChange} className = "field" placeholder = "Confirm Password" validations={[required]}/>
+        <Input onChange = {this.onConfirmChange} type='password' className = "field" placeholder = "Confirm Password" validations={[required]}/>
         </div>
         <br />
-        <Button color = 'green' className = "register-button"  animated onClick={this.onRegister}>
+        <Button color = 'yellow' className = "register-button"  animated onClick={this.onRegister}>
             <Button.Content visible>Register</Button.Content>
             <Button.Content hidden>
               <Icon name='right arrow' />

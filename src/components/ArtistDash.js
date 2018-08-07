@@ -2,21 +2,11 @@ import React, {Component} from 'react';
 import { Card, Icon, Header,Image, Container, Segment, Sidebar, Menu , Grid, Button} from 'semantic-ui-react'
 import {CreateEvent} from './CreateEvent.js'
 import MainMap from './Map';
-import Chat from './Chat';
-import ChatRoom from './ChatRoom';
+import ContactList from './ContactList';
+import EventHistory from './EventHistory'
 
-const url = 'http://localhost:1337'
+const url = 'http://36ab4809.ngrok.io'
 
-const customStyles = {
-  content : {
-    top                   : '50%',
-    left                  : '50%',
-    right                 : 'auto',
-    bottom                : 'auto',
-    marginRight           : '-50%',
-    transform             : 'translate(-50%, -50%)'
-  }
-};
 
 // toMap = () => this.props.redirect('Map')
 
@@ -27,7 +17,7 @@ const renderContent=(mode, socket) => { //functional component
     return (
       <div>
         <Header as='h3'>Events</Header>
-        {/* <ExistingEvent socket={socket}/> */}
+        <EventHistory artist={this.props.artist} socket={socket}/>
       </div>
     )
     case 'T2':
@@ -56,14 +46,13 @@ const renderContent=(mode, socket) => { //functional component
     return (
       <div>
         <Header as='h3'>Message</Header>
-        <Chat socket={socket} />
+        <ContactList socket={socket}/>
       </div>
     )
 
   }
 
 }
-
 
 const SidebarExampleVisible = (props) => (
 
@@ -117,6 +106,7 @@ class ArtistDash extends Component {
     this.state={
       mode:'T1',
       visible:false,
+
     }
   }
 

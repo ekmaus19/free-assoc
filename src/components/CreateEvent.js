@@ -1,10 +1,9 @@
-import React, {Component} from 'react';
-import { Button, Checkbox, Form, Input, Radio, Grid,Select, TextArea,Icon } from 'semantic-ui-react'
+import React from 'react';
+import { Button,Form, Input, Select,TextArea,Icon } from 'semantic-ui-react'
 import {
-    DateInput,
     TimeInput,
+    DatesRangeInput,
     DateTimeInput,
-    DatesRangeInput
   } from 'semantic-ui-calendar-react';
 import { WithContext as ReactTags } from 'react-tag-input';
 
@@ -14,9 +13,14 @@ const KeyCodes = {
   enter: 13,
 };
  
+const options = [
+  { key: 'art', text: 'Art', value: 'art' },
+  { key: 'music', text: 'Music', value: 'music' },
+  { key: 'performance', text: 'Performance', value: 'performance' },
+]
+
+
 const delimiters = [KeyCodes.comma, KeyCodes.enter];
-
-
 
 
   export class CreateEvent extends React.Component {
@@ -25,11 +29,9 @@ const delimiters = [KeyCodes.comma, KeyCodes.enter];
 
       this.state = {
         eventName: '',
-        eventCreator: '',
         venueName: '',
-        date: '',
+        medium:'',
         time: '',
-        dateTime: '',
         datesRange: '',
         streetAddress: '',
         city: '',
@@ -63,11 +65,18 @@ const delimiters = [KeyCodes.comma, KeyCodes.enter];
 
 
 
-    handleChange = (event, {name, value}) => {
+    handleDateChange = (event, {name, value}) => {
       if (this.state.hasOwnProperty(name)) {
         this.setState({ [name]: value });
       }
     }
+
+    handleTimeChange = (event, {name, value}) => {
+      if (this.state.hasOwnProperty(name)) {
+        this.setState({ [name]: value });
+      }
+    }
+
 
     handleDrag=(tag, currPos, newPos)=>{
       const tags = [...this.state.tags];
@@ -82,12 +91,10 @@ const delimiters = [KeyCodes.comma, KeyCodes.enter];
 
 
   onCreate = () => {
-      // console.log('ON CREATE*********************',this.state)
       this.props.socket.emit('createEvent', {
           eventName: this.state.eventName,
-          eventCreator: this.state.eventCreator,
           venueName: this.state.venueName,
-          date: this.state.date,
+          medium: this.state.medium, 
           time: this.state.time,
           datesRange: this.state.datesRange,
           streetAddress: this.state.streetAddress,
@@ -109,12 +116,6 @@ const delimiters = [KeyCodes.comma, KeyCodes.enter];
     onEventNameChange = (event) => {
       this.setState({
         eventName: event.target.value
-      })
-    }
-
-    onEventCreatorChange = (event) => {
-      this.setState({
-        eventCreator: event.target.value
       })
     }
 
@@ -145,12 +146,6 @@ const delimiters = [KeyCodes.comma, KeyCodes.enter];
   onEventNameChange = (event) => {
     this.setState({
       eventName: event.target.value
-    })
-  }
-
-  onEventCreatorChange = (event) => {
-    this.setState({
-      eventCreator: event.target.value
     })
   }
 
@@ -190,38 +185,24 @@ const delimiters = [KeyCodes.comma, KeyCodes.enter];
     })
   }
  
-  handleChange = (e, { value }) => this.setState({ value })
+  onMediumChange = (event,{value}) => {
+    this.setState({
+        medium: value
+    })
+}   
 
     render() {
       
-      const {value,tags,suggestions} = this.state
+      const {tags,suggestions} = this.state
       return (
         <Form>
           <Form.Group>
           <Form.Field control={Input} label='Event Name' placeholder='Event Name' onChange={this.onEventNameChange} />
-          <Form.Field control={Input} label='Event Creator' placeholder='Event Creator' onChange={this.onEventCreatorChange} />
           <Form.Field control={Input} label='Venue Name' placeholder='Venue Name' onChange={this.onVenueNameChange}/>
         </Form.Group>
         <Form.Group inline>
-          <label>Type</label>
-          <Form.Radio
-            label='Art'
-            value='art'
-            checked={value === 'art'}
-            onChange={this.handleChange}
-          />
-          <Form.Radio
-            label='Music'
-            value='music'
-            checked={value === 'music'}
-            onChange={this.handleChange}
-          />
-          <Form.Radio
-            label='Performance'
-            value='performance'
-            checked={value === 'performance'}
-            onChange={this.handleChange}
-          />
+          <label>Medium</label>
+          <Select style={{width:'100%'}} onChange = {this.onMediumChange} compact options={options} className = "field" />
         </Form.Group>
           From - To
           <DatesRangeInput
@@ -230,16 +211,16 @@ const delimiters = [KeyCodes.comma, KeyCodes.enter];
             placeholder="Date Range"
             value={this.state.datesRange}
             iconPosition="left"
-            onChange={this.handleChange} />
+            onChange={this.handleDateChange} />
             <br />
           Event Time
           <TimeInput
-            inline
-            name="time"
-            placeholder="Time"
-            value={this.state.time}
-            iconPosition="left"
-            onChange={this.handleChange} />
+          inline
+          name="time"
+          placeholder="Time"
+          value={this.state.time}
+          iconPosition="left"
+          onChange={this.handleTimeChange} />
              <br />
             <Form.Field control={TextArea} label='About' placeholder='Tell us a little more about the event...' onChange={this.onAboutChange} />
        

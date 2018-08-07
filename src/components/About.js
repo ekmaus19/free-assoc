@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import {Grid,Image} from 'semantic-ui-react';
 
 class About extends Component {
 

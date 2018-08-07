@@ -78,8 +78,8 @@ const eventSchema = mongoose.Schema({
     required: true
   },
   eventCreator: {
-    type: String,
-    required: true
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Artist'
   },
   medium: {
     type: String,
@@ -87,10 +87,6 @@ const eventSchema = mongoose.Schema({
     enum: ['music', 'art', 'performance']
   },
   venueName: {
-    type: String,
-    required: true
-  },
-  date: {
     type: String,
     required: true
   },

@@ -20,7 +20,6 @@ router.use(validator());
 router.post('/event/create', (req, res) => {
 
   req.checkBody("eventName", "Enter event name").notEmpty();
-  req.checkBody("eventCreator", "Enter event creator").notEmpty();
   req.checkBody("venueName", "Enter venue name").notEmpty();
   req.checkBody("date", "Enter date").notEmpty();
   req.checkBody("date", "Date must be in the future").isAfter();
@@ -31,18 +30,18 @@ router.post('/event/create', (req, res) => {
   req.checkBody("country", "Enter country").notEmpty();
   req.checkBody("city", "Enter city").notEmpty();
 
-  const event = new Event({
-    eventName: req.body.eventName,
-    eventCreator: req.body.eventCreator,
-    venueName: req.body.venueName,
-    date: req.body.date,
-    time: req.body.time,
-    streetAddress: req.body.streetAddress,
-    city: req.body.city,
-    state: req.body.state,
-    country: req.body.country,
-    about: req.body.about
-  })
+    const event = new Event({
+      eventName: req.body.eventName,
+      eventCreator: req.user._id,
+      venueName: req.body.venueName,
+      date: req.body.date,
+      time: req.body.time,
+      streetAddress: req.body.streetAddress,
+      city: req.body.city,
+      state: req.body.state,
+      country: req.body.country,
+      about: req.body.about
+    })
 
   const errors = req.validationErrors();
   if (errors) {

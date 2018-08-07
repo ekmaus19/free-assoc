@@ -74,6 +74,21 @@ io.on('connection', (socket) => {
 
   });
 
+  //get documents
+  socket.on('getEvents', (data, next) => {
+    Event
+    .find({userId: data.userId})
+    .exec(function(err, events) {
+      next({err, events})
+    })
+
+  })
+
+
+
+
+})
+
 // socket.on('filterCategory', (data, next) => {
 //   Event.find({about: data.about}, (err, data) => {
 //     done(err, data);
@@ -167,4 +182,4 @@ module.exports = app;
 
 server.listen(1337, '127.0.0.1');
 
-console.log('Server running at http://127.0.0.1:1337/');
+console.log('Server running at http://127.0.0.1:1337/')

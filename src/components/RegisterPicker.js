@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Button, Icon, Input} from 'semantic-ui-react';
+import {Button, Icon} from 'semantic-ui-react';
 
 class RegisterScreenPicker extends Component {
   constructor(props){
