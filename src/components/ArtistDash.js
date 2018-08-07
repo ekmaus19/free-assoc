@@ -123,16 +123,8 @@ class ArtistDash extends Component {
 
     return(
       <div>
-        <Container style={{display:'flex'}}>
-          <Button color = 'grey' className = "logout-button"  animated onClick = {this.onLogout}>
-            <Button.Content visible>Logout</Button.Content>
-            <Button.Content hidden>
-              <Icon name='right arrow'   />
-            </Button.Content>
-          </Button>
-        </Container>
         <Container>
-          <br />
+          {/* <br /> */}
           <br />
           <Grid>
             <Grid.Row>
@@ -172,7 +164,14 @@ class ArtistDash extends Component {
             </Grid.Row>
           </Grid>
         </Container>
-
+        <Container style={{display:'flex'}}>
+          <Button color = 'grey' className = "logout-button"  animated onClick = {this.onLogout}>
+            <Button.Content visible>Logout</Button.Content>
+            <Button.Content hidden>
+              <Icon name='right arrow'   />
+            </Button.Content>
+          </Button>
+        </Container>
       </div>
     )
   }

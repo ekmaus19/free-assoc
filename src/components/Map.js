@@ -1,6 +1,10 @@
 import React, { createRef, Component } from 'react'
 import { Map, TileLayer, Marker, Popup, CircleMarker, MapControl } from 'react-leaflet'
-import { Button, Input, Grid } from 'semantic-ui-react'
+import { Button, Input, Grid, Segment, Form } from 'semantic-ui-react'
+import url from './backend'
+import L from 'leaflet'
+import DivIcon from 'react-leaflet-div-icon';
+
 
 // ultimately, geocoder will be in the backend. In front for testing purposes
 const Nominatim = require('nominatim-geocoder')
@@ -10,55 +14,91 @@ const findMe = {
   center: [51.505, -0.09],
   zoom: 13
 }
-const url = "http://324c118e.ngrok.io";
-
-
-////////////////////  test data to render markers on the page /////////////////////////////////////////////////
-
-// // 1. actual data
-// const data = [
-//   {"key": "1", "about": "music", "eventName":"Stand-Up Paddleboarding Lessons","time":"Ongoing","place":"1200 Clay, San Francisco","venueName":"Boardsports","tags":"Classes & Seminars, Outdoors, Arts", "lat": 37.793663, "long": -122.413103},
-//   // {"key": "2", "eventName":"Alcatraz Night Tour","time":"Mondays, Thursdays-Sundays","place":"San Francisco Bay, San Francisco","venueName":"Alcatraz Island","tags":"Tours, Outdoors, Arts"},
-//   // {"key": "3", "eventName":"Hiking Yoga","time":"Mondays-Saturdays","place":"Multiple addresses, San Francisco","venueName":"Multiple San Francisco Locations","tags":"Mind & Body, Outdoors, Arts"},
-//   // {"key": "4", "eventName":"San Francisco City Guides Walking Tours","time":"Ongoing","place":"Multiple addresses, San Francisco","venueName":"Multiple San Francisco Locations","tags":"History, Tours, Free Events, Arts"},
-//   {"key": "5", "about":"art", "eventName":"Permanent Collection","time":"Ongoing, 10 a.m.-7 p.m.","place":"540 Broadway, San Francisco","venueName":"The Beat Museum","tags":"Museum Exhibits & Events, Art - Museums", "lat": 37.798056,"long": -122.406215}
-// ]
-
-
-// 2. fabricated data
-// const data = [
-//   { key: 'marker1', "lat": "37.793663", "long": -122.413103, "eventName": 'event1'},
-//   { key: 'marker2', "lat": 37.798056,"long": -122.406215, 'eventName': 'event2' },
-//   { key: 'marker3', "lat": 37.79056,"long": -122.40215, 'eventName': 'event3' },
-// ]
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-const TestPopupMarker = ({ eventName, latitude, longitude }) => (
-   <Marker position={[latitude, longitude]}>
-     <Popup>{eventName}</Popup>
+// popup work
+
+const pink_button = "https://webiconspng.com/wp-content/uploads/2017/09/Clothes-Button-PNG-Image-12924.png"
+const blue_button = "http://purepng.com/public/uploads/large/purepng.com-blue-sewing-button-with-4-holecloth-buttonspatternsewingsewing-accessoriesclip-artblue-1421526305532cwfxq.png"
+const green_button = "http://purepng.com/public/uploads/large/purepng.com-greent-round-buttoncloth-buttonspatternsewingsewing-accessoriesgreenclipart-14215263044871jstt.png"
+
+const iconsImages = [pink_button, blue_button, green_button]
+const icons = []
+for(var i=0; i < iconsImages.length ; i++) {
+  var iconMake = L.icon({
+    iconUrl: icons[i],
+    iconSize: [38, 95], // size of the icon
+    popupAnchor: [0,-15]
+    });
+
+  icons.push(iconMake)
+}
+
+const iconUse = (medium) => {
+  if(medium === "art") {
+    return  icons[2]
+  } else if (medium === 'performance') {
+    return icons[0]
+  } else if (medium === 'music') {
+    return icons[1]
+  }
+}
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+let splitStreet
+let splitCity
+let splitState
+
+const filterIcon = (medium) => {
+  if(medium === "art") {
+    return L.icon({ iconUrl: blue_button, iconSize: [25, 25] })
+  } else if (medium === 'performance') {
+    return L.icon({ iconUrl: pink_button, iconSize: [25, 25] })
+  } else if (medium === 'music') {
+    return L.icon({ iconUrl: green_button, iconSize: [25, 25] })
+  }
+}
+
+const customMarker = L.icon({ iconUrl: pink_button, iconSize: [25, 25] })
+const TestPopupMarker = ({ eventName, eventOrganizer, venueName, streetAddress, city, state, latitude, longitude, medium, latlng }) => (
+   <Marker icon={customMarker} position={[latitude, longitude]}>
+     <script>{console.log(latlng)} </script>
+
+     {/* ////////////////////////////// THIS //////////////////////////////// */}
+     <script>{ splitStreet = streetAddress.split(' ').join('+') } </script>
+     <script>{ splitCity = city.split(' ').join('+') } </script>
+     <script>{ splitState = state.split(' ').join('+') } </script>
+
+
+     <Popup>
+       <b>{eventName}</b><br/>
+       <b>{venueName}</b><br/>
+       Address: {streetAddress + ', '+ city}<br/>
+{/* https://www.google.com/maps/dir/SFO,+San+Francisco,+CA/AMC+Van+Ness+14,+Van+Ness+Avenue,+San+Francisco,+CA/@37.6957396,-122.4952311,12z/ */}
+
+     <Form action={"https://www.google.com/maps/dir/"+ splitStreet+','+splitCity+','+ splitState +latitude + "," + longitude+ "/@" + latlng.lat + ',' + latlng.lng  +',15z'}><Button size='mini'>Take Me There</Button><Button size='mini'>More</Button></Form>
+     </Popup>
    </Marker>
  )
 
-const TestMarkerList = ({ data }) => {
+const TestMarkerList = ({ data, latlng }) => {
   const items = data.map(({ _id, ...props}) => (
-    <TestPopupMarker key={_id} {...props}></TestPopupMarker>
+    <TestPopupMarker latlng={latlng} key={_id} {...props}></TestPopupMarker>
   ))
   return <div style={{ display: 'none' }}>{items}</div>
 }
-
-let data
 
 export default class MainMap extends Component {
   constructor(props) {
     super(props);
     this.state = {
+        filterArt: true,
+        filterMusic: true,
+        filterPerf: true,
+
         hasLocation: false,
         searchingPlace: null,
-        latlng: {
-          lat: 51.505,
-          lng: -0.09,
-        },
+        latlng: props.latlon ? {lat: props.latlon.lat, lon: props.latlon.lon} : {lat:37.771887, lon: -122.409596},
         // latlng: {this.props.latlon},
         viewport: {
           center: [51.505, -0.09],
@@ -68,9 +108,16 @@ export default class MainMap extends Component {
         medium: null,
 
         data: [],
+
+        userLocation: {
+          streetAddress: '',
+          city: '',
+          state: '',
+        },
       }
       this.filterCategory = this.filterCategory.bind(this)
   }
+
 
   componentDidMount() {
     fetch(url+'/events', {
@@ -98,6 +145,30 @@ export default class MainMap extends Component {
     })
   }
 
+  allData = (e) => {
+    e.preventDefault()
+    fetch(url+'/events', {
+      method: 'GET',
+    }).then(res => res.json())
+    .then(json => {
+      let data_use = []
+      console.log(json[1])
+      // console.log(json.[1].latitude)
+      for(var i=0; i<json.length; i++) {
+        if(json[i].latitude && json[i].longitude) {
+          json[i].latitude = parseFloat(json[i].latitude)
+          json[i].longitude = parseFloat(json[i].longitude)
+          data_use.push(json[i])
+        }
+      }
+      this.setState({
+        data: data_use
+      })
+    }).catch((err) => {
+      console.log(err)
+    })
+  }
+
   onSearchChange = (event) => {
     this.setState({
       searchingPlace: event.target.value
@@ -105,7 +176,6 @@ export default class MainMap extends Component {
   }
 
   findPlace = () => {
-    console.log('we got here at least')
     geocoder.search( { q: this.state.searchingPlace } )
         .then((response) => {
             console.log(response)
@@ -123,19 +193,20 @@ export default class MainMap extends Component {
 
   /// find an event of a given main category: WPS
   filterCategory(e) {
-    e.preventDefault()
-    console.log("Events being filetered: ", this.state);
 
-    fetch(url+"/filtered-data", {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        medium:  this.state.about
-      })
-    })
-    // .then(json => {
+    // e.preventDefault()
+    // console.log("Events being filetered: ", this.state);
+    //
+    // fetch(url + "/filtered-data", {
+    //   method: 'POST',
+    //   headers: {
+    //     'Content-Type': 'application/json'
+    //   },
+    //   body: JSON.stringify({
+    //     medium:  this.state.about
+    //   })
+    // }).then(res => res.json())
+    // .then((json) => {
     //   let data_use = []
     //   for(var i=0; i<json.length; i++) {
     //     if(json[i].latitude && json[i].longitude) {
@@ -158,6 +229,7 @@ export default class MainMap extends Component {
   }
 
   handleLocationFound = e => {
+
     this.setState({
       hasLocation: true,
       latlng: e.latlng,
@@ -165,18 +237,35 @@ export default class MainMap extends Component {
         center: e.latlng,
       },
     })
+
+    geocoder.search( { q: this.state.latlng } )
+        .then((response) => {
+            console.log(response)
+            this.setState({
+              userLocation: {
+                streetAddress:this.state.streetAddress,
+                city: this.state.city,
+                state: this.state.state,
+              }
+            })
+        })
+        .catch((error) => {
+            console.log(error)
+      })
   }
 
-// locating particular cities: WPS
-  // findInputPlace = (e)  => {
-  //   for(var i=0; i< data.length; i++){
-  //     if(data[i].place.indexOf(e.target.value)===-1) {
-  //       this.setState({
-  //
-  //       })
-  //     }
-  //   }
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// if more clicked
+
+  // more = () => {
+  //   <Grid.Column>
+  //     <Grid.Row><Segment></Segment></Grid.Row>
+  //   </Grid.Column>
   // }
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // render the map interface
   render() {
@@ -189,6 +278,19 @@ export default class MainMap extends Component {
       </CircleMarker>
     ) : null
 
+    // copy data
+    let filterData = this.state.data.slice()
+    if(this.state.filterArt===false){
+      filterData=filterData.filter(item => item.about !== "art")
+    }
+    if(this.state.filterMusic===false){
+      filterData=filterData.filter(item => item.about !== "music")
+    }
+    if(this.state.filterPerf===false){
+      filterData=filterData.filter(item => item.about !== "performance")
+    }
+
+
     return (
       <Grid >
         <Grid.Column floated='bottom-right'>
@@ -199,10 +301,11 @@ export default class MainMap extends Component {
           <Grid.Row><Button onClick={this.handleClick}>Find Me</Button></Grid.Row>
           <Grid.Row>
             <Button.Group>
-              <Button onClick={(e) => { this.setState({about: "arts"}); this.filterCategory(e); }}>Visual Arts</Button>
-              <Button onClick={(e) => { this.setState({about: "music"}); this.filterCategory(e); }}>Music</Button>
-              <Button onClick={(e) => { this.setState({about: "performance"}); this.filterCategory(e); }}>Performance</Button>
+              <Button active = {this.state.filterArt ? true : false } onClick={(e) => { this.setState({filterArt: !this.state.filterArt}); }}>Visual Arts</Button>
+              <Button  active = {this.state.filterMusic ? true : false  }  onClick={(e) => { this.setState({filterMusic: !this.state.filterMusic}); }}>Music</Button>
+              <Button active = {this.state.filterPerf ? true : false }  onClick={(e) => { this.setState({filterPerf: !this.state.filterPerf}); }}>Performance</Button>
             </Button.Group>
+            <Button onClick={(e) => {this.allData(e)}}>All Events</Button>
           </Grid.Row>
           <Grid.Row>
               <Map
@@ -216,7 +319,7 @@ export default class MainMap extends Component {
                   attribution="&amp;copy <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
                   url="https://stamen-tiles-{s}.a.ssl.fastly.net/toner/{z}/{x}/{y}{r}.png"
                 />
-                <TestMarkerList data={this.state.data}/>
+                <TestMarkerList data={filterData} latlng={this.state.latlng}/>
 
                 {/* past map tile of interest -- kept for reference */}
 

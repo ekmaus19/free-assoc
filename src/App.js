@@ -10,7 +10,7 @@ import MainMap from './components/Map';
 import {Button, Icon, Input, Menu, Container, Image} from 'semantic-ui-react';
 import io from 'socket.io-client'
 
-const url = "http://324c118e.ngrok.io";
+import url from './components/backend'
 
 class App extends Component {
   constructor(props){
@@ -72,7 +72,7 @@ getLocation() {
 
             </Menu>
 
-         <div style={{width:'25%', height:'25%',alignItems:'center',justifyContent:'center', marginLeft:'auto',marginRight:'auto', marginTop:'40px'}}>
+         <div style={{width:'15%', height:'10%',alignItems:'center',justifyContent:'center', marginLeft:'auto',marginRight:'auto', marginTop:'20px'}}>
             <Image src='/img/font.png' />
         </div>
          {this.state.currentPage === 'Home' ?

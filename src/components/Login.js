@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {Button, Icon, Input} from 'semantic-ui-react';
 import {connect} from 'react-redux';
 
-const url = "http://324c118e.ngrok.io";
+import url from './backend'
 
 class LoginScreen extends Component {
   constructor(props){

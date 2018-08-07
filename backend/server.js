@@ -172,10 +172,13 @@ app.get('/events', function (req, res) {
   })
 });
 
-app.post('filtered-data', function(req, res) {
-  Event.find({medium: req.medium}, (err, results) => {
+app.post('/filtered-data', function(req, res) {
+  Event.find({about: req.body.medium}, (err, results) => {
     if(err) console.log(err);
-    else res.json(results)
+    else {
+      console.log("from backend --------------------->",results)
+      return res.json(results)
+    }
   })
 })
 
