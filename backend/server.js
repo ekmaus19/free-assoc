@@ -72,43 +72,7 @@ io.on('connection', (socket) => {
     })
   })
 
-  socket.on('username', username => {
-    if (!username || !username.trim()) {
-      return socket.emit('errorMessage', 'No username!');
-    }
-    socket.username = String(username);
   });
-
-  socket.on('room', requestedRoom => {
-    if (!socket.username) {
-      return socket.emit('errorMessage', 'Username not set!');
-    }
-    if (!requestedRoom) {
-      return socket.emit('errorMessage', 'No room!');
-    }
-    if (socket.room) {
-      socket.leave(socket.room);
-    }
-    socket.room = requestedRoom;
-    socket.join(requestedRoom, () => {
-      socket.to(requestedRoom).emit('message', {
-        username: 'System',
-        content: `${socket.username} has joined`
-      });
-    });
-  });
-
-  socket.on('message', message => {
-    if (!socket.room) {
-      return socket.emit('errorMessage', 'No rooms joined!');
-    }
-    socket.to(socket.room).emit('message', {
-      username: socket.username,
-      content: message
-    });
-  })
-
-})
 
 // socket.on('filterCategory', (data, next) => {
 //   Event.find({about: data.about}, (err, data) => {
@@ -165,7 +129,7 @@ passport.deserializeUser((id, done) => {
 });
 
 // Passport User Strategy
-passport.use('user', new LocalStrategy(
+passport.use('user', new LocalStrategy (
   (username, password, done) => {
     User.findOne({ username }, (err, user) => {
       if (err) { return done(err); }
@@ -181,7 +145,7 @@ passport.use('user', new LocalStrategy(
 ));
 
 // Passport Artist Strategy
-passport.use('artist', new LocalStrategy(
+passport.use('artist', new LocalStrategy (
   (username, password, done) => {
     Artist.findOne({ username }, (err, artist) => {
       if (err) { return done(err); }

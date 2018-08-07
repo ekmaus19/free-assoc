@@ -13,9 +13,8 @@ class Chat extends React.Component {
   }
 
   componentDidMount() {
-    // WebSockets Receiving Event Handlers
     this.state.socket.on('connect', () => {
-      console.log('connected');
+      console.log('connected to chatroom');
       let username = prompt('enter username')
       this.setState({username: username})
       this.state.socket.emit('username', username)

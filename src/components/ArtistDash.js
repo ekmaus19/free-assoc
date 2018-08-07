@@ -5,7 +5,7 @@ import MainMap from './Map';
 import Chat from './Chat';
 import ChatRoom from './ChatRoom';
 
-const url = 'http://09b1c99c.ngrok.io'
+const url = 'http://localhost:1337'
 
 const customStyles = {
   content : {
@@ -56,9 +56,7 @@ const renderContent=(mode, socket) => { //functional component
     return (
       <div>
         <Header as='h3'>Message</Header>
-        {/* <Image src='https://react.semantic-ui.com/images/wireframe/paragraph.png' /> */}
-        <Chat />
-        <ChatRoom />
+        <Chat socket={socket} />
       </div>
     )
 
@@ -78,35 +76,7 @@ const SidebarExampleVisible = (props) => (
       vertical
       visible
       inverted
-      width='thin'
-      >
-        <Menu.Item as='a' onClick={()=>{props.setMode('T1')}}>
-          <Icon name='file alternate' />
-          Events
-        </Menu.Item>
-        <Menu.Item as='a' onClick={()=>{props.setMode('T2')}}>
-          <Icon name='edit' />
-          New Event
-        </Menu.Item>
-        <Menu.Item as='a' onClick={()=>{props.setMode('T3')}}>
-          <Icon name='search' />
-            Scout
-        </Menu.Item>
-        <Menu.Item as='map' onClick={()=>{props.setMode('T4')}}>
-          <Icon name='map' />
-          Map
-        </Menu.Item>
-
-        <Menu.Item as='a' onClick={()=>{props.setMode('T5')}}>
-          <Icon name='chat' />
-          Connect
-        </Menu.Item>
-
-      </Sidebar>
-
-      <Sidebar.Pusher>
-        <Container style={{paddingTop:'20px',paddingLeft:'30px',paddingRight:'185px',width:'100%'}} basic >
-
+      width='thin'>
       <Menu.Item as='a' onClick={()=>{props.setMode('T1')}}>
         <Icon name='file alternate' />
         Events
@@ -140,6 +110,7 @@ const SidebarExampleVisible = (props) => (
   </Sidebar.Pushable>
 )
 
+
 class ArtistDash extends Component {
   constructor(props){
     super(props)
@@ -149,7 +120,7 @@ class ArtistDash extends Component {
     }
   }
 
- 
+
   onLogout = () => {
     console.log('loggingout !!!')
     fetch(url+'/logout', {
@@ -172,7 +143,7 @@ class ArtistDash extends Component {
     return(
       <div>
         <Container style={{display:'flex'}}>
-         
+
         </Container>
         <Container>
           <br />
@@ -213,7 +184,7 @@ class ArtistDash extends Component {
 
                   </Card>
 
-               
+
                 </Container>
               </Grid.Column>
               <Grid.Column width={12}>

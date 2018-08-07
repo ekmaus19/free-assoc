@@ -12,7 +12,7 @@ import MainMap from './components/Map';
 import {Button, Icon, Input, Menu, Container, Image} from 'semantic-ui-react';
 import io from 'socket.io-client';
 
-const url = 'http://09b1c99c.ngrok.io'
+const url = 'http://localhost:1337'
 
 class App extends Component {
   constructor(props){
@@ -80,8 +80,8 @@ class App extends Component {
           </Button>
 
           </div>: null}
-          {this.state.currentPage === 'Ethos' ? <div><Ethos/></div>:null}  
-          {this.state.currentPage === 'About' ? <div><About/></div>:null}                            
+          {this.state.currentPage === 'Ethos' ? <div><Ethos/></div>:null}
+          {this.state.currentPage === 'About' ? <div><About/></div>:null}
           {this.state.currentPage === 'Login' ? <div><LoginScreen onLogin={this.onLogin} artistInfo={(obj)=>this.setState({artist:obj})} redirect={(e) => this.redirect(e)}/></div> : null}
           {this.state.currentPage === 'Registerpicker' ? <div><RegisterScreenPicker redirect={(e) => this.redirect(e)}/></div> : null}
           {this.state.currentPage === 'RegisterUser' ? <div><RegisterScreen redirect={(e) => this.redirect(e)}/></div> : null}

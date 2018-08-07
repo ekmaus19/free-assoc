@@ -91,29 +91,25 @@ module.exports = (passport) => {
     });
 
     router.post('/login/user', passport.authenticate('user'), (req, res) => {
-      console.log('user logged in');
       res.json({
         success: true,
         user: req.user,
       });
+      console.log('user logged in');
     });
 
     router.post('/login/artist', passport.authenticate('artist'), (req, res) => {
-      console.log('artist logged in');
       res.json({
         success: true,
         artist: req.user,
       });
+      console.log('artist logged in');
     });
 
     router.get('/logout', (req, res) => {
-      console.log('logout!!!!!')
       req.logout();
-<<<<<<< HEAD
       res.send(true)
-=======
       console.log('logged out')
->>>>>>> bf118c6ab7044a655365295ef3d282db9a2adb4c
     });
 
     return router;
