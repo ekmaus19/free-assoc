@@ -41,6 +41,7 @@ io.on('connection', (socket) => {
       eventName: data.eventName,
       eventCreator: data.eventCreator,
       venueName: data.venueName,
+      medium: data.medium,
       date: data.date,
       datesRange: data.datesRange,
       time: data.time,
@@ -72,9 +73,6 @@ io.on('connection', (socket) => {
     })
   })
 
-  });
-
-  //get documents
   socket.on('getEvents', (data, next) => {
     Event
     .find({userId: data.userId})
@@ -85,9 +83,9 @@ io.on('connection', (socket) => {
   })
 
 
+  });
 
 
-})
 
 // socket.on('filterCategory', (data, next) => {
 //   Event.find({about: data.about}, (err, data) => {
