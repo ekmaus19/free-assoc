@@ -9,10 +9,10 @@ import ArtistDash from './components/ArtistDash';
 import About from './components/About';
 import Ethos from './components/Ethos';
 import MainMap from './components/Map';
-import {Button, Icon, Input, Menu, Container, Image} from 'semantic-ui-react';
+import {Button, Icon, Input, Menu, Image} from 'semantic-ui-react';
 import io from 'socket.io-client';
 
-const url = 'http://09b1c99c.ngrok.io'
+const url = 'http://36ab4809.ngrok.io'
 
 class App extends Component {
   constructor(props){
@@ -21,12 +21,13 @@ class App extends Component {
     this.state=({
       currentPage:'Home',
       artist:{},
+      userId: '', 
     })
   }
 
   redirect(page){
     this.setState({
-      currentPage: page
+      currentPage: page,
     })
 }
 

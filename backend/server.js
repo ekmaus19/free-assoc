@@ -79,34 +79,18 @@ io.on('connection', (socket) => {
     socket.username = String(username);
   });
 
-  socket.on('room', requestedRoom => {
-    if (!socket.username) {
-      return socket.emit('errorMessage', 'Username not set!');
-    }
-    if (!requestedRoom) {
-      return socket.emit('errorMessage', 'No room!');
-    }
-    if (socket.room) {
-      socket.leave(socket.room);
-    }
-    socket.room = requestedRoom;
-    socket.join(requestedRoom, () => {
-      socket.to(requestedRoom).emit('message', {
-        username: 'System',
-        content: `${socket.username} has joined`
-      });
-    });
-  });
+  //get documents 
+  socket.on('getEvents', (data, next) => {
+    Event
+    .find({userId: data.userId})
+    .exec(function(err, events) {
+      next({err, events})
+    })
 
-  socket.on('message', message => {
-    if (!socket.room) {
-      return socket.emit('errorMessage', 'No rooms joined!');
-    }
-    socket.to(socket.room).emit('message', {
-      username: socket.username,
-      content: message
-    });
   })
+  
+
+
 
 })
 
@@ -203,4 +187,4 @@ module.exports = app;
 
 server.listen(1337, '127.0.0.1');
 
-console.log('Server running at http://127.0.0.1:1337/');
+console.log('Server running at http://127.0.0.1:1337/')

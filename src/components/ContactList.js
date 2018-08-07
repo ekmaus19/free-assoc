@@ -1,13 +1,12 @@
 import React from 'react';
 import io from 'socket.io-client';
-import ChatRoom from './ChatRoom';
 
-class Chat extends React.Component {
+
+class Contact extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       socket: io(),
-      roomName: "Artist Chatroom",
       username: ''
     };
   }
@@ -37,13 +36,12 @@ class Chat extends React.Component {
       <div>
         <h1>Chat</h1>
         <button className="btn btn-default" onClick={() => this.join("Artist Chatroom")}>
-          Join the Artist Chatroom
+          Contact List
         </button>
-        <ChatRoom socket = {this.props.socket} roomName = {this.state.roomName}
-          username = {this.state.username}/>
+     
       </div>
     );
   }
 }
 
-export default Chat;
+export default Contact;
