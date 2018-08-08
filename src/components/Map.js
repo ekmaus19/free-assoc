@@ -8,6 +8,8 @@ import DivIcon from 'react-leaflet-div-icon';
 
 // ultimately, geocoder will be in the backend. In front for testing purposes
 const Nominatim = require('nominatim-geocoder')
+var geocoderReverse = require('geocoder');
+
 const geocoder = new Nominatim()
 
 const findMe = {
@@ -45,9 +47,8 @@ const iconUse = (medium) => {
   }
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-let splitStreet
-let splitCity
-let splitState
+let splitUserLoc
+
 
 const filterIcon = (medium) => {
   if(medium === "art") {
@@ -60,14 +61,13 @@ const filterIcon = (medium) => {
 }
 
 const customMarker = L.icon({ iconUrl: pink_button, iconSize: [25, 25] })
-const TestPopupMarker = ({ eventName, eventOrganizer, venueName, streetAddress, city, state, latitude, longitude, medium, latlng }) => (
+const TestPopupMarker = ({ eventName, eventOrganizer, venueName, streetAddress, city, state, latitude, longitude, medium, latlng, userLocation }) => (
    <Marker icon={customMarker} position={[latitude, longitude]}>
-     <script>{console.log(latlng)} </script>
+     <script>{console.log('user location ---------------->', userLocation)} </script>
 
      {/* ////////////////////////////// THIS //////////////////////////////// */}
-     <script>{ splitStreet = streetAddress.split(' ').join('+') } </script>
-     <script>{ splitCity = city.split(' ').join('+') } </script>
-     <script>{ splitState = state.split(' ').join('+') } </script>
+     <script>{ splitUserLoc = userLocation.split(' ').join('+') } </script>
+
 
 
      <Popup>
@@ -76,14 +76,14 @@ const TestPopupMarker = ({ eventName, eventOrganizer, venueName, streetAddress, 
        Address: {streetAddress + ', '+ city}<br/>
 {/* https://www.google.com/maps/dir/SFO,+San+Francisco,+CA/AMC+Van+Ness+14,+Van+Ness+Avenue,+San+Francisco,+CA/@37.6957396,-122.4952311,12z/ */}
 
-     <Form action={"https://www.google.com/maps/dir/"+ splitStreet+','+splitCity+','+ splitState +latitude + "," + longitude+ "/@" + latlng.lat + ',' + latlng.lng  +',15z'}><Button size='mini'>Take Me There</Button><Button size='mini'>More</Button></Form>
+      <Form action={"https://www.google.com/maps/dir/"+ latitude + "," + longitude + '/' + splitUserLoc +"/@" + latlng.lat + ',' + latlng.lng  +',15z'}><Button size='mini'>Take Me There</Button><Button size='mini'>More</Button></Form>
      </Popup>
    </Marker>
  )
 
-const TestMarkerList = ({ data, latlng }) => {
+const TestMarkerList = ({ data, latlng, userLocation }) => {
   const items = data.map(({ _id, ...props}) => (
-    <TestPopupMarker latlng={latlng} key={_id} {...props}></TestPopupMarker>
+    <TestPopupMarker userLocation={userLocation} latlng={latlng} key={_id} {...props}></TestPopupMarker>
   ))
   return <div style={{ display: 'none' }}>{items}</div>
 }
@@ -92,14 +92,17 @@ export default class MainMap extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      // for event sorting on the map
         filterArt: true,
         filterMusic: true,
         filterPerf: true,
 
+      // for displaying all of the different places
         hasLocation: false,
         searchingPlace: null,
         latlng: props.latlon ? {lat: props.latlon.lat, lon: props.latlon.lon} : {lat:37.771887, lon: -122.409596},
-        // latlng: {this.props.latlon},
+
+      // latlng: {this.props.latlon},
         viewport: {
           center: [51.505, -0.09],
           // center: [this.props.latlon.lat, this.props.latlon.lon],
@@ -109,17 +112,15 @@ export default class MainMap extends Component {
 
         data: [],
 
-        userLocation: {
-          streetAddress: '',
-          city: '',
-          state: '',
-        },
+        userLocation: ''
       }
-      this.filterCategory = this.filterCategory.bind(this)
   }
 
 
   componentDidMount() {
+
+    this.mapRef.current.leafletElement.locate()
+
     fetch(url+'/events', {
       method: 'GET',
     }).then(res => res.json())
@@ -137,30 +138,6 @@ export default class MainMap extends Component {
 
       console.log('filtered data ', data_use)
 
-      this.setState({
-        data: data_use
-      })
-    }).catch((err) => {
-      console.log(err)
-    })
-  }
-
-  allData = (e) => {
-    e.preventDefault()
-    fetch(url+'/events', {
-      method: 'GET',
-    }).then(res => res.json())
-    .then(json => {
-      let data_use = []
-      console.log(json[1])
-      // console.log(json.[1].latitude)
-      for(var i=0; i<json.length; i++) {
-        if(json[i].latitude && json[i].longitude) {
-          json[i].latitude = parseFloat(json[i].latitude)
-          json[i].longitude = parseFloat(json[i].longitude)
-          data_use.push(json[i])
-        }
-      }
       this.setState({
         data: data_use
       })
@@ -191,36 +168,6 @@ export default class MainMap extends Component {
       })
   }
 
-  /// find an event of a given main category: WPS
-  filterCategory(e) {
-
-    // e.preventDefault()
-    // console.log("Events being filetered: ", this.state);
-    //
-    // fetch(url + "/filtered-data", {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json'
-    //   },
-    //   body: JSON.stringify({
-    //     medium:  this.state.about
-    //   })
-    // }).then(res => res.json())
-    // .then((json) => {
-    //   let data_use = []
-    //   for(var i=0; i<json.length; i++) {
-    //     if(json[i].latitude && json[i].longitude) {
-    //       json[i].latitude = parseFloat(json[i].latitude)
-    //       json[i].longitude = parseFloat(json[i].longitude)
-    //       data_use.push(json[i])
-    //     }
-    //   }
-    //   this.setState({
-    //     data: data_use
-    //   })
-    // })
-  }
-
   mapRef = createRef()
 
 // determine location of present user
@@ -229,7 +176,6 @@ export default class MainMap extends Component {
   }
 
   handleLocationFound = e => {
-
     this.setState({
       hasLocation: true,
       latlng: e.latlng,
@@ -238,20 +184,25 @@ export default class MainMap extends Component {
       },
     })
 
-    geocoder.search( { q: this.state.latlng } )
-        .then((response) => {
-            console.log(response)
-            this.setState({
-              userLocation: {
-                streetAddress:this.state.streetAddress,
-                city: this.state.city,
-                state: this.state.state,
-              }
-            })
-        })
-        .catch((error) => {
-            console.log(error)
-      })
+/// NOT DONE
+  //   geocoderReverse.reverseGeocode( parseFloat(this.state.latlng.lat), parseFloat(this.state.latlng.lon), function( err, response) {
+  //     if(err) {
+  //       console.log( parseFloat(this.state.latlng.lat))
+  //
+  //       console.log('threw an error, ', err)
+  //     } else {
+  //       var address = response.results[0].formatted_address
+  //       var address = address.split(',')
+  //       address = address[0] + ',' + address[1]
+  //
+  //       this.setState({
+  //         userLocation: address
+  //       })
+  //       console.log('did the thing, ', response)
+  //     }
+  //   }
+  // )
+
   }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -273,6 +224,7 @@ export default class MainMap extends Component {
     const marker = this.state.hasLocation ? (
       <CircleMarker center={this.state.latlng} radius={10}>
         <Popup>
+          filterData=filterData.filter(item => item.about !== "music")
           <span>You are here</span>
         </Popup>
       </CircleMarker>
@@ -284,7 +236,6 @@ export default class MainMap extends Component {
       filterData=filterData.filter(item => item.about !== "art")
     }
     if(this.state.filterMusic===false){
-      filterData=filterData.filter(item => item.about !== "music")
     }
     if(this.state.filterPerf===false){
       filterData=filterData.filter(item => item.about !== "performance")
@@ -305,7 +256,6 @@ export default class MainMap extends Component {
               <Button  active = {this.state.filterMusic ? true : false  }  onClick={(e) => { this.setState({filterMusic: !this.state.filterMusic}); }}>Music</Button>
               <Button active = {this.state.filterPerf ? true : false }  onClick={(e) => { this.setState({filterPerf: !this.state.filterPerf}); }}>Performance</Button>
             </Button.Group>
-            <Button onClick={(e) => {this.allData(e)}}>All Events</Button>
           </Grid.Row>
           <Grid.Row>
               <Map
@@ -319,7 +269,7 @@ export default class MainMap extends Component {
                   attribution="&amp;copy <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
                   url="https://stamen-tiles-{s}.a.ssl.fastly.net/toner/{z}/{x}/{y}{r}.png"
                 />
-                <TestMarkerList data={filterData} latlng={this.state.latlng}/>
+                <TestMarkerList data={filterData} latlng={this.state.latlng} userLocation={this.state.userLocation}/>
 
                 {/* past map tile of interest -- kept for reference */}
 
