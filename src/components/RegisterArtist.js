@@ -25,6 +25,9 @@ class RegisterArtist extends Component {
       existingWork: '',
       bio: '',
       tag: [],
+      facebook:'',
+      instagram:'',
+      twitter:''
     }
   }
 
@@ -69,6 +72,23 @@ class RegisterArtist extends Component {
           medium: value
       })
   }
+  onFacebookChange = (event,{value}) => {
+    this.setState({
+        facebook: value
+    })
+}
+
+  onInstagramChange = (event,{value}) => {
+  this.setState({
+      instagram: value
+  })
+  }
+
+  onTwitterChange = (event,{value}) => {
+    this.setState({
+        twitter: value
+    })
+    }
 
   onSampleChange = (event) => {
     this.setState({
@@ -98,7 +118,10 @@ class RegisterArtist extends Component {
           passwordRepeat: this.state.passwordRepeat,
           email: this.state.email,
           existingWork: this.state.existingWork,
-          bio: this.state.bio
+          bio: this.state.bio,
+          facebook: this.state.facebook,
+          instagram: this.state.instagram,
+          twitter: this.state.twitter
         })
       })
       .then((response) => response.json())
@@ -114,7 +137,7 @@ class RegisterArtist extends Component {
 
   render(){
     return (
-      <div>
+      <div style={{width:'70%', marginRight:'auto', marginLeft:'auto'}}>
         <Input style={{width:'190px', marginRight:'20px', marginBottom:'5px'}} onChange = {this.onFirstnameChange}  placeholder='First name' />
         <Input style={{width:'190px'}}  onChange = {this.onLastnameChange}  placeholder='Last name' />
         <div>
@@ -122,9 +145,9 @@ class RegisterArtist extends Component {
         <br />
         <Input onChange = {this.onEmailChange} className = "field" placeholder = "Email"/>
         <br />
-        <Input onChange = {this.onPassChange} className = "field" placeholder = "Password"/>
+        <Input type='password' onChange = {this.onPassChange} className = "field" placeholder = "Password"/>
         <br />
-        <Input onChange = {this.onConfirmChange} className = "field" placeholder = "Confirm Password"/>
+        <Input type='password' onChange = {this.onConfirmChange} className = "field" placeholder = "Confirm Password"/>
         <br />
         <Select style={{width:'400px'}} onChange = {this.onMediumChange} compact options={options} className = "field" placeholder = "Medium"/>
         <br />
@@ -132,9 +155,29 @@ class RegisterArtist extends Component {
         <br />
 
         <Input style={{height:'100px'}} onChange = {this.onBioChange} className = "field" placeholder = "Text us a little about yourself..."/>
-        </div>
         <br />
-        <Button color = 'green' className = "register-button"  animated onClick={this.onRegister}>
+         <div>
+          <Button color='facebook'>
+          <Icon name='facebook' /> Facebook
+          </Button>
+        <Input style={{width:'265px'}} onChange = {this.onFacebookChange} className = "field" placeholder = "Link to Page"/>
+         </div>
+         <div>
+        <Button color='instagram'>
+        <Icon name='instagram' /> Instagram
+        </Button>
+        <Input style={{width:'265px'}} onChange = {this.onInstagramChange} className = "field" placeholder = "Link to Page"/>
+        </div>
+        <div>
+        <Button color='twitter'>
+         <Icon name='twitter' /> Twitter
+        </Button>
+        <Input style={{width:'280px'}} onChange = {this.onTwitterChange} className = "field" placeholder = "Link to Page"/>
+        </div>
+        </div>
+
+        <br />
+        <Button color = 'pink' className = "register-button"  animated onClick={this.onRegister}>
             <Button.Content visible>Register</Button.Content>
             <Button.Content hidden>
               <Icon name='right arrow' />

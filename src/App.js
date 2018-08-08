@@ -6,9 +6,11 @@ import RegisterScreenPicker from './components/RegisterPicker';
 import RegisterScreen from './components/Register';
 import RegisterArtist from './components/RegisterArtist';
 import ArtistDash from './components/ArtistDash';
+import About from './components/About';
+import Ethos from './components/Ethos';
 import MainMap from './components/Map';
-import {Button, Icon, Input, Menu, Container, Image} from 'semantic-ui-react';
-import io from 'socket.io-client'
+import {Button, Icon, Input, Menu, Image} from 'semantic-ui-react';
+import io from 'socket.io-client';
 
 import url from './components/backend'
 
@@ -22,13 +24,15 @@ class App extends Component {
       latlon: {
         lat: null,
         lon: null,
-      }
+      },
+      userId: '',
+
     })
   }
 
   redirect(page){
     this.setState({
-      currentPage: page
+      currentPage: page,
     })
 }
 
@@ -58,9 +62,10 @@ getLocation() {
        <Menu className="menu"
               size='large'
             >
-                <Menu.Item as='a' active>Home</Menu.Item>
-                <Menu.Item as='a'>Ethos</Menu.Item>
-                <Menu.Item as='a'>About</Menu.Item>
+
+                <Menu.Item onClick = {() => this.redirect('Home')} as='a' active>Home</Menu.Item>
+                <Menu.Item onClick = {() => this.redirect('Ethos')} as='a'>Ethos</Menu.Item>
+                <Menu.Item onClick= {()=>this.redirect('About')}as='a'>About</Menu.Item>
                 <Menu.Item as='a'>Careers</Menu.Item>
 
                 <Menu.Item position='right'>
@@ -100,6 +105,8 @@ getLocation() {
           </Button>
 
           </div>: null}
+          {this.state.currentPage === 'Ethos' ? <div><Ethos/></div>:null}
+          {this.state.currentPage === 'About' ? <div><About/></div>:null}
           {this.state.currentPage === 'Login' ? <div><LoginScreen onLogin={this.onLogin} artistInfo={(obj)=>this.setState({artist:obj})} redirect={(e) => this.redirect(e)}/></div> : null}
           {this.state.currentPage === 'Registerpicker' ? <div><RegisterScreenPicker redirect={(e) => this.redirect(e)}/></div> : null}
           {this.state.currentPage === 'RegisterUser' ? <div><RegisterScreen redirect={(e) => this.redirect(e)}/></div> : null}

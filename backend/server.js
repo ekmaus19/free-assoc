@@ -23,15 +23,6 @@ const io = socketIO(server);
 
 io.on('connection', (socket) => {
 
-  // socket.on('map', (data, next) => {
-  //     if (!data.user || !data.artist) {
-  //       console.log('error');
-  //     } else if (data.user) {
-  //     res.send(data.user)
-  //   } else if (data.artist) {
-  //     res.send(data.artist)
-  //   }
-  // })
   console.log('connected--------')
   /////////////////////////////////
   // get latitude and longitude
@@ -50,6 +41,7 @@ io.on('connection', (socket) => {
       eventName: data.eventName,
       eventCreator: data.eventCreator,
       venueName: data.venueName,
+      medium: data.medium,
       date: data.date,
       datesRange: data.datesRange,
       time: data.time,
@@ -63,14 +55,39 @@ io.on('connection', (socket) => {
     }).save((err, event) => next({err, event}))
   })
 
+  socket.on('displayEvents', (data, next) => {
+    event.find({}, (err, results) => {
+      if(err) console.log("error")
+      else {
+        for (var i =0; i<results.length; i++) {
+          var query = results[i].streetAddress + ', ' + results[i].city + ', ' + results[i].state
+          geocoder.search( { q: query } )
+              .then((response) => {
+                  console.log(response)
+                  results[i].latitude = response[0].latitude
+                  results[i].longitude = response[0].longitude
+              }).save((err, event) => next({err, event}))
+              .catch((error) => {
+                  console.log(error)
+            })
+        }
+      }
+    })
+  })
 
-  // socket.on('events', (data, next) => {
-  //     Event.find({}, (err, results) => {
-  //       if(err) console.log("error")
-  //       else {console.log(results) ; return results}
-  //     })
-  //   })
-})
+  socket.on('getEvents', (data, next) => {
+    Event
+    .find({userId: data.userId})
+    .exec(function(err, events) {
+      next({err, events})
+    })
+
+  })
+
+
+  });
+
+
 
 // socket.on('filterCategory', (data, next) => {
 //   Event.find({medium: data.about}, (err, data) => {
@@ -127,7 +144,7 @@ passport.deserializeUser((id, done) => {
 });
 
 // Passport User Strategy
-passport.use('user', new LocalStrategy(
+passport.use('user', new LocalStrategy (
   (username, password, done) => {
     User.findOne({ username }, (err, user) => {
       if (err) { return done(err); }
@@ -143,7 +160,7 @@ passport.use('user', new LocalStrategy(
 ));
 
 // Passport Artist Strategy
-passport.use('artist', new LocalStrategy(
+passport.use('artist', new LocalStrategy (
   (username, password, done) => {
     Artist.findOne({ username }, (err, artist) => {
       if (err) { return done(err); }
@@ -184,13 +201,6 @@ app.post('/filtered-data', function(req, res) {
 
 module.exports = app;
 
-
-
-// const server = http.createServer(app);
 server.listen(1337, '127.0.0.1');
 
-console.log('Server running at http://127.0.0.1:3000/');
-
-
-
-// console.log('Server running at http://127.0.0.1:1337/');
+console.log('Server running at http://127.0.0.1:1337/')

@@ -114,6 +114,20 @@ export default class MainMap extends Component {
       }
   }
 
+// componentDidMount() {
+//   this.props.socket.emit('displayEvents', {
+//     latitude: this.state.latitude,
+//     longitude: this.state.longitude
+//   }, (res) => {
+//     console.log(res)
+//     if(res.err) {
+//       return alert('Error')
+//     } else {
+//       console.log('events displayed')
+//     }
+//   })
+// }
+
 
   componentDidMount() {
 

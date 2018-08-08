@@ -2,29 +2,22 @@ import React, {Component} from 'react';
 import { Card, Icon, Header,Image, Container, Segment, Sidebar, Menu , Grid, Button} from 'semantic-ui-react'
 import {CreateEvent} from './CreateEvent.js'
 import MainMap from './Map';
+import ContactList from './ContactList';
+import EventHistory from './EventHistory'
 
+const url = 'http://36ab4809.ngrok.io'
 
-const customStyles = {
-  content : {
-    top                   : '50%',
-    left                  : '50%',
-    right                 : 'auto',
-    bottom                : 'auto',
-    marginRight           : '-50%',
-    transform             : 'translate(-50%, -50%)'
-  }
-};
 
 // toMap = () => this.props.redirect('Map')
 
 
-const renderContent=(mode, socket) => { //functional component
+const renderContent=(mode, socket, artist) => { //functional component
   switch (mode) {
     case 'T1':
     return (
       <div>
         <Header as='h3'>Events</Header>
-        <Image src='https://react.semantic-ui.com/images/wireframe/paragraph.png' />
+        <EventHistory artist={artist} socket={socket}/>
       </div>
     )
     case 'T2':
@@ -53,14 +46,13 @@ const renderContent=(mode, socket) => { //functional component
     return (
       <div>
         <Header as='h3'>Message</Header>
-        <Image src='https://react.semantic-ui.com/images/wireframe/paragraph.png' />
+        <ContactList socket={socket}/>
       </div>
     )
 
   }
 
 }
-
 
 const SidebarExampleVisible = (props) => (
 
@@ -85,7 +77,7 @@ const SidebarExampleVisible = (props) => (
       <Menu.Item as='a' onClick={()=>{props.setMode('T3')}}>
         <Icon name='search' />
         Scout
-      </Menu.Item >
+      </Menu.Item>
       <Menu.Item as='map' onClick={()=>{ props.setMode('T4');}}>
         <Icon name='map' />
         Map
@@ -100,12 +92,13 @@ const SidebarExampleVisible = (props) => (
 
     <Sidebar.Pusher>
       <Container style={{paddingTop:'20px',paddingLeft:'30px',paddingRight:'185px'}} basic >
-        {renderContent(props.mode, props.socket)}
+        {renderContent(props.mode, props.socket, props.artist)}
 
       </Container>
     </Sidebar.Pusher>
   </Sidebar.Pushable>
 )
+
 
 class ArtistDash extends Component {
   constructor(props){
@@ -113,16 +106,35 @@ class ArtistDash extends Component {
     this.state={
       mode:'T1',
       visible:false,
+
     }
   }
 
-  onLogout = () => this.props.redirect('App')
+
+  onLogout = () => {
+    console.log('loggingout !!!')
+    fetch(url+'/logout', {
+      method: 'GET',
+    })
+    .then((response) => response.json())
+    .then((responseJson) => {
+      console.log('redirect!!!!')
+      this.props.redirect('Home')
+    })
+    .catch((error) => {
+      console.log(error);
+    })
+  }
+
 
 
   render(){
 
     return(
       <div>
+        <Container style={{display:'flex'}}>
+
+        </Container>
         <Container>
           {/* <br /> */}
           <br />
@@ -153,12 +165,21 @@ class ArtistDash extends Component {
                         22 Friends
                       </a>
                     </Card.Content>
+                    <Button style={{marginLeft:'auto', marginRight:'auto'}} color = 'grey' className = "logout-button"  animated onClick = {this.onLogout}>
+                    <Button.Content visible>Logout</Button.Content>
+                    <Button.Content hidden>
+                      <Icon name='right arrow'   />
+                    </Button.Content>
+                  </Button>
+
                   </Card>
+
+
                 </Container>
               </Grid.Column>
               <Grid.Column width={12}>
                 <Container style={{height:'100%'}}  >
-                  <SidebarExampleVisible  socket={this.props.socket} mode={this.state.mode} setMode={(mode)=> {this.setState({mode:mode})}}/>
+                  <SidebarExampleVisible artist={this.props.artist} socket={this.props.socket} mode={this.state.mode} setMode={(mode)=> {this.setState({mode:mode})}}/>
                 </Container>
               </Grid.Column>
             </Grid.Row>
