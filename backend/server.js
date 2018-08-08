@@ -49,7 +49,8 @@ io.on('connection', (socket) => {
       city: data.city,
       state: data.state,
       country: data.country,
-      about: data.about
+      about: data.about,
+      tags: data.tags
     }).save((err, event) => next({err, event}))
   })
 

@@ -1,6 +1,6 @@
 const express = require('express');
 const models = require('../models/models');
-const { Artist, User, Event } = require('../models/models')
+const { Artist, User, Event, Connection } = require('../models/models')
 const router = express.Router();
 const app = express();
 const validator = require('express-validator');
@@ -63,35 +63,60 @@ router.post('/event/create', (req, res) => {
 
 //send connection invite
 router.post('/connect', (req, res) => {
-  Artist.findOne({username: req.body.username}), (err, artist) => {
+  Artist.findOne({username: req.body.username}, (err, artist) => {
+    if (err) {
+      res.send(err)
+    } else {
     const connection = new Connection({
-      requester: req.user._id,
-      invitee: req.body.invitee,
+      requester: "5b62233284dd7663147a4ff3",
+      invitee: artist._id,
     })
     connection.save((err, connection) => {
       if (err) {
         console.log('error', err);
-      }
+        res.send(error)
+      } else {
       console.log('connection invite sent', connection);
       res.json({
         success: true,
         connection: connection
       })
+    }
     })
   }
+})
 });
 
 //accept connection invite
-router.post('/accept', (req, res) => {
-  Connection.findByIdAndUpdate(id, (err, connection) => {
-
-  })
+router.post('/accept/:id', (req, res) => {
+  Connection.findByIdAndUpdate(req.params.id, {status: 'accepted'}, (err, connection) => {
+    console.log('------- 1')
+    if (err) {
+      res.send(err)
+    } else {
+      console.log('------- 2')
+    res.json({
+      success: true,
+      connection: connection
+    })
+    console.log('------- 3')
+    artist.connections.push(connection.requester)
+    artist.save()
+  }
+})
 });
 
 //decline connection invite
-router.post('/decline', (req, res) => {
-  Connection.findByIdAndRemove(id, (err, connection) => {
-
+router.post('/decline/:id', (req, res) => {
+  Connection.findByIdAndUpdate(req.params.id, {status: 'declined'}, (err, connection) => {
+    if (err) {
+      res.send(err)
+    } else {
+    res.json({
+      success: true,
+      connection: connection
+    })
+  }
   })
 });
 

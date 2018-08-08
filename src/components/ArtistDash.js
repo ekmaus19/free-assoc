@@ -5,7 +5,7 @@ import MainMap from './Map';
 import ContactList from './ContactList';
 import EventHistory from './EventHistory'
 
-const url = 'http://36ab4809.ngrok.io'
+const url = 'http://localhost:1337'
 
 
 // toMap = () => this.props.redirect('Map')
