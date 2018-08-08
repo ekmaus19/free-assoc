@@ -73,6 +73,7 @@ const TestPopupMarker = ({ eventName, eventOrganizer, venueName, streetAddress, 
        <b>{venueName}</b><br/>
        Address: {streetAddress + ', '+ city}<br/>
 {/* https://www.google.com/maps/dir/SFO,+San+Francisco,+CA/AMC+Van+Ness+14,+Van+Ness+Avenue,+San+Francisco,+CA/@37.6957396,-122.4952311,12z/ */}
+{/* <Form ><Button size='mini' onClick={window.open("https://www.google.com/maps/dir/"+ latitude + "," + longitude + "/" + splitUserLoc +"/@" + latlng.lat + "," + latlng.lng  + ",15z", "_blank")}>Take Me There</Button><Button size='mini'>More</Button></Form> */}
 
       <Form action={"https://www.google.com/maps/dir/"+ latitude + "," + longitude + '/' + splitUserLoc +"/@" + latlng.lat + ',' + latlng.lng  +',15z'}><Button size='mini'>Take Me There</Button><Button size='mini'>More</Button></Form>
      </Popup>
@@ -88,7 +89,7 @@ const TestMarkerList = ({ data, latlng, userLocation }) => {
 
 export default class MainMap extends Component {
   constructor(props) {
-    
+
     super(props);
     this.state = {
       // for event sorting on the map
@@ -99,7 +100,7 @@ export default class MainMap extends Component {
       // for displaying all of the different places
         hasLocation: false,
         searchingPlace: null,
-        latlng: props.latlon ? {lat: props.latlon.lat, lon: props.latlon.lon} : {lat:37.771887, lon: -122.409596},
+        latlng: props.latlon ? {lat: props.latlon.lat, lon: props.latlon.lon} : {lat:27.773056, lon: -82.639999},
       // latlng: {this.props.latlon},
         viewport: {
           center: [51.505, -0.09],
@@ -110,34 +111,20 @@ export default class MainMap extends Component {
 
         data: [],
 
-        userLocation: ''
+        userLocation: '',
+        cityLatLong: props.latlon ? true : false,
       }
   }
-
-// componentDidMount() {
-//   this.props.socket.emit('displayEvents', {
-//     latitude: this.state.latitude,
-//     longitude: this.state.longitude
-//   }, (res) => {
-//     console.log(res)
-//     if(res.err) {
-//       return alert('Error')
-//     } else {
-//       console.log('events displayed')
-//     }
-//   })
-// }
 
 
   componentDidMount() {
 
-    this.mapRef.current.leafletElement.locate()
-
     fetch(url+'/events', {
       method: 'GET',
     }).then(res => res.json())
-    .then(json => {
+    .then(async json => {
       let data_use = []
+
       console.log(json[1])
       // console.log(json.[1].latitude)
       for(var i=0; i<json.length; i++) {
@@ -148,14 +135,32 @@ export default class MainMap extends Component {
         }
       }
 
-      console.log('filtered data ', data_use)
+      if(!this.props.latlon.lat) {
+        console.log('in 1st choice, near me search')
+        await this.mapRef.current.leafletElement.locate()
+        this.setState({
+          data: data_use
+        })
+      } else {
+        console.log('in else statement')
+        this.setState({
+          viewport: {
+            center: [this.props.latlon.lat, this.props.latlon.lon]
+          },
+          data: data_use
+        })
+      }
 
-      this.setState({
-        data: data_use
-      })
-    }).catch((err) => {
+  }).catch((err) => {
       console.log(err)
     })
+
+    console.log("Map view:", this.state)
+
+    this.mapRef.current.leafletElement.locate()
+
+
+
   }
 
   onSearchChange = (event) => {
