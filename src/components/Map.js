@@ -68,8 +68,6 @@ const TestPopupMarker = ({ eventName, eventOrganizer, venueName, streetAddress, 
      {/* ////////////////////////////// THIS //////////////////////////////// */}
      <script>{ splitUserLoc = userLocation.split(' ').join('+') } </script>
 
-
-
      <Popup>
        <b>{eventName}</b><br/>
        <b>{venueName}</b><br/>
@@ -90,6 +88,7 @@ const TestMarkerList = ({ data, latlng, userLocation }) => {
 
 export default class MainMap extends Component {
   constructor(props) {
+    
     super(props);
     this.state = {
       // for event sorting on the map
@@ -101,7 +100,6 @@ export default class MainMap extends Component {
         hasLocation: false,
         searchingPlace: null,
         latlng: props.latlon ? {lat: props.latlon.lat, lon: props.latlon.lon} : {lat:37.771887, lon: -122.409596},
-
       // latlng: {this.props.latlon},
         viewport: {
           center: [51.505, -0.09],
@@ -240,7 +238,6 @@ export default class MainMap extends Component {
     if(this.state.filterPerf===false){
       filterData=filterData.filter(item => item.about !== "performance")
     }
-
 
     return (
       <Grid >
