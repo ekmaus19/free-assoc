@@ -5,7 +5,7 @@ class Ethos extends Component {
 
     render(){
         return(
-            <div > 
+            <div >
             <h1>Ethos</h1>
             <p>Company Ethos</p>
             </div>

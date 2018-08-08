@@ -6,7 +6,8 @@ import {
     DateTimeInput,
   } from 'semantic-ui-calendar-react';
 import { WithContext as ReactTags } from 'react-tag-input';
-
+const Nominatim = require('nominatim-geocoder')
+const geocoder = new Nominatim()
 //tags
 const KeyCodes = {
   comma: 188,
@@ -37,6 +38,7 @@ const delimiters = [KeyCodes.comma, KeyCodes.enter];
         city: '',
         state: '',
         country: '',
+        medium: '',
         about: '',
         tags: [
 
@@ -91,26 +93,37 @@ const delimiters = [KeyCodes.comma, KeyCodes.enter];
 
 
   onCreate = () => {
-      this.props.socket.emit('createEvent', {
-          eventName: this.state.eventName,
-          venueName: this.state.venueName,
-          medium: this.state.medium,
-          time: this.state.time,
-          datesRange: this.state.datesRange,
-          streetAddress: this.state.streetAddress,
-          city: this.state.city,
-          state: this.state.state,
-          country: this.state.country,
-          about: this.state.about
-      }, (res) => {
-        console.log(res)
-        if(res.err) {
-          return alert('Opps Error')
-        } else {
-          alert('Saved')
-        }
-
-      })
+      // console.log('ON CREATE*********************',this.state)
+      let query = this.state.streetAddress + ', ' + this.state.city + ', ' + this.state.state + ', ' + this.state.country
+      geocoder.search( { q: query} )
+          .then((response) => {
+            this.props.socket.emit('createEvent', {
+                eventName: this.state.eventName,
+                eventCreator: this.state.eventCreator,
+                venueName: this.state.venueName,
+                date: this.state.date,
+                time: this.state.time,
+                datesRange: this.state.datesRange,
+                streetAddress: this.state.streetAddress,
+                city: this.state.city,
+                state: this.state.state,
+                country: this.state.country,
+                medium: this.state.medium,
+                latitude: response[0].lat,
+                longitude: response[0].lon,
+                about: this.state.about
+            }, (res) => {
+              console.log(res)
+              if(res.err) {
+                return alert('Opps Error')
+              } else {
+                alert('Saved')
+              }
+            })
+          })
+          .catch((error) => {
+            console.log("lookit this sexy error, " +error)
+        })
     }
 
     onEventNameChange = (event) => {

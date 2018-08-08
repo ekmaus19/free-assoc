@@ -129,6 +129,10 @@ const eventSchema = mongoose.Schema({
     required: true
   },
   latitude: String,
+  medium: {
+    type: String,
+    required: true,
+  },
   longitude: String,
   tags: Array,
   about: String,
