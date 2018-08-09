@@ -11,20 +11,20 @@ const url = 'http://1c65b18b.ngrok.io'
 // toMap = () => this.props.redirect('Map')
 
 
-const renderContent=(mode, socket, artist, redirect, event) => { //functional component
+const renderContent=(mode, socket, artist, redirect) => { //functional component
   switch (mode) {
     case 'T1':
     return (
       <div>
         <Header as='h2'>Past Events</Header>
-        <EventHistory event={event} artist={artist} socket={socket}/>
+        <EventHistory artist={artist} socket={socket}/>
       </div>
     )
     case 'T2':
     return (
       <div>
         <Header as='h2'>Create Event</Header>
-        <CreateEvent redirect={redirect} socket={socket}/>
+        <CreateEvent redirect={redirect} socket={socket} artist={artist} />
 
       </div>
     )
@@ -92,7 +92,7 @@ const SidebarExampleVisible = (props) => (
 
     <Sidebar.Pusher>
       <Container style={{paddingTop:'20px',paddingLeft:'30px',paddingRight:'185px'}} basic >
-        {renderContent(props.mode, props.socket, props.artist, props.event,props.redirect)}
+        {renderContent(props.mode, props.socket, props.artist,props.redirect)}
 
       </Container>
     </Sidebar.Pusher>
@@ -179,7 +179,7 @@ class ArtistDash extends Component {
               </Grid.Column>
               <Grid.Column width={12}>
                 <Container style={{height:'100%'}}  >
-                  <SidebarExampleVisible event={this.props.event} redirect={this.props.redirect} artist={this.props.artist} socket={this.props.socket} mode={this.state.mode} setMode={(mode)=> {this.setState({mode:mode})}}/>
+                  <SidebarExampleVisible redirect={this.props.redirect} artist={this.props.artist} socket={this.props.socket} mode={this.state.mode} setMode={(mode)=> {this.setState({mode:mode})}}/>
                 </Container>
               </Grid.Column>
             </Grid.Row>

@@ -33,16 +33,18 @@ export default class EventHistory extends React.Component {
   constructor(props) {
     super(props);
     this.state = ({
-      events:[]
+      event:[]
     })
   }
 
   loadEvents=()=> {
     this.props.socket.on('connect', () => this.setState({connecting: null}))
     this.props.socket.on('disconnect', () => this.setState({connecting: true}))
-    this.props.socket.emit('getEvents', {userId: this.props.artist._id}, (res)=> {
+    this.props.socket.emit('getEvents', {userId: this.props.artist._id});
+    this.props.socket.on('getEvents', (res)=> {
+      console.log(res)
       if(res.err) return alert ('Error')
-      this.setState({events: res.events})
+      this.setState({event: res.events})
     })
   }
 
@@ -62,13 +64,13 @@ export default class EventHistory extends React.Component {
         {/* document.getElementById('example-0') */} 
         <Item.Group>
     
-          {/* {this.props.event.map(event =>
+          {this.state.event.map(event =>
 
             <div>
               {event.eventName}
             </div>
             
-          )} */}
+          )}
         </Item.Group> 
       </div> 
     )
