@@ -28,6 +28,7 @@ class App extends Component {
         lon: null,
       },
       userId: '',
+      isArtist: false,
       placeSearch: null,
       placeSearchCoords: {
         lat: null,
@@ -140,8 +141,8 @@ searchPlaceHome = () => {
           {this.state.currentPage === 'Registerpicker' ? <div><RegisterScreenPicker redirect={(e) => this.redirect(e)}/></div> : null}
           {this.state.currentPage === 'RegisterUser' ? <div><RegisterScreen redirect={(e) => this.redirect(e)}/></div> : null}
           {this.state.currentPage === 'RegisterArtist' ? <div><RegisterArtist redirect={(e) => this.redirect(e)}/></div> : null}
-          {this.state.currentPage === 'ArtistDash' ? <div><ArtistDash socket={this.socket} artist={this.state.artist} redirect={(e) => this.redirect(e)}/></div> : null}
-          {this.state.currentPage === 'MainMap' ? <div><MainMap latlon={this.state.placeSearchCoords} redirect={(e) => this.redirect(e)}/></div> : null}
+          {this.state.currentPage === 'ArtistDash' ? <div><ArtistDash socket={this.socket} artist={this.state.artist} isArtist={this.state.isArtist} redirect={(e) => this.redirect(e)}/></div> : null}
+          {this.state.currentPage === 'MainMap' ? <div><MainMap latlon={this.state.placeSearchCoords} isArtist = {this.state.isArtist} redirect={(e) => this.redirect(e)}/></div> : null}
       </div>
     );
   }

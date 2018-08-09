@@ -10,6 +10,7 @@ class LoginScreen extends Component {
     this.state = {
       username: '',
       password: '',
+      isArtist: props.isArtist ? true : false,
     }
   }
 
@@ -40,6 +41,10 @@ class LoginScreen extends Component {
 
   onLoginArtist = () => {
     console.log(url)
+
+    this.setState({
+      isArtist: true,
+    })
 
     fetch(url+'/login/artist', {
       method: 'POST',

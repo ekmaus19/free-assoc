@@ -39,7 +39,7 @@ const renderContent=(mode, socket, artist) => { //functional component
     return (
       <div>
         <Header as='h3'>Map View</Header>
-         <MainMap />
+         <MainMap isArtist={true} />
       </div>
     )
     case 'T5':
