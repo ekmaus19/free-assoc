@@ -61,7 +61,7 @@ router.post('/event/create', (req, res) => {
   }
 });
 
-//send connection invite
+// send connection invite
 router.post('/connect', (req, res) => {
   Artist.findOne({username: req.body.username}, (err, artist) => {
     if (err) {
@@ -90,21 +90,26 @@ router.post('/connect', (req, res) => {
 //accept connection invite
 router.post('/accept/:id', (req, res) => {
   Connection.findByIdAndUpdate(req.params.id, {status: 'accepted'}, (err, connection) => {
-    console.log('------- 1')
     if (err) {
       res.send(err)
     } else {
-      console.log('------- 2')
-    res.json({
-      success: true,
-      connection: connection
+    Artist.findById(connection.requester, (err, artist) => {
+      artist.connections.push(connection.invitee)
+      artist.save((err, artist) => {
+        Artist.findById(connection.invitee, (err, artist) => {
+          artist.connections.push(connection.requester)
+          artist.save((err, artist) => {
+            res.json({
+              success: true,
+              connection: connection
+            })
+          })
+        })
     })
-    console.log('------- 3')
-    artist.connections.push(connection.requester)
-    artist.save()
-  }
+  })
+}
 })
-});
+})
 
 //decline connection invite
 router.post('/decline/:id', (req, res) => {

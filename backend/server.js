@@ -9,7 +9,7 @@ import socketIO from 'socket.io';
 import cors from 'cors';
 
 const models = require('./models/models');
-const { Artist, User, Event } = require('./models/models')
+const { Artist, User, Event, Connection } = require('./models/models')
 
 const routes = require('./routes/routes');
 const auth = require('./routes/auth');

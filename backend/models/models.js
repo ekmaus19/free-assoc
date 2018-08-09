@@ -49,21 +49,10 @@ const artistSchema = mongoose.Schema({
   instagram: String,
   twitter: String,
   tags: Array,
-  // connections: [{
-  //   type: mongoose.Schema.Types.ObjectId,
-  //   ref: 'Artist',
-  // }],
   connections: [{
-    artist: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Artist',
-    },
-    status: {
-      type: String,
-      enum: ['pending', 'accepted', 'declined'],
-      default: 'pending'
-    }
-  }]
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Artist',
+  }],
 });
 
 const userSchema = mongoose.Schema({
@@ -129,39 +118,35 @@ const eventSchema = mongoose.Schema({
     required: true
   },
   latitude: String,
-  medium: {
-    type: String,
-    required: true,
-  },
   longitude: String,
   tags: Array,
   about: String,
 });
 
-// const connectionSchema = mongoose.Schema({
-//   requester: {
-//     type: mongoose.Schema.Types.ObjectId,
-//     ref: 'Artist'
-//   },
-//   invitee: {
-//     type: mongoose.Schema.Types.ObjectId,
-//     ref: 'Artist'
-//   },
-//   status: {
-//     type: String,
-//     enum: ['pending', 'accepted', 'declined'],
-//     default: 'pending'
-//   },
-// });
+const connectionSchema = mongoose.Schema({
+  requester: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Artist'
+  },
+  invitee: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Artist'
+  },
+  status: {
+    type: String,
+    enum: ['pending', 'accepted', 'declined'],
+    default: 'pending'
+  },
+});
 
 const Artist = mongoose.model('Artist', artistSchema);
 const User = mongoose.model('User', userSchema);
 const Event = mongoose.model('Event', eventSchema);
-// const Connection = mongoose.model('Connection', connectionSchema);
+const Connection = mongoose.model('Connection', connectionSchema);
 
 module.exports = {
   Artist,
   User,
   Event,
-  // Connection
+  Connection
 };

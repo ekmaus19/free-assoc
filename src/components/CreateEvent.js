@@ -111,6 +111,7 @@ const delimiters = [KeyCodes.comma, KeyCodes.enter];
                 medium: this.state.medium,
                 latitude: response[0].lat,
                 longitude: response[0].lon,
+                tags: this.state.tags,
                 about: this.state.about
             }, (res) => {
               console.log(res)

@@ -1,1 +1,1 @@
-export default URL="http://ba544790.ngrok.io"
+export default URL="http://localhost:1337"

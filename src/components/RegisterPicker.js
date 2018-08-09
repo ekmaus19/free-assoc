@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {Button, Icon, Input} from 'semantic-ui-react';
-const url = 'http://666132bb.ngrok.io'
+
+import url from './backend'
 
 class RegisterScreenPicker extends Component {
   constructor(props){
