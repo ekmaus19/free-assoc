@@ -39,6 +39,8 @@ class LoginScreen extends Component {
   }
 
   onLoginArtist = () => {
+    console.log(url)
+
     fetch(url+'/login/artist', {
       method: 'POST',
       headers: {

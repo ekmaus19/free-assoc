@@ -5,9 +5,13 @@
 } */
 
 .leaflet-container {
-   height: 500px;
+   height: 800px;
    width: 100%;
 }
+
+/* .map-container {
+  height:
+} */
 
 /* .bottomRight {
   position:"fixed";

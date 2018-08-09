@@ -20,7 +20,7 @@ const KeyCodes = {
   comma: 188,
   enter: 13,
 };
- 
+
 const options = [
   { key: 'art', text: 'Art', value: 'art' },
   { key: 'music', text: 'Music', value: 'music' },
@@ -46,6 +46,7 @@ const delimiters = [KeyCodes.comma, KeyCodes.enter];
         city: '',
         state: '',
         country: '',
+        medium: '',
         about: '',
         tags: [],
       suggestions: [
@@ -58,14 +59,14 @@ const delimiters = [KeyCodes.comma, KeyCodes.enter];
        ]
       };
     }
-    
+
     handleDelete=(i)=> {
       const {tags} = this.state
       this.setState({
         tags: tags.filter((tag,index)=> index !==i)
       })
     }
-    
+
     handleAddition=(tag)=>{
       this.setState(state=> ({tags:[...state.tags,tag]}))
     }
@@ -207,12 +208,12 @@ const delimiters = [KeyCodes.comma, KeyCodes.enter];
       about: event.target.value
     })
   }
- 
+
   onMediumChange = (event,{value}) => {
     this.setState({
         medium: value
     })
-}   
+}
 
   fileSelectedHandler=(event)=>{
     this.setState({
@@ -223,7 +224,7 @@ const delimiters = [KeyCodes.comma, KeyCodes.enter];
  
 
     render() {
-      
+
       const {tags,suggestions} = this.state
       return (
         <Form>
@@ -255,17 +256,17 @@ const delimiters = [KeyCodes.comma, KeyCodes.enter];
           onChange={this.handleTimeChange} />
              <br />
             <Form.Field control={TextArea} label='About' placeholder='Tell us a little more about the event...' onChange={this.onAboutChange} />
-       
-          <br /> 
-        
+
+          <br />
+
              <Form.Field control={Input} label='Street Address' placeholder='Street Address' onChange={this.onAddressChange} />
              <Form.Field control={Input} label='City' placeholder='City' onChange={this.onCityChange}/>
              <Form.Field control={Input} label='State' placeholder='State'  onChange={this.onStateChange}/>
              <Form.Field  control={Input} label='Country' placeholder='Country' onChange={this.onCountryChange}/>
-             
-             <div style={{position:'relative', width:'100%', background:'light-grey'}}> 
-                <ReactTags 
-                
+
+             <div style={{position:'relative', width:'100%', background:'light-grey'}}>
+                <ReactTags
+
                     tags={tags}
                     suggestions={suggestions}
                     handleDelete={this.handleDelete}

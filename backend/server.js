@@ -90,12 +90,12 @@ io.on('connection', (socket) => {
 
 
 // socket.on('filterCategory', (data, next) => {
-//   Event.find({about: data.about}, (err, data) => {
-//     done(err, data);
+//   Event.find({medium: data.about}, (err, data) => {
+//       done(err, data);
+//     })
 //   })
-// })
 
-// })
+
 
 app.use(session({
   secret: process.env.SECRET,
@@ -180,6 +180,27 @@ passport.use('artist', new LocalStrategy (
 
 app.use('/', auth(passport));
 app.use('/', routes);
+
+app.get('/events', function (req, res) {
+  console.log("are we there yet")
+  Event.find({}, (err, results) => {
+    if(err) console.log("a terrible horrible error")
+    else {
+      console.log(results)
+      return res.json(results)
+    }
+  })
+});
+
+app.post('/filtered-data', function(req, res) {
+  Event.find({about: req.body.medium}, (err, results) => {
+    if(err) console.log(err);
+    else {
+      console.log("from backend --------------------->",results)
+      return res.json(results)
+    }
+  })
+})
 
 module.exports = app;
 
