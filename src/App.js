@@ -149,14 +149,9 @@ searchPlaceHome = () => {
           {this.state.currentPage === 'Registerpicker' ? <div><RegisterScreenPicker redirect={(e) => this.redirect(e)}/></div> : null}
           {this.state.currentPage === 'RegisterUser' ? <div><RegisterScreen redirect={(e) => this.redirect(e)}/></div> : null}
           {this.state.currentPage === 'RegisterArtist' ? <div><RegisterArtist redirect={(e) => this.redirect(e)}/></div> : null}
-<<<<<<< HEAD
           {this.state.currentPage === 'ArtistDash' ? <div><ArtistDash socket={this.socket} event={this.state.event} artist={this.state.artist} redirect={(e) => this.redirect(e)}/></div> : null}
-          {this.state.currentPage === 'MainMap' ? <div><MainMap socket={this.socket} redirect={(e) => this.redirect(e)}/></div> : null}
+          {this.state.currentPage === 'MainMap' ? <div><MainMap latlon={this.state.placeSearchCoords} socket={this.socket} redirect={(e) => this.redirect(e)}/></div> : null}
 
-=======
-          {this.state.currentPage === 'ArtistDash' ? <div><ArtistDash socket={this.socket} artist={this.state.artist} redirect={(e) => this.redirect(e)}/></div> : null}
-          {this.state.currentPage === 'MainMap' ? <div><MainMap latlon={this.state.placeSearchCoords} redirect={(e) => this.redirect(e)}/></div> : null}
->>>>>>> f30a75ad04c0edbeef642421ac878ac33acda663
       </div>
     );
   }
