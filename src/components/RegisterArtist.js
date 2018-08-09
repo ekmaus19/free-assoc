@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {Button,Icon, Select,Input} from 'semantic-ui-react';
 
 
-import url from './backend'
+const url = "http://localhost:1337"
 
 
 const options = [
