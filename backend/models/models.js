@@ -73,6 +73,10 @@ const userSchema = mongoose.Schema({
 });
 
 const eventSchema = mongoose.Schema({
+  img: {
+    data:Buffer,
+    contentType:String,
+  },
   eventName: {
     type: String,
     required: true
@@ -119,6 +123,10 @@ const eventSchema = mongoose.Schema({
   about: String,
 });
 
+
+
+ 
+
 const connectionSchema = mongoose.Schema({
   requester: {
     type: mongoose.Schema.Types.ObjectId,
@@ -144,5 +152,5 @@ module.exports = {
   Artist,
   User,
   Event,
-  Connection
+  Connection,
 };

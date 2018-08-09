@@ -1,11 +1,19 @@
 import React from 'react';
-import { Button,Form, Input, Select,TextArea,Icon } from 'semantic-ui-react'
+import { Container,Button,Form, Input, Select,TextArea,Icon } from 'semantic-ui-react'
 import {
     TimeInput,
     DatesRangeInput,
     DateTimeInput,
   } from 'semantic-ui-calendar-react';
 import { WithContext as ReactTags } from 'react-tag-input';
+import axios from 'axios';
+import {EventHistory} from './EventHistory'
+import cors from 'cors';
+const Nominatim = require('nominatim-geocoder')
+const geocoder = new Nominatim({
+  secure: true
+})
+
 
 //tags
 const KeyCodes = {
@@ -28,6 +36,7 @@ const delimiters = [KeyCodes.comma, KeyCodes.enter];
       super(props);
 
       this.state = {
+        selectedFile:null,
         eventName: '',
         venueName: '',
         medium:'',
@@ -38,9 +47,7 @@ const delimiters = [KeyCodes.comma, KeyCodes.enter];
         state: '',
         country: '',
         about: '',
-        tags: [
-   
-       ],
+        tags: [],
       suggestions: [
           { id: 'LGBT', text: 'LGBT' },
           { id: 'Alternative', text: 'Alternative' },
@@ -90,28 +97,44 @@ const delimiters = [KeyCodes.comma, KeyCodes.enter];
   }
 
 
-  onCreate = () => {
-      this.props.socket.emit('createEvent', {
-          eventName: this.state.eventName,
-          venueName: this.state.venueName,
-          medium: this.state.medium, 
-          time: this.state.time,
-          datesRange: this.state.datesRange,
-          streetAddress: this.state.streetAddress,
-          city: this.state.city,
-          state: this.state.state,
-          country: this.state.country,
-          about: this.state.about
-      }, (res) => {
-        console.log(res)
-        if(res.err) {
-          return alert('Opps Error')
-        } else {
-          alert('Saved')
-        }
+  onCreate = (e) => {
+     let query = this.state.streetAddress + ', ' + this.state.city + ', ' + this.state.state + ', ' + this.state.country
+    const createEvent = {
+      eventName: this.state.eventName,
+      venueName: this.state.venueName,
+      medium: this.state.medium, 
+      time: this.state.time,
+      datesRange: this.state.datesRange,
+      streetAddress: this.state.streetAddress,
+      city: this.state.city,
+      state: this.state.state,
+      country: this.state.country,
+      about: this.state.about,
+      tags: this.state.tags 
+  }
+    const { description, selectedFile} = this.state;
+    e.preventDefault();
+    console.log(selectedFile)
+    let formData = new FormData(); 
+    formData.append('info', JSON.stringify(createEvent))
+    formData.append('selectedFile', selectedFile);
+    console.log(query)
 
-      })
+    geocoder.search({q:query})
+    .then((response)=> {
+      
+      formData.append('latitude', response[0].lat)
+      formData.append('longitude', response[0].lon)
+
+      return axios.post('http://localhost:1337/fileUpload', formData)
+    }).then((result)=> {
+      this.props.redirect('EventHistory')
+    }).catch((err)=> {
+      console.log(err)
+    })
+
     }
+
 
     onEventNameChange = (event) => {
       this.setState({
@@ -191,18 +214,27 @@ const delimiters = [KeyCodes.comma, KeyCodes.enter];
     })
 }   
 
+  fileSelectedHandler=(event)=>{
+    this.setState({
+      selectedFile: event.target.files[0]
+    })
+  }
+
+ 
+
     render() {
       
       const {tags,suggestions} = this.state
       return (
         <Form>
-          <Form.Group>
+          <Form.Group style={{display:'flex'}}>
           <Form.Field control={Input} label='Event Name' placeholder='Event Name' onChange={this.onEventNameChange} />
           <Form.Field control={Input} label='Venue Name' placeholder='Venue Name' onChange={this.onVenueNameChange}/>
         </Form.Group>
         <Form.Group inline>
-          <label>Medium</label>
-          <Select style={{width:'100%'}} onChange = {this.onMediumChange} compact options={options} className = "field" />
+           <label>Medium</label>
+           <br /> 
+          <Select label='Medium' style={{width:'100%'}} onChange = {this.onMediumChange} options={options} className = "field" />
         </Form.Group>
           From - To
           <DatesRangeInput
@@ -241,7 +273,11 @@ const delimiters = [KeyCodes.comma, KeyCodes.enter];
                     handleDrag={this.handleDrag}
                     delimiters={delimiters} />
             </div> 
-            
+            <br /> 
+            <div style={{display:'flex'}} > 
+            <Input style={{marginRight:'auto', width:'70%'}} type='file' onChange={this.fileSelectedHandler} /> 
+            </div> 
+            <br />
             <Button style={{margin:'20px',marginLeft:'auto',marginRight:'auto', alignItems:'center'}} color = 'pink' className = "logout-button"  animated onClick = {this.onCreate}>
              <Button.Content visible>Create Event Go!</Button.Content>
                  <Button.Content hidden>

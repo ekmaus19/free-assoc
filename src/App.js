@@ -6,13 +6,14 @@ import RegisterScreenPicker from './components/RegisterPicker';
 import RegisterScreen from './components/Register';
 import RegisterArtist from './components/RegisterArtist';
 import ArtistDash from './components/ArtistDash';
+import {CreateEvent} from './components/CreateEvent';
 import About from './components/About';
 import Ethos from './components/Ethos';
 import MainMap from './components/Map';
 import {Button, Icon, Input, Menu, Image} from 'semantic-ui-react';
 import io from 'socket.io-client';
 
-const url = 'http://localhost:1337'
+const url = 'http://1c65b18b.ngrok.io'
 
 class App extends Component {
   constructor(props){
@@ -22,6 +23,7 @@ class App extends Component {
       currentPage:'Home',
       artist:{},
       userId: '',
+      event:{}
     })
   }
 
@@ -87,7 +89,7 @@ class App extends Component {
           {this.state.currentPage === 'Registerpicker' ? <div><RegisterScreenPicker redirect={(e) => this.redirect(e)}/></div> : null}
           {this.state.currentPage === 'RegisterUser' ? <div><RegisterScreen redirect={(e) => this.redirect(e)}/></div> : null}
           {this.state.currentPage === 'RegisterArtist' ? <div><RegisterArtist redirect={(e) => this.redirect(e)}/></div> : null}
-          {this.state.currentPage === 'ArtistDash' ? <div><ArtistDash socket={this.socket} artist={this.state.artist} redirect={(e) => this.redirect(e)}/></div> : null}
+          {this.state.currentPage === 'ArtistDash' ? <div><ArtistDash socket={this.socket} event={this.state.event} artist={this.state.artist} redirect={(e) => this.redirect(e)}/></div> : null}
           {this.state.currentPage === 'MainMap' ? <div><MainMap socket={this.socket} redirect={(e) => this.redirect(e)}/></div> : null}
 
       </div>

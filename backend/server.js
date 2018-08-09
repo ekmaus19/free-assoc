@@ -8,6 +8,7 @@ import bodyParser from 'body-parser';
 import socketIO from 'socket.io';
 import cors from 'cors';
 
+
 const models = require('./models/models');
 const { Artist, User, Event } = require('./models/models')
 
@@ -26,32 +27,33 @@ io.on('connection', (socket) => {
   console.log('connected--------')
   /////////////////////////////////
   // get latitude and longitude
-  socket.on('createEvent', (data, next) => {
-  //   /// ask about this
-  //   geocoder.search( { q: data.venueName + ', ' + data.streetAddress + ', ' data.city + ', ' + data.state + ', ' + data.country} )
-  //   .then((response) => {
-  //       console.log(response)
-  //   })
-  //   .catch((error) => {
-  //       console.log(error)
-  //   })
-    /////////////////////////////
-    console.log('Sweet Jesus it worked',data)
-    new Event({
-      eventName: data.eventName,
-      eventCreator: data.eventCreator,
-      venueName: data.venueName,
-      medium: data.medium,
-      date: data.date,
-      datesRange: data.datesRange,
-      time: data.time,
-      streetAddress: data.streetAddress,
-      city: data.city,
-      state: data.state,
-      country: data.country,
-      about: data.about
-    }).save((err, event) => next({err, event}))
-  })
+  // socket.on('createEvent', (data, next) => {
+  // //   /// ask about this
+  // //   geocoder.search( { q: data.venueName + ', ' + data.streetAddress + ', ' data.city + ', ' + data.state + ', ' + data.country} )
+  // //   .then((response) => {
+  // //       console.log(response)
+  // //   })
+  // //   .catch((error) => {
+  // //       console.log(error)
+  // //   })
+  //   /////////////////////////////
+  //   console.log('Sweet Jesus it worked',data)
+  //   new Event({
+  //     eventName: data.eventName,
+  //     eventCreator: data.eventCreator,
+  //     venueName: data.venueName,
+  //     medium: data.medium,
+  //     date: data.date,
+  //     datesRange: data.datesRange,
+  //     time: data.time,
+  //     streetAddress: data.streetAddress,
+  //     city: data.city,
+  //     state: data.state,
+  //     country: data.country,
+  //     about: data.about,
+  //     tags: data.tags.map((tag)=> tag.text)
+  //   }).save((err, event) => next({err, event}))
+  // })
 
   socket.on('displayEvents', (data, next) => {
     event.find({}, (err, results) => {
@@ -112,6 +114,9 @@ app.use(express.static(path.join(__dirname, 'build')));
 app.use(bodyParser.json());
 app.use(cors());
 app.use(validator());
+
+//multer
+
 
 mongoose.connection.on('connected', () => {
   console.log('connected to mongoDB');
