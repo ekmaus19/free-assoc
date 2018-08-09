@@ -77,6 +77,10 @@ const userSchema = mongoose.Schema({
 });
 
 const eventSchema = mongoose.Schema({
+  img: {
+    data:Buffer,
+    contentType:String,
+  },
   eventName: {
     type: String,
     required: true
@@ -148,5 +152,5 @@ module.exports = {
   Artist,
   User,
   Event,
-  Connection
+  Connection,
 };

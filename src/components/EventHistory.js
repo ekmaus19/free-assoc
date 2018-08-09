@@ -1,6 +1,6 @@
 import React from 'react'
-import { render } from 'react-dom';
 import Gallery from 'react-grid-gallery';
+import { Button, Icon, Image as ImageComponent, Item } from 'semantic-ui-react'
 
 const IMAGES =
 [{
@@ -49,39 +49,27 @@ export default class EventHistory extends React.Component {
   componentDidMount(){
     this.loadEvents()
   }
+  
+  componentWillUnmount(){
 
+  }
+  
   render() {
+
     return (
       <div>
-         <h2 style={{marginRight:"auto"}} className='PastEvents'>
-          Past Events 
-        </h2>
-        <Gallery images={IMAGES} backdropClosesModal={true} />
-        {/* document.getElementById('example-0') */}
+        {/* <Gallery images={IMAGES} backdropClosesModal={true} /> */}
+        {/* document.getElementById('example-0') */} 
+        <Item.Group>
+    
+          {/* {this.props.event.map(event =>
 
-        <div>
-          {/* <br/>
-          <Item.Group divided>
-            {this.state.docs.map(doc =>
-              <Item>
-                <Item.Content>
-                  <Item.Header as='a' onClick={() => this.link(doc._id)}>{doc.title}</Item.Header>
-                  <Item.Meta>
-                    <span className='creator'>Creator: <div>{doc.collabs[0].username}</div></span>
-                  </Item.Meta>
-                  <Item.Description>Collaborators: {doc.collabs.map(user => <div>{user.username}</div>)} </Item.Description>
-                  <Item.Extra>
-                    <Button onClick = {() => this.deleteDocument(doc._id)} floated='right' id="delete-button"><Icon name='trash' /></Button>
-                  </Item.Extra>
-                </Item.Content>
-              </Item>)}
-            </Item.Group>
-          </div>
-          <div>
-            <button className="Logout" type="submit" onClick={this.onLogout}>Logout</button>
-          </div> */}
-
-      </div>
+            <div>
+              {event.eventName}
+            </div>
+            
+          )} */}
+        </Item.Group> 
       </div> 
     )
   }

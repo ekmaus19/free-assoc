@@ -7,31 +7,30 @@ import EventHistory from './EventHistory'
 
 const url = 'http://localhost:1337'
 
-
 // toMap = () => this.props.redirect('Map')
 
 
-const renderContent=(mode, socket, artist) => { //functional component
+const renderContent=(mode, socket, artist, redirect, event) => { //functional component
   switch (mode) {
     case 'T1':
     return (
       <div>
-        <Header as='h3'>Events</Header>
-        <EventHistory artist={artist} socket={socket}/>
+        <Header as='h2'>Past Events</Header>
+        <EventHistory event={event} artist={artist} socket={socket}/>
       </div>
     )
     case 'T2':
     return (
       <div>
         <Header as='h2'>Create Event</Header>
-        <CreateEvent socket={socket}/>
+        <CreateEvent redirect={redirect} socket={socket}/>
 
       </div>
     )
     case 'T3':
     return (
       <div>
-        <Header as='h3'>Scout</Header>
+        <Header as='h2'>Scout</Header>
         <Image src='https://react.semantic-ui.com/images/wireframe/paragraph.png' />
       </div>
     )
@@ -45,7 +44,7 @@ const renderContent=(mode, socket, artist) => { //functional component
     case 'T5':
     return (
       <div>
-        <Header as='h3'>Message</Header>
+        <Header as='h2'>Contact</Header>
         <ContactList socket={socket}/>
       </div>
     )
@@ -92,7 +91,7 @@ const SidebarExampleVisible = (props) => (
 
     <Sidebar.Pusher>
       <Container style={{paddingTop:'20px',paddingLeft:'30px',paddingRight:'185px'}} basic >
-        {renderContent(props.mode, props.socket, props.artist)}
+        {renderContent(props.mode, props.socket, props.artist, props.event,props.redirect)}
 
       </Container>
     </Sidebar.Pusher>
@@ -179,7 +178,7 @@ class ArtistDash extends Component {
               </Grid.Column>
               <Grid.Column width={12}>
                 <Container style={{height:'100%'}}  >
-                  <SidebarExampleVisible artist={this.props.artist} socket={this.props.socket} mode={this.state.mode} setMode={(mode)=> {this.setState({mode:mode})}}/>
+                  <SidebarExampleVisible event={this.props.event} redirect={this.props.redirect} artist={this.props.artist} socket={this.props.socket} mode={this.state.mode} setMode={(mode)=> {this.setState({mode:mode})}}/>
                 </Container>
               </Grid.Column>
             </Grid.Row>
