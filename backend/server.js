@@ -77,9 +77,9 @@ io.on('connection', (socket) => {
 
   socket.on('getEvents', (data, next) => {
     Event
-    .find({userId: data.userId})
+    .find({eventCreator: data.userId})
     .exec(function(err, events) {
-      next({err, events})
+      socket.emit('getEvents',{err, events})
     })
 
   })

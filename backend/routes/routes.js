@@ -22,6 +22,7 @@ router.use(validator());
 
 router.post('/fileUpload', upload.array('selectedFile','info','longitude','latitude'),function(req,res,next){
   console.log('file****', req.files,req.body)
+  console.log(req.user);
   const info = JSON.parse(req.body.info)
   new Event({
       eventName: info.eventName,
