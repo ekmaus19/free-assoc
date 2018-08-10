@@ -96,7 +96,7 @@ searchPlaceHome = () => {
              </div>
                 <Menu.Item onClick = {() => this.redirect('Home')} as='a' active>Home</Menu.Item>
                 <Menu.Item onClick = {() => this.redirect('Ethos')} as='a'>Ethos</Menu.Item>
-                <Menu.Item onClick= {()=>this.redirect('About')}as='a'>About</Menu.Item>
+                <Menu.Item onClick= {() => this.redirect('About')}as='a'>About</Menu.Item>
                 <Menu.Item as='a'>Careers</Menu.Item>
 
                 <Menu.Item position='right'>

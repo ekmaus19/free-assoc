@@ -62,7 +62,7 @@ let splitUserLoc
 
 /////// 8.8.2018 WPS
 
-const TestPopupMarker = ({ eventName, eventOrganizer, venueName, streetAddress, city, state, latitude, longitude, medium, latlng, userLocation, menuClickPopup }) => {
+const TestPopupMarker = ({ eventName, eventOrganizer, venueName, streetAddress, city, state, latitude, longitude, medium, latlng, userLocation, tags, menuClickPopup }) => {
 let customMarker
 console.log(medium, latitude, longitude)
   if(medium === "art"){
@@ -88,14 +88,14 @@ console.log(medium, latitude, longitude)
 {/* https://www.google.com/maps/dir/SFO,+San+Francisco,+CA/AMC+Van+Ness+14,+Van+Ness+Avenue,+San+Francisco,+CA/@37.6957396,-122.4952311,12z/ */}
 {/* <Form action={window.open("https://www.google.com/maps/dir/"+ latitude + "," + longitude + "/" + splitUserLoc +"/@" + latlng.lat + "," + latlng.lng  + ",15z", "_blank")}><Button size='mini'>Take Me There</Button><Button size='mini'>More</Button></Form> */}
 
-      <Form action={"https://www.google.com/maps/dir/"+ latitude + "," + longitude + '/' + splitUserLoc +"/@" + latlng.lat + ',' + latlng.lng  +',15z'}><Button size='mini'>Take Me There</Button></Form><Button size='mini' onClick ={() => menuClickPopup(eventName, medium, eventOrganizer, venueName, streetAddress, city, state)}>More</Button>
+      <Form action={"https://www.google.com/maps/@" + latitude + ',' + longitude + ',15z'}><Button size='mini'>Take Me There</Button></Form><Button size='mini' onClick ={() => menuClickPopup(eventName, medium, eventOrganizer, venueName, streetAddress, city, state, latitude, longitude, tags)}>More</Button>
      </Popup>
    </Marker>)
 }
 
 const TestMarkerList = ({ data, latlng, userLocation, menuClickPopup }) => {
   const items = data.map(({ _id, ...props}) => (
-    <TestPopupMarker userLocation={userLocation} latlng={latlng} key={_id} {...props} menuClickPopup= {(event, medium, artist, venue, address, city, state) => menuClickPopup(event, medium, artist, venue, address, city, state)}></TestPopupMarker>
+    <TestPopupMarker userLocation={userLocation} latlng={latlng} key={_id} {...props} menuClickPopup= {(event, medium, artist, venue, address, city, state, lat, long, tags) => menuClickPopup(event, medium, artist, venue, address, city, state, lat, long, tags)}></TestPopupMarker>
   ))
   return <div style={{ display: 'none' }}>{items}</div>
 }
@@ -114,6 +114,7 @@ export default class MainMap extends Component {
       menuAddress: null,
       menuCity: null,
       menuState: null,
+      menuTags: null,
 
       // for event sorting on the map ////////////////////
       searchingPlace: null,
@@ -141,8 +142,8 @@ export default class MainMap extends Component {
       userLocation: '',
 
       // sidebar to be used on the map ////////////////////
-      menuCollapsed: false,
-      selected: 'id',
+      collapsed: true,
+      selected: null,
 
       // user or artist view //////////////////////////////
       artist: props.isArtist ? true : false
@@ -185,7 +186,6 @@ export default class MainMap extends Component {
           viewport: {
             center: [this.props.latlon.lat, this.props.latlon.lon]
           },
-          data: data_use
         })
       }
 
@@ -195,6 +195,7 @@ export default class MainMap extends Component {
     console.log("Map view:", this.state)
     this.mapRef.current.leafletElement.locate()
   }
+  data: data_use
 
   onSearchChange = (event) => {
     this.setState({
@@ -275,7 +276,7 @@ export default class MainMap extends Component {
 
 
 
- menuClickPopup = (event, medium, artist, venue, address, city, state) => {
+ menuClickPopup = (event, medium, artist, venue, address, city, state, lat, long, tags) => {
   console.log('hit me baby one more time')
   console.log("params -----------> ", event, medium, artist, venue, address, city, state)
     this.setState({
@@ -284,10 +285,17 @@ export default class MainMap extends Component {
       menuMedium: medium,
       menuArtist: artist,
       menuVenue: venue,
-
       menuAddress: address,
       menuCity: city,
       menuState: state,
+      menuTags: tags,
+
+      viewport: {
+        center: [lat, long]
+      },
+
+      collapsed: false,
+      selected: 'event',
     })
   }
 
@@ -322,22 +330,23 @@ export default class MainMap extends Component {
     // copy data and allow the buttons to filter the map
     let filterData = this.state.data.slice()
     if(this.state.filterArt===false){
-      filterData=filterData.filter(item => item.about !== "art")
+      filterData=filterData.filter(item => item.medium !== "art")
     }
     if(this.state.filterMusic===false){
-      filterData=filterData.filter(item => item.about !== "music")
+      filterData=filterData.filter(item => item.medium !== "music")
 
     }
     if(this.state.filterPerf===false){
-      filterData=filterData.filter(item => item.about !== "performance")
+      filterData=filterData.filter(item => item.medium !== "performance")
     }
 
     const menuSingleEvent = this.state.moreClicked ? (
-      <Grid.Column>
-        <Grid.Row>{this.state.menuEvent}</Grid.Row>
-        <Grid.Row>{this.state.menuVenue}", "{this.state.menuAddress}", "{this.state.menuState}</Grid.Row>
-        <Grid.Row>{this.state.menuArtist}</Grid.Row>
-      </Grid.Column>
+      <Tab id="event" header="Event" icon="fa fa-cog" anchor="bottom">
+        <p>{this.state.menuEvent}</p>
+        <p>{this.state.menuVenue}", "{this.state.menuAddress}", "{this.state.menuState}</p>
+        <p>{this.state.menuArtist}</p>
+        <p>{this.state.menuTags}</p>
+      </Tab>
     ) : null
 
     return (
@@ -354,21 +363,27 @@ export default class MainMap extends Component {
               <Button massive active = {this.state.filterMusic ? true : false  }  onClick={(e) => { this.setState({filterMusic: !this.state.filterMusic}); }}>Music</Button>
               <Button massive active = {this.state.filterPerf ? true : false }  onClick={(e) => { this.setState({filterPerf: !this.state.filterPerf}); }}>Performance</Button>
             </Button.Group>
-            <button className='buttonArt'>Test CSS</button>
-            {/* <button></button>
-            <button></button> */}
+            {/* <button className='buttonArt'>Test CSS</button> */}
           </Grid.Row>
           <Grid.Row>
             <Sidebar id="sidebar" collapsed={this.state.collapsed} selected={this.state.selected}
                      onOpen={this.onSidebarOpen.bind(this)} onClose={this.onSidebarClose.bind(this)}>
-              <Tab id="home" header="Home" icon="fa fa-home">
+              <Tab id="home1" header="Home" icon="fa fa-home">
                 <p>No place like home!</p>
               </Tab>
-              <Tab id="settings" header="Settings" icon="fa fa-cog" anchor="bottom">
-                <p>Settings dialogue.</p>
+              <Tab id="event" header={this.state.menuEvent} icon="fa fa-cog">
+                <p id="listingEventName">{this.state.menuEvent}</p>
+                <p className="listingL2">{this.state.menuArtist}</p>
+                <p>{this.state.menuArtist}</p>
+                <p>{this.state.menuVenue}, {this.state.menuAddress}, {this.state.menuState}</p>
+
+
               </Tab>
+
             </Sidebar>
               <Map
+                className="sidebar-map"
+                // onClick={this.setState({collapsed:true})}
                 center={this.state.latlng}
                 length={4}
                 onLocationfound={this.handleLocationFound}
@@ -379,7 +394,7 @@ export default class MainMap extends Component {
                   attribution="&amp;copy <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
                   url="https://stamen-tiles-{s}.a.ssl.fastly.net/toner/{z}/{x}/{y}{r}.png"
                 />
-                <TestMarkerList data={filterData} latlng={this.state.latlng} userLocation={this.state.userLocation} menuClickPopup={(event, medium, artist, venue, address, city, state)=>this.menuClickPopup(event, medium, artist, venue, address, city, state)}/>
+                <TestMarkerList data={filterData} latlng={this.state.latlng} userLocation={this.state.userLocation} menuClickPopup={(event, medium, artist, venue, address, city, state, lat, long, tags)=>this.menuClickPopup(event, medium, artist, venue, address, city, state, lat, long, tags)}/>
 
                 {/* past map tile of interest -- kept for reference */}
                 {/* L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
