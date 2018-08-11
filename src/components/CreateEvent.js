@@ -47,6 +47,7 @@ const delimiters = [KeyCodes.comma, KeyCodes.enter];
         state: '',
         country: '',
         medium: '',
+        price:'',
         about: '',
         tags: [],
       suggestions: [
@@ -78,7 +79,6 @@ const delimiters = [KeyCodes.comma, KeyCodes.enter];
         this.setState({ [name]: value });
       }
     }
-
     handleTimeChange = (event, {name, value}) => {
       if (this.state.hasOwnProperty(name)) {
         this.setState({ [name]: value });
@@ -112,6 +112,7 @@ const delimiters = [KeyCodes.comma, KeyCodes.enter];
       state: this.state.state,
       country: this.state.country,
       about: this.state.about,
+      price: this.state.price,
       tags: this.state.tags 
   }
     const { description, selectedFile} = this.state;
@@ -216,6 +217,12 @@ const delimiters = [KeyCodes.comma, KeyCodes.enter];
     })
 }
 
+  onPriceChange = (event) => {
+  this.setState({
+    price: event.target.value
+  })
+ }
+
   fileSelectedHandler=(event)=>{
     this.setState({
       selectedFile: event.target.files[0]
@@ -259,7 +266,7 @@ const delimiters = [KeyCodes.comma, KeyCodes.enter];
             <Form.Field control={TextArea} label='About' placeholder='Tell us a little more about the event...' onChange={this.onAboutChange} />
 
           <br />
-
+             <Form.Field control={Input} label='$' placeholder='Price' onChange={this.onPriceChange} />
              <Form.Field control={Input} label='Street Address' placeholder='Street Address' onChange={this.onAddressChange} />
              <Form.Field control={Input} label='City' placeholder='City' onChange={this.onCityChange}/>
              <Form.Field control={Input} label='State' placeholder='State'  onChange={this.onStateChange}/>

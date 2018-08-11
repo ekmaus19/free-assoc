@@ -7,6 +7,7 @@ import LocalStrategy from 'passport-local';
 import bodyParser from 'body-parser';
 import socketIO from 'socket.io';
 import cors from 'cors';
+import { emitKeypressEvents } from 'readline';
 
 
 const models = require('./models/models');
@@ -79,11 +80,18 @@ io.on('connection', (socket) => {
     Event
     .find({eventCreator: data.userId})
     .exec(function(err, events) {
-      socket.emit('getEvents',{err, events})
+      // var images = events.map((event)=> {
+      //   return new Buffer(event.img.data).toString('base64')
+      // })
+      // events.forEach((i)=> {
+      //   if(i.img.data){
+      //  var string = new Buffer(i.img.data,'binary').toString('base64')
+      //  i.img= 'data:image/jpeg;base64,'+ string
+      //  console.log(i.img)
+ 
+      socket.emit('getEvents',{events})
+      })
     })
-
-  })
-
 
   });
 

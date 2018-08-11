@@ -5,7 +5,7 @@ import MainMap from './Map';
 import ContactList from './ContactList';
 import EventHistory from './EventHistory'
 
-const url = 'http://1c65b18b.ngrok.io'
+const url = 'http://localhost:1337'
 
 
 // toMap = () => this.props.redirect('Map')
@@ -16,7 +16,7 @@ const renderContent=(mode, socket, artist, redirect) => { //functional component
     case 'T1':
     return (
       <div>
-        <Header as='h2'>Past Events</Header>
+        <Header style={{padding:'10px'}} as='h2'>Events</Header>
         <EventHistory artist={artist} socket={socket}/>
       </div>
     )
@@ -106,9 +106,11 @@ class ArtistDash extends Component {
     this.state={
       mode:'T1',
       visible:false,
+      switched: false
 
     }
   }
+
 
 
   onLogout = () => {
@@ -132,18 +134,17 @@ class ArtistDash extends Component {
 
     return(
       <div>
-        <Container style={{display:'flex'}}>
-
-        </Container>
-        <Container>
+        <Container style={{width:'100%', padding:'100px'}}>
           {/* <br /> */}
           <br />
           <Grid>
             <Grid.Row>
-              <Grid.Column width={4}>
-                <Container>
+              <Grid.Column width={3}>
+                <Container >
                   <Card style={{justifyContent:'center', alignItems:'center'}}>
-                    <Image style={{width:'75%', height:'75%',padding:'10px'}} src='/img/1.png' />
+                    <Container > 
+                    <Image style={{marginLeft:'auto',marginRight:'auto',width:'75%', height:'75%',padding:'10px'}} src='/img/1.png' />
+                    </Container> 
                     <Card.Content>
                       <Card.Header>{this.props.artist.firstName} {this.props.artist.lastName}</Card.Header>
                       <Card.Meta>
@@ -165,33 +166,19 @@ class ArtistDash extends Component {
                         22 Friends
                       </a>
                     </Card.Content>
-                    <Button style={{marginLeft:'auto', marginRight:'auto'}} color = 'grey' className = "logout-button"  animated onClick = {this.onLogout}>
-                    <Button.Content visible>Logout</Button.Content>
-                    <Button.Content hidden>
-                      <Icon name='right arrow'   />
-                    </Button.Content>
-                  </Button>
-
+                    <Button style={{marginLeft:'auto', marginRight:'auto'}} basic color = 'grey' className = "logout-button"  animated onClick = {this.onLogout}>Logout</Button>
                   </Card>
 
 
                 </Container>
               </Grid.Column>
-              <Grid.Column width={12}>
-                <Container style={{height:'100%'}}  >
+              <Grid.Column width={13}>
+                <Container style={{height:'100%'}} >
                   <SidebarExampleVisible redirect={this.props.redirect} artist={this.props.artist} socket={this.props.socket} mode={this.state.mode} setMode={(mode)=> {this.setState({mode:mode})}}/>
                 </Container>
               </Grid.Column>
             </Grid.Row>
           </Grid>
-        </Container>
-        <Container style={{display:'flex'}}>
-          <Button color = 'grey' className = "logout-button"  animated onClick = {this.onLogout}>
-            <Button.Content visible>Logout</Button.Content>
-            <Button.Content hidden>
-              <Icon name='right arrow'   />
-            </Button.Content>
-          </Button>
         </Container>
       </div>
     )

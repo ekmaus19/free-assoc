@@ -20,9 +20,10 @@ router.use(bodyParser.urlencoded({ extended: true }));
 
 router.use(validator());
 
-router.post('/fileUpload', upload.array('selectedFile','info','longitude','latitude'),function(req,res,next){
-  console.log('file****', req.files,req.body)
+router.post('/fileUpload', upload.single('selectedFile'),function(req,res,next){
+  console.log('file****', req.file,req.body)
   console.log(req.user);
+  var readFile = fs.readFileSync(req.file.path)
   const info = JSON.parse(req.body.info)
   new Event({
       eventName: info.eventName,
@@ -36,14 +37,19 @@ router.post('/fileUpload', upload.array('selectedFile','info','longitude','latit
       city: info.city,
       state: info.state,
       country:info.country,
+      price: info.price,
       about: info.about,
       tags:info.tags.map((tag)=> tag.text),
-      img: {data:req.file,contentType:'image/png'},
+      img: {data:readFile,contentType:'image/png'},
       latitude: req.body.latitude,
       longitude: req.body.longitude
   }).save((err,event)=> {
-    console.log('saved')
-    res.json({success:true})
+    if (err){
+      console.log(err)
+    } else{
+      console.log('saved')
+      res.json({success:true})
+    }
   }
   );
 })

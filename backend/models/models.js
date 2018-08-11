@@ -125,6 +125,10 @@ const eventSchema = mongoose.Schema({
   longitude: String,
   tags: Array,
   about: String,
+  price:{
+    type:String,
+    required:true
+  }
 });
 
 
