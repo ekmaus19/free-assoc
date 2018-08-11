@@ -1,9 +1,11 @@
 import React, { createRef, Component } from 'react'
-import { Map, TileLayer, Marker, Popup, CircleMarker, MapControl } from 'react-leaflet'
-import { Button, Input, Grid, Segment, Form } from 'semantic-ui-react'
+import { Map, TileLayer, Marker, Popup, CircleMarker, MapControl, ZoomControl } from 'react-leaflet'
+import { Button, Input, Grid, Segment, Form, Dimmer, Loader } from 'semantic-ui-react'
 import url from './backend'
 import L from 'leaflet'
 import { Sidebar, Tab } from 'react-leaflet-sidebarv2';
+// import { Sidebar, Tab } from './Sidebar';
+
 import '../index.css'
 
 // ultimately, geocoder will be in the backend. In front for testing purposes
@@ -34,68 +36,56 @@ const pink_button = "https://webiconspng.com/wp-content/uploads/2017/09/Clothes-
 const blue_button = "http://purepng.com/public/uploads/large/purepng.com-blue-sewing-button-with-4-holecloth-buttonspatternsewingsewing-accessoriesclip-artblue-1421526305532cwfxq.png"
 const green_button = "http://purepng.com/public/uploads/large/purepng.com-greent-round-buttoncloth-buttonspatternsewingsewing-accessoriesgreenclipart-14215263044871jstt.png"
 
-const iconsImages = [pink_button, blue_button, green_button]
-const icons = []
-for(var i=0; i < iconsImages.length ; i++) {
-  var iconMake = L.icon({
-    iconUrl: icons[i],
-    iconSize: [38, 95], // size of the icon
-    });
-
-  icons.push(iconMake)
-}
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 let splitUserLoc
-
-// const filterIcon = (medium) => {
-//   if(medium === "art") {
-//     return customMarker = L.icon({ iconUrl: blue_button, iconSize: [25, 25] })
-//   } else if (medium === 'performance') {
-//    return   customMarker =  L.icon({ iconUrl: pink_button, iconSize: [25, 25] })
-//   } else if (medium === 'music') {
-//     return customMarker =  L.icon({ iconUrl: green_button, iconSize: [25, 25] })
-//   }
-// }
-
-// const customMarker = L.icon({ iconUrl: pink_button, iconSize: [25, 25] })
-
 /////// 8.8.2018 WPS
 
-const TestPopupMarker = ({ eventName, eventOrganizer, venueName, streetAddress, city, state, latitude, longitude, medium, latlng, userLocation, tags, menuClickPopup }) => {
+const TestPopupMarker = ({ eventName, eventOrganizer, venueName, streetAddress, city, state, latitude, longitude, medium, latlng, userLocation, tags, about, menuClickPopup }) => {
 let customMarker
 console.log(medium, latitude, longitude)
+  // if(medium === "art"){
+  //      customMarker = L.icon({ iconUrl: blue_button, iconSize: [25, 25] })
+  //   } else if (medium === 'performance') {
+  //       customMarker =  L.icon({ iconUrl: pink_button, iconSize: [25, 25] })
+  //   } else if (medium === 'music') {
+  //      customMarker =  L.icon({ iconUrl: green_button, iconSize: [25, 25] })
+  //   } else {
+  //     customMarker =  L.icon({ iconUrl: "http://cdn.shopify.com/s/files/1/1211/8882/products/Stupid_Morty_WEB_grande.jpg?v=1503605262", iconSize: [25, 25] })
+  //   }
+
   if(medium === "art"){
-       customMarker = L.icon({ iconUrl: blue_button, iconSize: [25, 25] })
+       customMarker = "#0060fc"
     } else if (medium === 'performance') {
-        customMarker =  L.icon({ iconUrl: pink_button, iconSize: [25, 25] })
+        customMarker =  "#fc00b4"
     } else if (medium === 'music') {
-       customMarker =  L.icon({ iconUrl: green_button, iconSize: [25, 25] })
+       customMarker =  "#00fc2e"
     } else {
-      customMarker =  L.icon({ iconUrl: "http://cdn.shopify.com/s/files/1/1211/8882/products/Stupid_Morty_WEB_grande.jpg?v=1503605262", iconSize: [25, 25] })
+      customMarker =  "#d6a74a"
     }
 
-  return ( <Marker icon={customMarker} position={[latitude, longitude]}>
+// if <Marker />, use icon={customMarker}
+  return ( <CircleMarker color={null} fillColor={customMarker} fillOpacity={.75} center={[latitude, longitude]} radius={12}>
      <script>{console.log('user location ---------------->', userLocation)} </script>
 
      {/* ////////////////////////////// THIS //////////////////////////////// */}
      <script>{ splitUserLoc = userLocation.split(' ').join('+') } </script>
 
      <Popup>
-       <b>{eventName}</b><br/>
+       <b className="eventName">{eventName}</b><br/>
        <b>{venueName}</b><br/>
-       Address: {streetAddress + ', '+ city}<br/>
+       Address: {streetAddress + ', '+ city}
+       <br/>
 {/* https://www.google.com/maps/dir/SFO,+San+Francisco,+CA/AMC+Van+Ness+14,+Van+Ness+Avenue,+San+Francisco,+CA/@37.6957396,-122.4952311,12z/ */}
 {/* <Form action={window.open("https://www.google.com/maps/dir/"+ latitude + "," + longitude + "/" + splitUserLoc +"/@" + latlng.lat + "," + latlng.lng  + ",15z", "_blank")}><Button size='mini'>Take Me There</Button><Button size='mini'>More</Button></Form> */}
 
-      <Form action={"https://www.google.com/maps/@" + latitude + ',' + longitude + ',15z'}><Button size='mini'>Take Me There</Button></Form><Button size='mini' onClick ={() => menuClickPopup(eventName, medium, eventOrganizer, venueName, streetAddress, city, state, latitude, longitude, tags)}>More</Button>
+      <Button onClick={"https://www.google.com/maps/@" + latitude + ',' + longitude + ',15z'} size='mini'>Take Me There</Button><Button size='mini' onClick ={() => menuClickPopup(eventName, medium, eventOrganizer, venueName, streetAddress, city, state, latitude, longitude, tags, about)}>More</Button>
      </Popup>
-   </Marker>)
+   </CircleMarker>)
 }
 
 const TestMarkerList = ({ data, latlng, userLocation, menuClickPopup }) => {
   const items = data.map(({ _id, ...props}) => (
-    <TestPopupMarker userLocation={userLocation} latlng={latlng} key={_id} {...props} menuClickPopup= {(event, medium, artist, venue, address, city, state, lat, long, tags) => menuClickPopup(event, medium, artist, venue, address, city, state, lat, long, tags)}></TestPopupMarker>
+    <TestPopupMarker userLocation={userLocation} latlng={latlng} key={_id} {...props} menuClickPopup= {(event, medium, artist, venue, address, city, state, lat, long, tags, about) => menuClickPopup(event, medium, artist, venue, address, city, state, lat, long, tags, about)}></TestPopupMarker>
   ))
   return <div style={{ display: 'none' }}>{items}</div>
 }
@@ -105,6 +95,7 @@ export default class MainMap extends Component {
 
     super(props);
     this.state = {
+      loading:true,
       // when more button clicked/////////////////////////
       moreClicked: false,
       menuEvent: null,
@@ -115,6 +106,7 @@ export default class MainMap extends Component {
       menuCity: null,
       menuState: null,
       menuTags: null,
+      menuAbout: null,
 
       // for event sorting on the map ////////////////////
       searchingPlace: null,
@@ -172,13 +164,15 @@ export default class MainMap extends Component {
       if(this.state.artist) {
         await this.mapRef.current.leafletElement.locate()
         this.setState({
-          data: data_use
+          data: data_use,
+          loading:false,
         })
       } else if(!this.props.latlon.lat) {
         console.log('in 1st choice, near me search')
         await this.mapRef.current.leafletElement.locate()
         this.setState({
-          data: data_use
+          data: data_use,
+          loading:false,
         })
       } else {
         console.log('in else statement')
@@ -236,7 +230,6 @@ export default class MainMap extends Component {
       },
       //     // var address = address.split(',')
     })
-
     // first try
 
     // geocoderReverse.reverseGeocode( parseFloat(e.latlng.lat), parseFloat(e.latlng.lng), function( err, response) {
@@ -246,6 +239,7 @@ export default class MainMap extends Component {
     //     console.log('threw an error, ', err)
     //   } else {
     //     console.log(response)
+
     //     // var address = response.results[0].formatted_address
     //     // address = address[0] + ',' + address[1]
     //     var address = "test"
@@ -276,7 +270,7 @@ export default class MainMap extends Component {
 
 
 
- menuClickPopup = (event, medium, artist, venue, address, city, state, lat, long, tags) => {
+ menuClickPopup = (event, medium, artist, venue, address, city, state, lat, long, tags, about) => {
   console.log('hit me baby one more time')
   console.log("params -----------> ", event, medium, artist, venue, address, city, state)
     this.setState({
@@ -289,14 +283,22 @@ export default class MainMap extends Component {
       menuCity: city,
       menuState: state,
       menuTags: tags,
+      menuAbout: about,
 
       viewport: {
-        center: [lat, long]
+        zoom: 14,
+        center: [lat-.005, long-.025],
       },
 
       collapsed: false,
       selected: 'event',
     })
+  }
+
+  handleClickWTF = (items) => {
+    var item = items[Math.floor(Math.random()*items.length)];
+    console.log("WHAT THE ACTUAL ", item)
+    this.menuClickPopup(item.eventName, item.medium, item.artist, item.venueName, item.streetAddress, item.city, item.state, item.latitude, item.longitude, item.tags, item.about)
   }
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -341,70 +343,84 @@ export default class MainMap extends Component {
     }
 
     const menuSingleEvent = this.state.moreClicked ? (
-      <Tab id="event" header="Event" icon="fa fa-cog" anchor="bottom">
-        <p>{this.state.menuEvent}</p>
-        <p>{this.state.menuVenue}", "{this.state.menuAddress}", "{this.state.menuState}</p>
-        <p>{this.state.menuArtist}</p>
-        <p>{this.state.menuTags}</p>
-      </Tab>
-    ) : null
+        <div className="menuSingleEvent">
+          <br/>
+          <p className="listingL2"><b>Artist:</b> {this.state.menuArtist}</p>
+          <p>{this.state.menuArtist}</p>
+          <p><b className="listingVenueName">{this.state.menuVenue}</b> {this.state.menuAddress}, {this.state.menuState}</p>
+          <p><b>About: </b>{this.state.menuAbout}</p>
+      </div>
+    ) : <Tab><p></p></Tab>
+
+    const mapComponent = (<Map className="sidebar-map"
+                    // onClick={this.setState({collapsed:true})}
+                    center={this.state.latlng}
+                    length={4}
+                    onLocationfound={this.handleLocationFound}
+                    ref={this.mapRef}
+                    // zoom={15}
+                    viewport={this.state.viewport}
+                    zoomControl={false}>
+                    <TileLayer
+                      attribution="&amp;copy <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
+                      url="https://stamen-tiles-{s}.a.ssl.fastly.net/toner/{z}/{x}/{y}{r}.png"
+                    />
+                    <ZoomControl position="bottomright"/>
+                    <TestMarkerList data={filterData} latlng={this.state.latlng} userLocation={this.state.userLocation} menuClickPopup={(event, medium, artist, venue, address, city, state, lat, long, tags, about)=>this.menuClickPopup(event, medium, artist, venue, address, city, state, lat, long, tags, about)}/>
+
+                    {/* past map tile of interest -- kept for reference */}
+                    {/* L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
+                      // attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+                      id: 'mapbox.comic',
+                      accessToken: "pk.eyJ1IjoiZWttYXVzMTkiLCJhIjoiY2prYTAyc3JvMXppbjNrbWtmNTI5cmFheSJ9.SRlzG8UvBjRsNKoB1oY56Q"
+                    }).addTo(this.map); */}
+                    {marker}
+                  </Map>
+                )
+
+    const mapLoading = (
+        <Dimmer active inverted>
+          <Loader inverted>Loading</Loader>
+        </Dimmer>
+    )
 
     return (
       <Grid>
         <Grid.Column>
-          <Grid.Row>
+          {/* <Grid.Row>
             <Input focus className="placeSearch" placeholder="Find a place..." onChange={this.onSearchChange}/>
+            <button  className={this.state.filterArt ? "buttonArt" : "buttonOff" } onClick={(e) => { this.setState({filterArt: !this.state.filterArt}); }}>A</button>
             <Button onClick={this.findPlace}>Search</Button>
-          </Grid.Row>
-          <Grid.Row><Button onClick={this.handleClick}>Find Me</Button></Grid.Row>
+          </Grid.Row> */}
+          <Grid.Row><Button className="buttonFindMe" onClick={() => this.handleClick}>Find Me</Button></Grid.Row>
+          <Grid.Row><Button className="buttonWTF" onClick={() => this.handleClickWTF(filterData ? filterData : this.state.data)}>WTF</Button></Grid.Row>
+
           <Grid.Row>
-            <Button.Group>
-              <Button massive active = {this.state.filterArt ? true : false } className='buttonArt'onClick={(e) => { this.setState({filterArt: !this.state.filterArt}); }}>Visual Arts</Button>
-              <Button massive active = {this.state.filterMusic ? true : false  }  onClick={(e) => { this.setState({filterMusic: !this.state.filterMusic}); }}>Music</Button>
-              <Button massive active = {this.state.filterPerf ? true : false }  onClick={(e) => { this.setState({filterPerf: !this.state.filterPerf}); }}>Performance</Button>
-            </Button.Group>
+            {this.state.loading ? mapLoading : null }
+
+            <div className='buttonMain'>
+              <button className={this.state.filterArt ? "buttonArt" : "buttonOff" } onClick={(e) => { this.setState({filterArt: !this.state.filterArt}); }}>A</button>
+              <button className={this.state.filterMusic ? "buttonArt" : "buttonOff" } onClick={(e) => { this.setState({filterMusic: !this.state.filterMusic}); }}>M</button>
+              <button className={this.state.filterPerf ? "buttonArt" : "buttonOff" } onClick={(e) => { this.setState({filterPerf: !this.state.filterPerf}); }}>P</button>
+            </div>
             {/* <button className='buttonArt'>Test CSS</button> */}
           </Grid.Row>
           <Grid.Row>
             <Sidebar id="sidebar" collapsed={this.state.collapsed} selected={this.state.selected}
                      onOpen={this.onSidebarOpen.bind(this)} onClose={this.onSidebarClose.bind(this)}>
-              <Tab id="home1" header="Home" icon="fa fa-home">
-                <p>No place like home!</p>
+              <Tab id="home1" header="Find a Place" icon="fa fa-globe">
+              <br/>
+                <Input focus action="Search" className="placeSearch" placeholder="Find a place..." onChange={this.onSearchChange} onClick={this.findPlace}/>
+                {/* <Input focus className="placeSearch" placeholder="Find a place..." onChange={this.onSearchChange}/><Button onClick={this.findPlace}>Search</Button> */}
               </Tab>
-              <Tab id="event" header={this.state.menuEvent} icon="fa fa-cog">
-                <p id="listingEventName">{this.state.menuEvent}</p>
-                <p className="listingL2">{this.state.menuArtist}</p>
-                <p>{this.state.menuArtist}</p>
-                <p>{this.state.menuVenue}, {this.state.menuAddress}, {this.state.menuState}</p>
-
-
+              <Tab id="event" header={this.state.menuEvent} icon="fa fa-info-circle">
+                {menuSingleEvent}
               </Tab>
+              <Tab id="music" placeholder="M" icon="fa fa-meh-o"></Tab>
+
 
             </Sidebar>
-              <Map
-                className="sidebar-map"
-                // onClick={this.setState({collapsed:true})}
-                center={this.state.latlng}
-                length={4}
-                onLocationfound={this.handleLocationFound}
-                ref={this.mapRef}
-                // zoom={15}
-                viewport={this.state.viewport}>
-                <TileLayer
-                  attribution="&amp;copy <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
-                  url="https://stamen-tiles-{s}.a.ssl.fastly.net/toner/{z}/{x}/{y}{r}.png"
-                />
-                <TestMarkerList data={filterData} latlng={this.state.latlng} userLocation={this.state.userLocation} menuClickPopup={(event, medium, artist, venue, address, city, state, lat, long, tags)=>this.menuClickPopup(event, medium, artist, venue, address, city, state, lat, long, tags)}/>
-
-                {/* past map tile of interest -- kept for reference */}
-                {/* L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
-                  // attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-                  id: 'mapbox.comic',
-                  accessToken: "pk.eyJ1IjoiZWttYXVzMTkiLCJhIjoiY2prYTAyc3JvMXppbjNrbWtmNTI5cmFheSJ9.SRlzG8UvBjRsNKoB1oY56Q"
-                }).addTo(this.map); */}
-                {marker}
-              </Map>
-
+              {mapComponent}
             </Grid.Row>
         </Grid.Column>
     </Grid>
