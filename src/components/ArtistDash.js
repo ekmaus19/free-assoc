@@ -5,7 +5,7 @@ import MainMap from './Map';
 import ContactList from './ContactList';
 import EventHistory from './EventHistory'
 
-const url = 'http://1c65b18b.ngrok.io'
+const url = 'http://localhost:1337'
 
 
 // toMap = () => this.props.redirect('Map')
@@ -45,8 +45,8 @@ const renderContent=(mode, socket, artist, redirect) => { //functional component
     case 'T5':
     return (
       <div>
-        <Header as='h2'>Contact</Header>
-        <ContactList socket={socket}/>
+        <Header as='h2'>My Connections</Header>
+        <ContactList />
       </div>
     )
 

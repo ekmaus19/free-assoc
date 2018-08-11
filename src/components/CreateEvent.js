@@ -104,7 +104,7 @@ const delimiters = [KeyCodes.comma, KeyCodes.enter];
       eventName: this.state.eventName,
       eventCreator: this.props.artist._id,
       venueName: this.state.venueName,
-      medium: this.state.medium, 
+      medium: this.state.medium,
       time: this.state.time,
       datesRange: this.state.datesRange,
       streetAddress: this.state.streetAddress,
@@ -112,19 +112,19 @@ const delimiters = [KeyCodes.comma, KeyCodes.enter];
       state: this.state.state,
       country: this.state.country,
       about: this.state.about,
-      tags: this.state.tags 
+      tags: this.state.tags
   }
     const { description, selectedFile} = this.state;
     e.preventDefault();
     console.log(selectedFile)
-    let formData = new FormData(); 
+    let formData = new FormData();
     formData.append('info', JSON.stringify(createEvent))
     formData.append('selectedFile', selectedFile);
     console.log(query)
 
     geocoder.search({q:query})
     .then((response)=> {
-      
+
       formData.append('latitude', response[0].lat)
       formData.append('longitude', response[0].lon)
 
@@ -222,7 +222,7 @@ const delimiters = [KeyCodes.comma, KeyCodes.enter];
     })
   }
 
- 
+
 
     render() {
 
@@ -235,7 +235,7 @@ const delimiters = [KeyCodes.comma, KeyCodes.enter];
         </Form.Group>
         <Form.Group inline>
            <label>Medium</label>
-           <br /> 
+           <br />
           <Select label='Medium' style={{width:'100%'}} onChange = {this.onMediumChange} options={options} className = "field" />
         </Form.Group>
           From - To
@@ -274,11 +274,11 @@ const delimiters = [KeyCodes.comma, KeyCodes.enter];
                     handleAddition={this.handleAddition}
                     handleDrag={this.handleDrag}
                     delimiters={delimiters} />
-            </div> 
-            <br /> 
-            <div style={{display:'flex'}} > 
-            <Input style={{marginRight:'auto', width:'70%'}} type='file' onChange={this.fileSelectedHandler} /> 
-            </div> 
+            </div>
+            <br />
+            <div style={{display:'flex'}} >
+            <Input style={{marginRight:'auto', width:'70%'}} type='file' onChange={this.fileSelectedHandler} />
+            </div>
             <br />
             <Button style={{margin:'20px',marginLeft:'auto',marginRight:'auto', alignItems:'center'}} color = 'pink' className = "logout-button"  animated onClick = {this.onCreate}>
              <Button.Content visible>Create Event Go!</Button.Content>

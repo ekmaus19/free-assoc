@@ -48,7 +48,10 @@ const artistSchema = mongoose.Schema({
   facebook: String,
   instagram: String,
   twitter: String,
-  tags: Array
+  connections: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Artist',
+  }],
 });
 
 const userSchema = mongoose.Schema({
@@ -101,6 +104,10 @@ const eventSchema = mongoose.Schema({
     type: String,
     required: true
   },
+  price: {
+    type: String,
+    required: true
+  },
   streetAddress: {
     type: String,
     required: true
@@ -126,10 +133,6 @@ const eventSchema = mongoose.Schema({
   tags: Array,
   about: String,
 });
-
-
-
- 
 
 const connectionSchema = mongoose.Schema({
   requester: {

@@ -51,29 +51,28 @@ export default class EventHistory extends React.Component {
   componentDidMount(){
     this.loadEvents()
   }
-  
-  componentWillUnmount(){
 
-  }
-  
+  // componentWillUnmount(){
+  //
+  // }
+
   render() {
 
     return (
       <div>
         {/* <Gallery images={IMAGES} backdropClosesModal={true} /> */}
-        {/* document.getElementById('example-0') */} 
+        {/* document.getElementById('example-0') */}
         <Item.Group>
-    
+
           {this.state.event.map(event =>
 
             <div>
               {event.eventName}
             </div>
-            
+
           )}
-        </Item.Group> 
-      </div> 
+        </Item.Group>
+      </div>
     )
   }
 }
-

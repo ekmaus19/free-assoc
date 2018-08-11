@@ -8,9 +8,8 @@ import bodyParser from 'body-parser';
 import socketIO from 'socket.io';
 import cors from 'cors';
 
-
 const models = require('./models/models');
-const { Artist, User, Event } = require('./models/models')
+const { Artist, User, Event, Connection } = require('./models/models')
 
 const routes = require('./routes/routes');
 const auth = require('./routes/auth');
@@ -63,7 +62,6 @@ io.on('connection', (socket) => {
           var query = results[i].streetAddress + ', ' + results[i].city + ', ' + results[i].state
           geocoder.search( { q: query } )
               .then((response) => {
-                  console.log(response)
                   results[i].latitude = response[0].latitude
                   results[i].longitude = response[0].longitude
               }).save((err, event) => next({err, event}))
@@ -107,8 +105,7 @@ app.use(session({
 }));
 
 // Initialize Passport
-app.use(passport.initialize());
-app.use(passport.session());
+
 
 app.use(express.static(path.join(__dirname, 'build')));
 app.use(bodyParser.json());
@@ -178,6 +175,9 @@ passport.use('artist', new LocalStrategy (
   },
 ));
 
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.use('/', auth(passport));
 app.use('/', routes);
 
@@ -186,7 +186,6 @@ app.get('/events', function (req, res) {
   Event.find({}, (err, results) => {
     if(err) console.log("a terrible horrible error")
     else {
-      console.log(results)
       return res.json(results)
     }
   })

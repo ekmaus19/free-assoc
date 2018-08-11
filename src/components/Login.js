@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {Button, Icon, Input} from 'semantic-ui-react';
 import {connect} from 'react-redux';
 
-const url = 'http://1c65b18b.ngrok.io'
+const url = 'http://localhost:1337'
 
 class LoginScreen extends Component {
   constructor(props){
@@ -19,6 +19,7 @@ class LoginScreen extends Component {
       headers: {
         'Content-Type': 'application/json',
       },
+      credentials: 'same-origin',
       body: JSON.stringify({
         username: this.state.username,
         password: this.state.password
@@ -46,6 +47,7 @@ class LoginScreen extends Component {
       headers: {
         'Content-Type': 'application/json',
       },
+      'credentials': 'same-origin',
       body: JSON.stringify({
         username: this.state.username,
         password: this.state.password
