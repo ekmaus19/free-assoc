@@ -102,6 +102,7 @@ const delimiters = [KeyCodes.comma, KeyCodes.enter];
      let query = this.state.streetAddress + ', ' + this.state.city + ', ' + this.state.state + ', ' + this.state.country
     const createEvent = {
       eventName: this.state.eventName,
+      eventCreator: this.props.artist._id,
       venueName: this.state.venueName,
       medium: this.state.medium,
       time: this.state.time,
@@ -127,7 +128,7 @@ const delimiters = [KeyCodes.comma, KeyCodes.enter];
       formData.append('latitude', response[0].lat)
       formData.append('longitude', response[0].lon)
 
-      return axios.post('http://localhost:1337/fileUpload', formData)
+      return axios.post('http://localhost:1337/fileUpload', formData);
     }).then((result)=> {
       this.props.redirect('EventHistory')
     }).catch((err)=> {

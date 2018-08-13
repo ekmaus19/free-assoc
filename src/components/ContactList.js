@@ -1,46 +1,264 @@
 import React from 'react';
-import io from 'socket.io-client';
+import Modal from 'react-modal';
 
+Modal.setAppElement('#root')
+
+const url = 'http://localhost:1337'
+
+const customStyles = {
+  content : {
+    top                   : '50%',
+    left                  : '50%',
+    right                 : 'auto',
+    bottom                : 'auto',
+    marginRight           : '-50%',
+    transform             : 'translate(-50%, -50%)'
+  }
+};
 
 class Contact extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      socket: io(),
-      username: ''
-    };
+      contacts: [],
+      sent: [],
+      received: [],
+      username: '',
+      connection: '',
+      requester: '',
+      invitee: '',
+      modalSearchIsOpen: false,
+      modalPendingIsOpen: false
+    }
+    this.openSearchModal = this.openSearchModal.bind(this);
+    this.closeSearchModal = this.closeSearchModal.bind(this);
+
+    this.openPendingModal = this.openPendingModal.bind(this);
+    this.closePendingModal = this.closePendingModal.bind(this);
   }
 
-  componentDidMount() {
-    console.log('WEEEEEE')
-    this.state.socket.on('connect', () => {
-      console.log('connected to chatroom');
-      let username = prompt('enter username')
-      this.setState({username: username})
-      this.state.socket.emit('username', username)
-      this.state.socket.emit('room', this.state.roomName)
-    });
+  async componentDidMount() {
+    await this.contactList()
+    await this.sentInvites()
+    await this.receivedInvites()
+  }
 
-    this.state.socket.on('errorMessage', message => {
-      alert(message)
+  openSearchModal() {
+    this.setState({
+      modalSearchIsOpen: true,
     });
   }
 
-  join(room) {
-    console.log(room);
-    this.setState({roomName: room})
+  closeSearchModal() {
+    this.setState({
+      modalSearchIsOpen: false,
+    });
+  }
+
+  openPendingModal() {
+    this.setState({
+      modalPendingIsOpen: true,
+    });
+  }
+
+  closePendingModal() {
+    this.setState({
+      modalPendingIsOpen: false,
+    });
+  }
+
+  contactList = () => {
+    fetch(url + `/contacts/${this.props.artist._id}`, {
+      method: 'GET',
+    }).then(res => res.json())
+    .then(json => {
+      console.log('JSON ---->', json)
+      this.setState({
+        contacts: json.contacts,
+      })
+    })
+    .catch((err) => {
+      throw err
+    })
+  }
+
+  sentInvites = () => {
+    fetch(url + `/pending/sent/${this.props.artist._id}`, {
+      method: 'GET',
+    }).then(res => res.json())
+    .then(json => {
+      console.log('JSON ---->', json)
+      this.setState({
+        sent: json.sent
+      })
+    })
+    .catch((err) => {
+      throw err
+    })
+  }
+
+  receivedInvites = () => {
+    fetch(url + `/pending/received/${this.props.artist._id}`, {
+      method: 'GET',
+    }).then(res => res.json())
+    .then(json => {
+      console.log('JSON ---->', json)
+      this.setState({
+        received: json.received
+      })
+    })
+    .catch((err) => {
+      throw err
+    })
+  }
+
+  onUsernameChange = (e) => {
+    this.setState ({
+      username: e.target.value
+    })
+  }
+
+  sendConnection = () => {
+    fetch(url + `/connect/${this.props.artist._id}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        username: this.state.username
+      })
+    })
+    .then(res => res.json())
+    .then(json => {
+      console.log('JSON ----->', json)
+      if (json.success) {
+        this.setState({
+          connection: json.connection,
+          modalSearchIsOpen:false
+        })
+        alert('Invite sent!')
+      }
+    })
+    .catch((err) => {
+      throw err
+    })
+  }
+
+  acceptConnection = (requester) => {
+    fetch(url + `/accept/${this.props.artist._id}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        requester: requester,
+        invitee: this.props.artist._id
+      })
+    })
+    .then(res => res.json())
+    .then(json => {
+      console.log('JSON ----->', json)
+      if (json.success) {
+        this.setState({
+          connection: json.connection,
+          modalPendingIsOpen: false
+        })
+        alert('Invite accepted!')
+      }
+    })
+    .catch((err) => {
+      throw err
+    })
+  }
+
+  declineConnection = (requester) => {
+    fetch(url + `/decline/${this.props.artist._id}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        requester: requester,
+        invitee: this.props.artist._id
+      })
+    })
+    .then(res => res.json())
+    .then(json => {
+      console.log('JSON ----->', json)
+      if (json.success) {
+        this.setState({
+          connection: json.connection,
+          modalPendingIsOpen: false
+        })
+        alert('Invite declined')
+      }
+    })
+    .catch((err) => {
+      throw err
+    })
   }
 
   render() {
+    const renderContacts = () => {
+      if (this.state.contacts) {
+        return this.state.contacts.map(contacts => {
+          return (
+            <div>
+              {contacts.username}
+            </div>
+          )
+        })
+      }
+    }
+    const renderSent = () => {
+      if (this.state.sent) {
+        return this.state.sent.map(sent => {
+          return (
+            <div>
+              {sent.invitee.username}
+            </div>
+          )
+        })
+      }
+    }
+    const renderReceived = () => {
+      if (this.state.received) {
+        return this.state.received.map((received, i) => {
+          return (
+            <div key = {i}>
+              {received.requester.username}
+              <button onClick={() => this.acceptConnection(received.requester._id)}>Accept</button>
+              <button onClick={() => this.declineConnection(received.requester._id)}>Decline</button>
+            </div>
+          )
+        })
+      }
+    }
     return (
       <div>
-        <h1>Chat</h1>
-        <button className="btn btn-default" onClick={() => this.join("Artist Chatroom")}>
-          Contact List
-        </button>
-
+        <div>
+          {renderContacts()}
+        </div>
+        <div>
+          <button onClick={() => this.openSearchModal()}>Make a new friend!</button>
+          <Modal isOpen={this.state.modalSearchIsOpen} style={customStyles}>
+            <input type='text' placeholder='enter artist username' onChange={(e) => (this.setState({username:e.target.value}))}></input>
+            <button onClick={() => this.sendConnection()}>Connect</button>
+            <button onClick={() => this.closeSearchModal()}>Cancel</button>
+          </Modal>
+        </div>
+        <div>
+          <button onClick={() => this.openPendingModal()}>Pending connections</button>
+          <Modal isOpen={this.state.modalPendingIsOpen} style={customStyles}>
+            Sent Invites
+            {renderSent()}
+            Received invites
+            {renderReceived()}
+            <button onClick={() => this.closePendingModal()}>Close</button>
+          </Modal>
+        </div>
       </div>
-    );
+    )
   }
 }
 

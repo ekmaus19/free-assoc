@@ -12,11 +12,12 @@ import Ethos from './components/Ethos';
 import MainMap from './components/Map';
 import {Button, Icon, Input, Menu, Image} from 'semantic-ui-react';
 import io from 'socket.io-client';
-
-const url = "http://localhost:1337"
-
 const Nominatim = require('nominatim-geocoder')
-const geocoder = new Nominatim()
+const geocoder = new Nominatim({
+  secure: true
+})
+
+const url = 'http://localhost:1337'
 
 class App extends Component {
   constructor(props){
@@ -144,7 +145,8 @@ searchPlaceHome = () => {
           {this.state.currentPage === 'RegisterUser' ? <div><RegisterScreen redirect={(e) => this.redirect(e)}/></div> : null}
           {this.state.currentPage === 'RegisterArtist' ? <div><RegisterArtist redirect={(e) => this.redirect(e)}/></div> : null}
           {this.state.currentPage === 'ArtistDash' ? <div><ArtistDash socket={this.socket} artist={this.state.artist} redirect={(e) => this.redirect(e)}/></div> : null}
-          {this.state.currentPage === 'MainMap' ? <div><MainMap latlon={this.state.placeSearchCoords} redirect={(e) => this.redirect(e)}/></div> : null}
+          {this.state.currentPage === 'MainMap' ? <div><MainMap latlon={this.state.placeSearchCoords} socket={this.socket} redirect={(e) => this.redirect(e)}/></div> : null}
+
       </div>
     );
   }

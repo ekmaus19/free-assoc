@@ -1,9 +1,7 @@
 import React, {Component} from 'react';
 import {Button,Icon, Select,Input} from 'semantic-ui-react';
 
-
-const url = "http://localhost:1337"
-
+const url = 'http://localhost:1337'
 
 const options = [
     { key: 'art', text: 'Art', value: 'art' },

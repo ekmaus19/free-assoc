@@ -101,7 +101,15 @@ const eventSchema = mongoose.Schema({
   datesRange: {
     type: String,
   },
-  time: {
+  startTime: {
+    type: String,
+    required: true
+  },
+  endTime: {
+    type: String,
+    required: true
+  },
+  price: {
     type: String,
     required: true
   },

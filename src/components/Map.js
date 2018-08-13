@@ -1,10 +1,10 @@
 import React, { createRef, Component } from 'react'
 import { Map, TileLayer, Marker, Popup, CircleMarker, MapControl } from 'react-leaflet'
 import { Button, Input, Grid, Segment, Form } from 'semantic-ui-react'
-import url from './backend'
 import L from 'leaflet'
 import DivIcon from 'react-leaflet-div-icon';
 
+const url = 'http://localhost:1337'
 
 // ultimately, geocoder will be in the backend. In front for testing purposes
 const Nominatim = require('nominatim-geocoder')
