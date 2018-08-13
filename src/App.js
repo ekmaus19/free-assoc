@@ -98,7 +98,8 @@ searchPlaceHome = () => {
              <Container >
               <Menu.Item>
                       <header style={{marginRight:'auto', height:'20px'}} className="App-header">
-                        <Image width='30px' height='30px' src='/img/logo4.png' className="App-logo"/>
+                        <Image width='30px' height='30px' src='/img/logo4.png'/>
+                
                        </header>
                     <h2 style={{marginTop:'auto', marginBottom:'auto', marginLeft:'10px'}}>  Free Associations  </h2>
                 </Menu.Item>
@@ -117,6 +118,7 @@ searchPlaceHome = () => {
           <div>
              <div style={{width:'30%', height:'30%',alignItems:'center',justifyContent:'center', marginLeft:'auto',marginRight:'auto', marginTop:'40px'}}>
              <Image className="mainlogo" src='/img/font2.png'/>
+             {/* <h1 className='App-logo'>AMP</h1> */}
           
             </div>
 
