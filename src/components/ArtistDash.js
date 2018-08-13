@@ -47,7 +47,7 @@ const renderContent=(mode, socket, artist,setMode) => { //functional component
     return (
       <div>
         <Header as='h2'>My Connections</Header>
-        <ContactList />
+        <ContactList artist={artist}/>
       </div>
     )
 
@@ -143,9 +143,9 @@ class ArtistDash extends Component {
               <Grid.Column width={3}>
                 <Container >
                   <Card style={{justifyContent:'center', alignItems:'center'}}>
-                    <Container > 
+                    <Container >
                     <Image style={{marginLeft:'auto',marginRight:'auto',width:'75%', height:'75%',padding:'10px'}} src='/img/1.png' />
-                    </Container> 
+                    </Container>
                     <Card.Content>
                       <Card.Header>{this.props.artist.firstName} {this.props.artist.lastName}</Card.Header>
                       <Card.Meta>

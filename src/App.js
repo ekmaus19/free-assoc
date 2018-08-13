@@ -30,7 +30,6 @@ class App extends Component {
         lat: null,
         lon: null,
       },
-      userId: '',
       placeSearch: null,
       placeSearchCoords: {
         lat: null,
