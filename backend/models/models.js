@@ -100,7 +100,11 @@ const eventSchema = mongoose.Schema({
   datesRange: {
     type: String,
   },
-  time: {
+  startTime: {
+    type: String,
+    required: true
+  },
+  endTime: {
     type: String,
     required: true
   },
@@ -132,6 +136,10 @@ const eventSchema = mongoose.Schema({
   longitude: String,
   tags: Array,
   about: String,
+  price:{
+    type:String,
+    required:true
+  }
 });
 
 const connectionSchema = mongoose.Schema({

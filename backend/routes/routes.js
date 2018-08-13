@@ -20,34 +20,47 @@ router.use(bodyParser.urlencoded({ extended: true }));
 
 router.use(validator());
 
-router.post('/fileUpload', upload.array('selectedFile','info','longitude','latitude'),function(req,res,next){
-  console.log('file****', req.files,req.body)
+router.post('/fileUpload', upload.single('selectedFile'),function(req,res,next){
+  console.log('file****', req.file,req.body)
   console.log(req.user);
+  var readFile = fs.readFileSync(req.file.path)
   const info = JSON.parse(req.body.info)
   new Event({
-    eventName: info.eventName,
-    eventCreator: info.eventCreator,
-    venueName: info.venueName,
-    medium:info.medium,
-    date: info.date,
-    datesRange: info.datesRange,
-    time: info.time,
-    streetAddress: info.streetAddress,
-    city: info.city,
-    state: info.state,
-    country:info.country,
-    about: info.about,
-    tags:info.tags.map((tag)=> tag.text),
-    img: {data:req.file,contentType:'image/png'},
-    latitude: req.body.latitude,
-    longitude: req.body.longitude
+      eventName: info.eventName,
+      eventCreator: info.eventCreator,
+      venueName: info.venueName,
+      medium:info.medium,
+      date: info.date,
+      datesRange: info.datesRange,
+      startTime: info.startTime,
+      endTime: info.endTime,
+      streetAddress: info.streetAddress,
+      city: info.city,
+      state: info.state,
+      country:info.country,
+      price: info.price,
+      about: info.about,
+      tags:info.tags.map((tag)=> tag.text),
+      img: {data:readFile,contentType:'image/png'},
+      latitude: req.body.latitude,
+      longitude: req.body.longitude
   }).save((err,event)=> {
-    console.log('saved')
-    res.json({success:true})
+    if (err){
+      console.log(err)
+    } else{
+      console.log('saved')
+      res.json({success:true})
+    }
   }
 );
 })
 
+router.get('/event/:id/profileimg',(req,res)=>{
+  Event.findById(req.params.id, (err,event)=>{
+    res.contentType(event.img.contentType)
+    res.end(event.img.data, "binary")
+  })
+})
 
 // router.post('/event/create', (req, res) => {
 

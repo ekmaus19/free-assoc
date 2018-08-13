@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Button, Icon, Input} from 'semantic-ui-react';
+import {Button, Icon, Input, Image} from 'semantic-ui-react';
 import {connect} from 'react-redux';
 
 const url = 'http://localhost:1337'
@@ -88,7 +88,9 @@ class LoginScreen extends Component {
       <div>
 
       <div className = "login">
-
+            <div style={{width:'30%', height:'30%',alignItems:'center',justifyContent:'center', marginLeft:'auto',marginRight:'auto', marginTop:'40px'}}>
+            <Image src='/img/font2.png' />
+            </div>
           <div className = "input-container">
             <Input onChange = {this.onUsernameChange}  className = "field" placeholder = "Username..."/>
             <br/>
