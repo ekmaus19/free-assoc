@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Button,Icon, Select,Input} from 'semantic-ui-react';
+import {Button,Icon, Select,Input, Image} from 'semantic-ui-react';
 
 const url = 'http://localhost:1337'
 
@@ -135,6 +135,7 @@ class RegisterArtist extends Component {
 
   render(){
     return (
+     
       <div style={{width:'70%', marginRight:'auto', marginLeft:'auto'}}>
         <Input style={{width:'190px', marginRight:'20px', marginBottom:'5px'}} onChange = {this.onFirstnameChange}  placeholder='First name' />
         <Input style={{width:'190px'}}  onChange = {this.onLastnameChange}  placeholder='Last name' />

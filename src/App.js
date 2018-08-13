@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
 import LoginScreen from './components/Login';
 import RegisterScreenPicker from './components/RegisterPicker';
@@ -10,13 +9,14 @@ import {CreateEvent} from './components/CreateEvent';
 import About from './components/About';
 import Ethos from './components/Ethos';
 import MainMap from './components/Map';
-import {Button, Icon, Input, Menu, Image} from 'semantic-ui-react';
+import {Button, Icon, Input, Menu, Image,Container} from 'semantic-ui-react';
 import io from 'socket.io-client';
 const Nominatim = require('nominatim-geocoder')
 const geocoder = new Nominatim({
   secure: true
 })
 
+console.log(url)
 const url = 'http://localhost:1337'
 
 class App extends Component {
@@ -65,7 +65,7 @@ nearMeRedirect = () => {
   this.redirect("MainMap")
 }
 
-onPassChange = (e) => {
+onNameChange = (e) => {
   this.setState({
     placeSearch: e.target.value,
   })
@@ -83,46 +83,55 @@ searchPlaceHome = () => {
     })
     console.log("Home page state:", this.state)
   });
-}
+ }
 
 
 
   render() {
     return (
       <div className="App">
-       <Menu className="menu"
-              size='large'>
-              <div style={{width:'10%', height:'3%', marginLeft:'20px',marginRight:'20px', marginTop:'10px'}}>
+       <Menu className="menu" size='large' style={{justifyContent:'space-between'}}>
+              {/* <div style={{width:'10%', height:'3%', marginLeft:'20px',marginRight:'20px', marginTop:'10px'}}>
                  <Image src='/img/font.png' />
-             </div>
+             </div> */}
+             <Container >
+              <Menu.Item>
+                      <header style={{marginRight:'auto', height:'20px'}} className="App-header">
+                        <Image width='30px' height='30px' src='/img/logo4.png'/>
+                
+                       </header>
+                    <h2 style={{marginTop:'auto', marginBottom:'auto', marginLeft:'10px'}}>  Free Associations  </h2>
+                </Menu.Item>
                 <Menu.Item onClick = {() => this.redirect('Home')} as='a' active>Home</Menu.Item>
                 <Menu.Item onClick = {() => this.redirect('Ethos')} as='a'>Ethos</Menu.Item>
                 <Menu.Item onClick= {()=>this.redirect('About')}as='a'>About</Menu.Item>
                 <Menu.Item as='a'>Careers</Menu.Item>
-
-                <Menu.Item position='right'>
-                      <header style={{marginRight:'auto'}} className="App-header">
-                      <img src={logo} className="App-logo" alt="logo" />
-                       </header>
-                    <h2 style={{marginTop:'auto', marginBottom:'auto'}}>  Free Associations  </h2>
-                </Menu.Item>
-
+                </Container> 
+                <Container style={{display:'flex',justifyContent:'flex-end'}}> 
+                <Button style={{padding:'3px',height:'75%',width:'100px', textAlign:'center', margin:'10px'}} basic color = 'grey' className = "register-button"  animated onClick = {() => this.redirect('Registerpicker')}>Register</Button>
+                <Button style={{padding:'3px',width:'100px',height:'75%', textAlign:'center', margin:'10px'}} color = 'violet' className = "login-button"  animated onClick = {() => this.redirect('Login')}>Login</Button>
+                </Container> 
             </Menu>
-
 
          {this.state.currentPage === 'Home' ?
           <div>
+             <div style={{width:'30%', height:'30%',alignItems:'center',justifyContent:'center', marginLeft:'auto',marginRight:'auto', marginTop:'40px'}}>
+             <Image className="mainlogo" src='/img/font2.png'/>
+             {/* <h1 className='App-logo'>AMP</h1> */}
+          
+            </div>
+
           <div>
             {/* <Input size='massive' action={{icon:'search'}} onChange = {this.onNameChange}  className = "field" placeholder = "Events Near Me"/> */}
-            <Button onClick = { () => { this.nearMeRedirect() } }>Events Near Me</Button>
+            <Button style={{padding:'3px',textAlign:'center',width:'450px',height:"60px", fontSize:'30px'}} color='orange' onClick = { () => { this.nearMeRedirect()}}> Events   Near   Me</Button>
             <br/>
             <h2>or</h2>
-            <Input size='large' onChange = {this.onPassChange}  className = "field" placeholder = "Search a place..."/>
-            <Button onClick={ this.searchPlaceHome }>Search</Button>
+            <Input style={{width:'450px',height:"60px", textAlign:'center', marginBottom:'50px'}} size='massive' onChange = {this.onNameChange} className = "field" placeholder = "Search a place..."/>
+            <Button color='violet' style={{width:'100px',height:"40px",textAlign:'center', display:'block', marginRight:'auto', marginLeft:'auto'}} onClick = {this.searchPlaceHome}>Go!</Button>
             <br />
           </div>
           <br/>
-          <Button color = 'blue' className = "register-button"  animated onClick = {() => this.redirect('Registerpicker')}>
+          {/* <Button color = 'blue' className = "register-button"  animated onClick = {() => this.redirect('Registerpicker')}>
             <Button.Content visible>Register</Button.Content>
             <Button.Content hidden>
               <Icon name='right arrow' />
@@ -133,7 +142,7 @@ searchPlaceHome = () => {
             <Button.Content hidden>
               <Icon name='right arrow' />
             </Button.Content>
-          </Button>
+          </Button> */}
 
           </div>: null}
           {this.state.currentPage === 'Ethos' ? <div><Ethos/></div>:null}
@@ -142,7 +151,7 @@ searchPlaceHome = () => {
           {this.state.currentPage === 'Registerpicker' ? <div><RegisterScreenPicker redirect={(e) => this.redirect(e)}/></div> : null}
           {this.state.currentPage === 'RegisterUser' ? <div><RegisterScreen redirect={(e) => this.redirect(e)}/></div> : null}
           {this.state.currentPage === 'RegisterArtist' ? <div><RegisterArtist redirect={(e) => this.redirect(e)}/></div> : null}
-          {this.state.currentPage === 'ArtistDash' ? <div><ArtistDash socket={this.socket} artist={this.state.artist} redirect={(e) => this.redirect(e)}/></div> : null}
+          {this.state.currentPage === 'ArtistDash' ? <div><ArtistDash socket={this.socket} event={this.state.event} artist={this.state.artist} redirect={(e) => this.redirect(e)}/></div> : null}
           {this.state.currentPage === 'MainMap' ? <div><MainMap latlon={this.state.placeSearchCoords} socket={this.socket} redirect={(e) => this.redirect(e)}/></div> : null}
 
       </div>

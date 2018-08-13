@@ -7,6 +7,7 @@ import LocalStrategy from 'passport-local';
 import bodyParser from 'body-parser';
 import socketIO from 'socket.io';
 import cors from 'cors';
+import { emitKeypressEvents } from 'readline';
 
 const models = require('./models/models');
 const { Artist, User, Event, Connection } = require('./models/models')
@@ -76,12 +77,16 @@ io.on('connection', (socket) => {
   socket.on('getEvents', (data, next) => {
     Event
     .find({eventCreator: data.userId})
+    .select('-img')
     .exec(function(err, events) {
-      socket.emit('getEvents',{err, events})
+  
+      // events.forEach((i)=> {
+      //  i.img.data = null 
+      // })
+      console.log(events[0],'****')
+      socket.emit('getEvents',{events})
+      })
     })
-
-  })
-
 
   });
 
