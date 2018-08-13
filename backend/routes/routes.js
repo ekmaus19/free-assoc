@@ -200,9 +200,7 @@ router.post('/accept/:userId', (req, res) => {
       })
     }
   })
-}
-})
-})
+});
 
 //decline connection invite
 router.post('/decline/:userId', (req, res) => {

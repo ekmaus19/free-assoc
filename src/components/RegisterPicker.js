@@ -1,8 +1,6 @@
 import React, {Component} from 'react';
 import {Button, Icon, Input} from 'semantic-ui-react';
 
-import url from './backend'
-
 class RegisterScreenPicker extends Component {
   constructor(props){
     super(props);
