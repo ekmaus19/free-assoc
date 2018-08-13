@@ -1,21 +1,17 @@
 .App {
   text-align: center;
-  background-color:linear-gradient(rgb(78, 18, 104),rgb(210, 107, 255));
+  background-color:rgb(232,142,164);
 }
 
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
-
-}
 
 
 .menu{
-  background-color:  rgb(210, 107, 255);
+  background-color:rgb(232,142,164);
 }
 
 
 body{
-  background-color:rgb(210, 107, 255) ;
+  background-color:rgb(232,142,164);
 }
 .App-title {
   font-size: 60px;

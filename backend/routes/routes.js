@@ -32,7 +32,8 @@ router.post('/fileUpload', upload.single('selectedFile'),function(req,res,next){
       medium:info.medium,
       date: info.date,
       datesRange: info.datesRange,
-      time: info.time,
+      startTime: info.startTime,
+      endTime: info.endTime,
       streetAddress: info.streetAddress,
       city: info.city,
       state: info.state,
@@ -54,6 +55,12 @@ router.post('/fileUpload', upload.single('selectedFile'),function(req,res,next){
   );
 })
 
+router.get('/event/:id/profileimg',(req,res)=>{
+  Event.findById(req.params.id, (err,event)=>{
+    res.contentType(event.img.contentType)
+    res.end(event.img.data, "binary")
+  })
+})
 
  
 // router.post('/event/create', (req, res) => {

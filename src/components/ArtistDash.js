@@ -4,6 +4,7 @@ import {CreateEvent} from './CreateEvent.js'
 import MainMap from './Map';
 import ContactList from './ContactList';
 import EventHistory from './EventHistory'
+import {CreateEventDone} from './CreateEventDone'
 
 const url = 'http://localhost:1337'
 
@@ -11,7 +12,7 @@ const url = 'http://localhost:1337'
 // toMap = () => this.props.redirect('Map')
 
 
-const renderContent=(mode, socket, artist, redirect) => { //functional component
+const renderContent=(mode, socket, artist,setMode) => { //functional component
   switch (mode) {
     case 'T1':
     return (
@@ -24,7 +25,7 @@ const renderContent=(mode, socket, artist, redirect) => { //functional component
     return (
       <div>
         <Header as='h2'>Create Event</Header>
-        <CreateEvent redirect={redirect} socket={socket} artist={artist} />
+        <CreateEvent socket={socket} artist={artist} setMode={setMode} />
 
       </div>
     )
@@ -92,7 +93,7 @@ const SidebarExampleVisible = (props) => (
 
     <Sidebar.Pusher>
       <Container style={{paddingTop:'20px',paddingLeft:'30px',paddingRight:'185px'}} basic >
-        {renderContent(props.mode, props.socket, props.artist,props.redirect)}
+        {renderContent(props.mode, props.socket, props.artist, props.setMode)}
 
       </Container>
     </Sidebar.Pusher>
@@ -174,7 +175,7 @@ class ArtistDash extends Component {
               </Grid.Column>
               <Grid.Column width={13}>
                 <Container style={{height:'100%'}} >
-                  <SidebarExampleVisible redirect={this.props.redirect} artist={this.props.artist} socket={this.props.socket} mode={this.state.mode} setMode={(mode)=> {this.setState({mode:mode})}}/>
+                  <SidebarExampleVisible  artist={this.props.artist} socket={this.props.socket} mode={this.state.mode} setMode={(mode)=> {this.setState({mode:mode})}}/>
                 </Container>
               </Grid.Column>
             </Grid.Row>

@@ -1,13 +1,12 @@
 import React from 'react';
+import TimeRangePicker from 'react-time-range-picker';
 import { Container,Button,Form, Input, Select,TextArea,Icon } from 'semantic-ui-react'
 import {
-    TimeInput,
     DatesRangeInput,
     DateTimeInput,
   } from 'semantic-ui-calendar-react';
 import { WithContext as ReactTags } from 'react-tag-input';
 import axios from 'axios';
-import {EventHistory} from './EventHistory'
 import cors from 'cors';
 const Nominatim = require('nominatim-geocoder')
 const geocoder = new Nominatim({
@@ -40,7 +39,8 @@ const delimiters = [KeyCodes.comma, KeyCodes.enter];
         eventName: '',
         venueName: '',
         medium:'',
-        time: '',
+        startTime: '',
+        endTime:'',
         datesRange: '',
         streetAddress: '',
         city: '',
@@ -79,12 +79,16 @@ const delimiters = [KeyCodes.comma, KeyCodes.enter];
         this.setState({ [name]: value });
       }
     }
-    handleTimeChange = (event, {name, value}) => {
-      if (this.state.hasOwnProperty(name)) {
-        this.setState({ [name]: value });
-      }
-    }
+    // handleTimeChange = (event, {name, value}) => {
+    //   if (this.state.hasOwnProperty(name)) {
+    //     this.setState({ [name]: value });
+    //   }
+    // }
 
+    pickerupdate = (start_time, end_time) => {
+      // start and end time in 24hour time
+      this.setState({startTime: start_time, endTime: end_time})
+    }
 
     handleDrag=(tag, currPos, newPos)=>{
       const tags = [...this.state.tags];
@@ -105,7 +109,8 @@ const delimiters = [KeyCodes.comma, KeyCodes.enter];
       eventCreator: this.props.artist._id,
       venueName: this.state.venueName,
       medium: this.state.medium, 
-      time: this.state.time,
+      startTime: this.state.startTime,
+      endTime: this.state.endTime,
       datesRange: this.state.datesRange,
       streetAddress: this.state.streetAddress,
       city: this.state.city,
@@ -131,7 +136,8 @@ const delimiters = [KeyCodes.comma, KeyCodes.enter];
 
       return axios.post('http://localhost:1337/fileUpload', formData);
     }).then((result)=> {
-      this.props.redirect('EventHistory')
+      console.log('redirect****')
+      this.props.setMode('T1')
     }).catch((err)=> {
       console.log(err)
     })
@@ -255,13 +261,8 @@ const delimiters = [KeyCodes.comma, KeyCodes.enter];
             onChange={this.handleDateChange} />
             <br />
           Event Time
-          <TimeInput
-          inline
-          name="time"
-          placeholder="Time"
-          value={this.state.time}
-          iconPosition="left"
-          onChange={this.handleTimeChange} />
+    
+          <TimeRangePicker hourmarkers hourlines timeupdate={this.pickerupdate}/>
              <br />
             <Form.Field control={TextArea} label='About' placeholder='Tell us a little more about the event...' onChange={this.onAboutChange} />
 

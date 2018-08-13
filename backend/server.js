@@ -79,16 +79,13 @@ io.on('connection', (socket) => {
   socket.on('getEvents', (data, next) => {
     Event
     .find({eventCreator: data.userId})
+    .select('-img')
     .exec(function(err, events) {
-      // var images = events.map((event)=> {
-      //   return new Buffer(event.img.data).toString('base64')
-      // })
+  
       // events.forEach((i)=> {
-      //   if(i.img.data){
-      //  var string = new Buffer(i.img.data,'binary').toString('base64')
-      //  i.img= 'data:image/jpeg;base64,'+ string
-      //  console.log(i.img)
- 
+      //  i.img.data = null 
+      // })
+      console.log(events[0],'****')
       socket.emit('getEvents',{events})
       })
     })

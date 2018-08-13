@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
 import LoginScreen from './components/Login';
 import RegisterScreenPicker from './components/RegisterPicker';
@@ -98,10 +97,10 @@ searchPlaceHome = () => {
              </div> */}
              <Container >
               <Menu.Item>
-                      <header style={{marginRight:'auto'}} className="App-header">
-                      <img src={logo} className="App-logo" alt="logo" />
+                      <header style={{marginRight:'auto', height:'20px'}} className="App-header">
+                        <Image width='30px' height='30px' src='/img/logo4.png' className="App-logo"/>
                        </header>
-                    <h2 style={{marginTop:'auto', marginBottom:'auto'}}>  Free Associations  </h2>
+                    <h2 style={{marginTop:'auto', marginBottom:'auto', marginLeft:'10px'}}>  Free Associations  </h2>
                 </Menu.Item>
                 <Menu.Item onClick = {() => this.redirect('Home')} as='a' active>Home</Menu.Item>
                 <Menu.Item onClick = {() => this.redirect('Ethos')} as='a'>Ethos</Menu.Item>
@@ -110,24 +109,24 @@ searchPlaceHome = () => {
                 </Container> 
                 <Container style={{display:'flex',justifyContent:'flex-end'}}> 
                 <Button style={{padding:'3px',height:'75%',width:'100px', textAlign:'center', margin:'10px'}} basic color = 'grey' className = "register-button"  animated onClick = {() => this.redirect('Registerpicker')}>Register</Button>
-                <Button style={{padding:'3px',width:'100px',height:'75%', textAlign:'center', margin:'10px'}} color = 'purple' className = "login-button"  animated onClick = {() => this.redirect('Login')}>Login</Button>
+                <Button style={{padding:'3px',width:'100px',height:'75%', textAlign:'center', margin:'10px'}} color = 'violet' className = "login-button"  animated onClick = {() => this.redirect('Login')}>Login</Button>
                 </Container> 
             </Menu>
 
          {this.state.currentPage === 'Home' ?
           <div>
              <div style={{width:'30%', height:'30%',alignItems:'center',justifyContent:'center', marginLeft:'auto',marginRight:'auto', marginTop:'40px'}}>
-             <Image className="mainlogo" src='/img/font2.png' />
+             <Image className="mainlogo" src='/img/font2.png'/>
           
             </div>
 
           <div>
             {/* <Input size='massive' action={{icon:'search'}} onChange = {this.onNameChange}  className = "field" placeholder = "Events Near Me"/> */}
-            <Button style={{padding:'3px',textAlign:'center',width:'450px',height:"60px", fontSize:'30px'}} color='yellow' onClick = { () => { this.nearMeRedirect()}}> Events   Near   Me</Button>
+            <Button style={{padding:'3px',textAlign:'center',width:'450px',height:"60px", fontSize:'30px'}} color='orange' onClick = { () => { this.nearMeRedirect()}}> Events   Near   Me</Button>
             <br/>
             <h2>or</h2>
             <Input style={{width:'450px',height:"60px", textAlign:'center', marginBottom:'50px'}} size='massive' onChange = {this.onNameChange} className = "field" placeholder = "Search a place..."/>
-            <Button color='purple' style={{width:'100px',height:"40px",textAlign:'center', display:'block', marginRight:'auto', marginLeft:'auto'}} onClick = {this.searchPlaceHome}>Go!</Button>
+            <Button color='violet' style={{width:'100px',height:"40px",textAlign:'center', display:'block', marginRight:'auto', marginLeft:'auto'}} onClick = {this.searchPlaceHome}>Go!</Button>
             <br />
           </div>
           <br/>
