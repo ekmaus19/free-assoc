@@ -108,11 +108,14 @@ router.get('/contacts/:userId', (req, res) => {
 });
 
 //get sent invites
-router.get('/pending/sent', (req, res) => {
-  Connection.find({requester: '5b62233284dd7663147a4ff3'}, (err, connection) => {
+router.get('/pending/sent/:userId', (req, res) => {
+  Connection.find({requester: req.params.userId})
+  .populate('invitee')
+  .exec( (err, connection) => {
     if (err) {
       console.log(err)
     }
+    console.log(connection)
     const sent = connection.filter((item) => {
       if (item.status === 'pending') {
         return true
@@ -122,14 +125,17 @@ router.get('/pending/sent', (req, res) => {
     })
     res.json({sent: sent})
   })
-})
+});
 
 //get received invites
-router.get('/pending/received', (req, res) => {
-  Connection.find({invitee: '5b62233284dd7663147a4ff3'}, (err, connection) => {
+router.get('/pending/received/:userId', (req, res) => {
+  Connection.find({invitee: req.params.userId})
+  .populate('requester')
+  .exec( (err, connection) => {
     if (err) {
       console.log(err)
     }
+    console.log(connection)
     const received = connection.filter((item) => {
       if (item.status === 'pending') {
         return true
@@ -139,10 +145,10 @@ router.get('/pending/received', (req, res) => {
     })
     res.json({received: received})
   })
-})
+});
 
 // send connection invite
-router.post('/connect', (req, res) => {
+router.post('/connect/:userId', (req, res) => {
   console.log('username', req.body.username)
   Artist.findOne({username: req.body.username}, (err, artist) => {
     if (err) {
@@ -154,7 +160,7 @@ router.post('/connect', (req, res) => {
         return
       }
       const connection = new Connection({
-        requester: "5b62233284dd7663147a4ff3",
+        requester: req.params.userId,
         invitee: artist._id,
       })
       connection.save((err, connection) => {
@@ -174,8 +180,8 @@ router.post('/connect', (req, res) => {
 });
 
 //accept connection invite
-router.post('/accept/:id', (req, res) => {
-  Connection.findByIdAndUpdate(req.params.id, {status: 'accepted'}, (err, connection) => {
+router.post('/accept/:userId', (req, res) => {
+  Connection.findOneAndUpdate({requester: req.body.requester, invitee: req.params.userId}, {status: 'accepted'}, (err, connection) => {
     if (err) {
       res.send(err)
     } else {
@@ -198,8 +204,8 @@ router.post('/accept/:id', (req, res) => {
 });
 
 //decline connection invite
-router.post('/decline/:id', (req, res) => {
-  Connection.findByIdAndUpdate(req.params.id, {status: 'declined'}, (err, connection) => {
+router.post('/decline/:userId', (req, res) => {
+  Connection.findOneAndUpdate({requester: req.body.requester, invitee: req.params.userId}, {status: 'declined'}, (err, connection) => {
     if (err) {
       res.send(err)
     } else {

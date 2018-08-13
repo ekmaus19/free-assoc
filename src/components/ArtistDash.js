@@ -46,7 +46,7 @@ const renderContent=(mode, socket, artist, redirect) => { //functional component
     return (
       <div>
         <Header as='h2'>My Connections</Header>
-        <ContactList />
+        <ContactList artist={artist}/>
       </div>
     )
 
@@ -92,7 +92,7 @@ const SidebarExampleVisible = (props) => (
 
     <Sidebar.Pusher>
       <Container style={{paddingTop:'20px',paddingLeft:'30px',paddingRight:'185px'}} basic >
-        {renderContent(props.mode, props.socket, props.artist,props.redirect)}
+        {renderContent(props.mode, props.socket, props.artist, props.redirect)}
 
       </Container>
     </Sidebar.Pusher>

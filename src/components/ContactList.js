@@ -39,7 +39,8 @@ class Contact extends React.Component {
 
   async componentDidMount() {
     await this.contactList()
-    console.log(this.state)
+    await this.sentInvites()
+    await this.receivedInvites()
   }
 
   openSearchModal() {
@@ -67,7 +68,7 @@ class Contact extends React.Component {
   }
 
   contactList = () => {
-    fetch(url + `/contacts/5b62233284dd7663147a4ff3`, {
+    fetch(url + `/contacts/${this.props.artist._id}`, {
       method: 'GET',
     }).then(res => res.json())
     .then(json => {
@@ -82,7 +83,7 @@ class Contact extends React.Component {
   }
 
   sentInvites = () => {
-    fetch(url + '/pending/sent', {
+    fetch(url + `/pending/sent/${this.props.artist._id}`, {
       method: 'GET',
     }).then(res => res.json())
     .then(json => {
@@ -97,7 +98,7 @@ class Contact extends React.Component {
   }
 
   receivedInvites = () => {
-    fetch(url + '/pending/received', {
+    fetch(url + `/pending/received/${this.props.artist._id}`, {
       method: 'GET',
     }).then(res => res.json())
     .then(json => {
@@ -118,7 +119,7 @@ class Contact extends React.Component {
   }
 
   sendConnection = () => {
-    fetch(url + '/connect', {
+    fetch(url + `/connect/${this.props.artist._id}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -143,12 +144,58 @@ class Contact extends React.Component {
     })
   }
 
-  acceptConnection = () => {
-
+  acceptConnection = (requester) => {
+    fetch(url + `/accept/${this.props.artist._id}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        requester: requester,
+        invitee: this.props.artist._id
+      })
+    })
+    .then(res => res.json())
+    .then(json => {
+      console.log('JSON ----->', json)
+      if (json.success) {
+        this.setState({
+          connection: json.connection,
+          modalPendingIsOpen: false
+        })
+        alert('Invite accepted!')
+      }
+    })
+    .catch((err) => {
+      throw err
+    })
   }
 
-  declineConnection = () => {
-
+  declineConnection = (requester) => {
+    fetch(url + `/decline/${this.props.artist._id}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        requester: requester,
+        invitee: this.props.artist._id
+      })
+    })
+    .then(res => res.json())
+    .then(json => {
+      console.log('JSON ----->', json)
+      if (json.success) {
+        this.setState({
+          connection: json.connection,
+          modalPendingIsOpen: false
+        })
+        alert('Invite declined')
+      }
+    })
+    .catch((err) => {
+      throw err
+    })
   }
 
   render() {
@@ -163,24 +210,50 @@ class Contact extends React.Component {
         })
       }
     }
+    const renderSent = () => {
+      if (this.state.sent) {
+        return this.state.sent.map(sent => {
+          return (
+            <div>
+              {sent.invitee.username}
+            </div>
+          )
+        })
+      }
+    }
+    const renderReceived = () => {
+      if (this.state.received) {
+        return this.state.received.map((received, i) => {
+          return (
+            <div key = {i}>
+              {received.requester.username}
+              <button onClick={() => this.acceptConnection(received.requester._id)}>Accept</button>
+              <button onClick={() => this.declineConnection(received.requester._id)}>Decline</button>
+            </div>
+          )
+        })
+      }
+    }
     return (
       <div>
         <div>
           {renderContacts()}
         </div>
         <div>
-        <button onClick={() => this.openSearchModal()}>Make a new friend!</button>
-        <Modal isOpen={this.state.modalSearchIsOpen} style={customStyles}>
-          <input type='text' placeholder='enter artist username' onChange={(e) => (this.setState({username:e.target.value}))}></input>
-          <button onClick={() => this.sendConnection()}>Connect</button>
-          <button onClick={() => this.closeSearchModal()}>Cancel</button>
-        </Modal>
-      </div>
-      <div>
-        <button onClick={() => this.openPendingModal()}>Pending connections</button>
+          <button onClick={() => this.openSearchModal()}>Make a new friend!</button>
+          <Modal isOpen={this.state.modalSearchIsOpen} style={customStyles}>
+            <input type='text' placeholder='enter artist username' onChange={(e) => (this.setState({username:e.target.value}))}></input>
+            <button onClick={() => this.sendConnection()}>Connect</button>
+            <button onClick={() => this.closeSearchModal()}>Cancel</button>
+          </Modal>
+        </div>
+        <div>
+          <button onClick={() => this.openPendingModal()}>Pending connections</button>
           <Modal isOpen={this.state.modalPendingIsOpen} style={customStyles}>
             Sent Invites
-            {this.state.username}
+            {renderSent()}
+            Received invites
+            {renderReceived()}
             <button onClick={() => this.closePendingModal()}>Close</button>
           </Modal>
         </div>
