@@ -4,9 +4,18 @@ import { Button, Input, Grid, Segment, Form, Dimmer, Loader } from 'semantic-ui-
 import url from './backend'
 import L from 'leaflet'
 import { Sidebar, Tab } from 'react-leaflet-sidebarv2';
+import {
+    TimeInput,
+    DateInput,
+    DatesRangeInput,
+    DateTimeInput,
+  } from 'semantic-ui-calendar-react';
+import moment from 'moment';
+import '../index.css'
+
+moment().format();
 // import { Sidebar, Tab } from './Sidebar';
 
-import '../index.css'
 
 // ultimately, geocoder will be in the backend. In front for testing purposes
 const Nominatim = require('nominatim-geocoder')
@@ -28,6 +37,40 @@ const findMe = {
   zoom: 13
 }
 
+class DateTimeFormInline extends React.Component {
+  constructor(props) {
+  super(props);
+
+  this.state = {
+    date: '',
+    time: '',
+    dateTime: '',
+    datesRange: ''
+  };
+}
+
+ handleChange = (event, {name, value}) => {
+    if (this.state.hasOwnProperty(name)) {
+      this.setState({ [name]: value });
+    }
+  }
+
+  render() {
+    return (
+      <Form>
+        <div className='ui grid container'>
+          <div className='two wide column'>
+            <DateInput
+              inline
+              name="date"
+              value={this.state.date}
+              onChange={this.handleDateChange} />
+          </div>
+        </div>
+      </Form>
+    );
+  }
+}
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // popup work
@@ -65,10 +108,10 @@ console.log(medium, latitude, longitude)
 
 // if <Marker />, use icon={customMarker}
   return ( <CircleMarker color={null} fillColor={customMarker} fillOpacity={.75} center={[latitude, longitude]} radius={12}>
-     <script>{console.log('user location ---------------->', userLocation)} </script>
+     {/* <script>{console.log('user location ---------------->', userLocation)} </script> */}
 
      {/* ////////////////////////////// THIS //////////////////////////////// */}
-     <script>{ splitUserLoc = userLocation.split(' ').join('+') } </script>
+     {/* <script>{ splitUserLoc = userLocation.split(' ').join('+') } </script> */}
 
      <Popup>
        <b className="eventName">{eventName}</b><br/>
@@ -127,11 +170,16 @@ export default class MainMap extends Component {
 
       // data generation //////////////////////////////////
       data: [],
+      nowTime: null,
+      nowHourTime: null,
 
       // if a city was selected on the home page //////////
       cityLatLong: props.latlon ? true : false,
 
-      userLocation: '',
+      userLocation: {
+        lat:27.773056,
+        lon: -82.639999
+      },
 
       // sidebar to be used on the map ////////////////////
       collapsed: true,
@@ -151,28 +199,60 @@ export default class MainMap extends Component {
     .then(async json => {
       let data_use = []
 
+      var currDate = moment().format('YYYY-MM-DD');
+      var currTime = moment().format("HH:mm")
+      console.log(currDate)
+      // currDate = moment(String(currDate))
+      // console.log("TESTING DATE ", currDate)
+
+
       console.log(json[1])
-      // console.log(json.[1].latitude)
       for(var i=0; i<json.length; i++) {
-        if(json[i].latitude && json[i].longitude) {
+        if(json[i].latitude && json[i].longitude && json[i].datesRange) {
           json[i].latitude = parseFloat(json[i].latitude)
           json[i].longitude = parseFloat(json[i].longitude)
           data_use.push(json[i])
         }
       }
 
+      /// fix the date format
+      for(var i=0; i < data_use.length; i++) {
+        data_use[i].datesRange = data_use[i].datesRange.split(' - ');
+        var one = String(data_use[i].datesRange[0])
+        console.log(moment(one, "DD-MM-YYYY").format('YYYY-MM-DD'))
+        var two = String(data_use[i].datesRange[1])
+        console.log(moment(two, "DD-MM-YYYY").format('YYYY-MM-DD'))
+        data_use[i].datesRange[0] = moment(one, "DD-MM-YYYY").format('YYYY-MM-DD');
+        data_use[i].datesRange[1] = moment(two, "DD-MM-YYYY").format('YYYY-MM-DD');
+      }
+      console.log(data_use)
+
       if(this.state.artist) {
         await this.mapRef.current.leafletElement.locate()
+        console.log(this.mapRef.current.leafletElement.locate())
         this.setState({
           data: data_use,
           loading:false,
+          nowTime: currDate,
+          nowHourTime: currTime,
+          userLocation: {
+            lat: a._lastCenter.lat,
+            lon: a._lastCenter.lng,
+          },
         })
       } else if(!this.props.latlon.lat) {
         console.log('in 1st choice, near me search')
         await this.mapRef.current.leafletElement.locate()
+        var a = await this.mapRef.current.leafletElement.locate()
         this.setState({
           data: data_use,
           loading:false,
+          nowTime: currDate,
+          nowHourTime: currTime,
+          userLocation: {
+            lat: a._lastCenter.lat,
+            lon: a._lastCenter.lng,
+          },
         })
       } else {
         console.log('in else statement')
@@ -180,22 +260,39 @@ export default class MainMap extends Component {
           viewport: {
             center: [this.props.latlon.lat, this.props.latlon.lon]
           },
+          nowTime: currDate,
+          nowHourTime: currTime,
         })
       }
-
   }).catch((err) => {
       console.log(err)
     })
     console.log("Map view:", this.state)
-    this.mapRef.current.leafletElement.locate()
+    // this.mapRef.current.leafletElement.locate()
   }
   data: data_use
+
+////////////////////////////////////////////////////////////////////////////////
 
   onSearchChange = (event) => {
     this.setState({
       searchingPlace: event.target.value
     })
   }
+
+  handleDateChange = (event, {name, value}) => {
+    if (this.state.hasOwnProperty(name)) {
+      this.setState({ [name]: value });
+    }
+  }
+
+  handleTimeChange = (event, {name, value}) => {
+    if (this.state.hasOwnProperty(name)) {
+      this.setState({ [name]: value });
+    }
+  }
+
+  //////////////////////////////////////////////////////////////////////////////
 
   findPlace = () => {
     geocoder.search( { q: this.state.searchingPlace } )
@@ -217,13 +314,18 @@ export default class MainMap extends Component {
 
 // determine location of present user
   handleClick = () => {
-    this.mapRef.current.leafletElement.locate()
+    this.setState({
+      viewport: {
+        center: this.state.userLocation,
+      }
+    })
   }
 
   handleLocationFound = e => {
     //user is here
     this.setState({
       hasLocation: true,
+      userLocation: e.latlng,
       latlng: e.latlng,
       viewport: {
         center: e.latlng,
@@ -299,6 +401,16 @@ export default class MainMap extends Component {
     var item = items[Math.floor(Math.random()*items.length)];
     console.log("WHAT THE ACTUAL ", item)
     this.menuClickPopup(item.eventName, item.medium, item.artist, item.venueName, item.streetAddress, item.city, item.state, item.latitude, item.longitude, item.tags, item.about)
+
+    return <CircleMarker fillColor={"red"} center={[item.latitude, item.longitude]} radius={.5}>
+      <Popup>
+        <b className="eventName">{item.eventName}</b><br/>
+        <b>{item.venueName}</b><br/>
+        Address: {item.streetAddress + ', '+ item.city}
+        <br/>
+       {/* <Button onClick={"https://www.google.com/maps/@" + item.latitude + ',' + item.longitude + ',15z'} size='mini'>Take Me There</Button><Button size='mini' onClick ={() => menuClickPopup(eventName, medium, eventOrganizer, venueName, streetAddress, city, state, latitude, longitude, tags, about)}>More</Button> */}
+      </Popup>
+    </CircleMarker>
   }
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -316,6 +428,38 @@ export default class MainMap extends Component {
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+  onNowTime = () => {
+    var now = moment();
+    var now_date
+    var now_time = moment().format("HH:mm")
+    console.log("Right now ", now_time);
+    this.setState({
+      nowHourTime: now_time,
+    })
+  }
+
+  onSoonTime = () => {
+    var inAnHour = moment().add(1, 'hour').format("HH:mm")
+    console.log("in an hour", inAnHour)
+    this.setState({
+      nowHourTime: inAnHour,
+    })
+  }
+
+  onTodayTime = () => {
+    var month = moment().get('month')+1;
+    var day = moment().get('date');
+    var year = moment().get('year')
+
+    var currDate = day + '-' + month + '-' + year
+    this.setState({
+      nowTime: currDate,
+    })
+    console.log(this.state.nowTime)
+  }
+
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // render the map interface
   render() {
     console.log(this.state)
@@ -331,6 +475,44 @@ export default class MainMap extends Component {
 
     // copy data and allow the buttons to filter the map
     let filterData = this.state.data.slice()
+
+    // if(this.state.nowTime) {
+    //   let dud = []
+    //   for(var i=0; i<filterData.length; i++) {
+    //      if(filterData[i].datesRange.indexOf(this.state.nowTime) !== -1) {
+    //        dud.push(filterData[i])
+    //        console.log('wowee')
+    //      } else {
+    //        console.log("boooo")
+    //      }
+    //    }
+    //    filterData=dud
+    // }
+
+    if(this.state.nowHourTime && this.state.nowTime) {
+      let dud = []
+      // find events that are happening right now!!
+      // if the current timetime is less than the end time of event AND AFTER start time
+      for(var i=0; i<filterData.length; i++) {
+        console.log(String(this.state.nowTime))
+        console.log(filterData[i].datesRange)
+        if(filterData[i].datesRange.indexOf(String(this.state.nowTime)) !== -1) {
+          if(this.state.nowHourTime < filterData[i].endTime) {
+            dud.push(filterData[i])
+            console.log('today and still to happen')
+          } else {
+            console.log("today but already happened")
+          }
+        } else {
+          console.log('not today')
+        }
+      }
+      filterData=dud
+      console.log("All of these should show up >>>>>>>>>>>>>", dud)
+    }
+
+
+
     if(this.state.filterArt===false){
       filterData=filterData.filter(item => item.medium !== "art")
     }
@@ -415,6 +597,13 @@ export default class MainMap extends Component {
               </Tab>
               <Tab id="event" header={this.state.menuEvent} icon="fa fa-info-circle">
                 {menuSingleEvent}
+              </Tab>
+              <Tab id="music" placeholder="M" icon="fa fa-clock-o">
+                <Button onClick={this.onNowTime}>Right Now</Button>
+                <Button onClick={this.onSoonTime}>Soon (+1hr)</Button>
+                <Button onClick={this.onTodayTime}>Today</Button>
+                <Button>Choose Time</Button>
+                <DateTimeFormInline />
               </Tab>
               <Tab id="music" placeholder="M" icon="fa fa-meh-o"></Tab>
 
