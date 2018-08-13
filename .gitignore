@@ -8,6 +8,8 @@ env.sh
 
 .DS_Store
 
+uploads/
+
 # Runtime data
 pids
 *.pid
