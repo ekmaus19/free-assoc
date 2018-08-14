@@ -87,7 +87,7 @@ console.log(medium, latitude, longitude)
 {/* https://www.google.com/maps/dir/SFO,+San+Francisco,+CA/AMC+Van+Ness+14,+Van+Ness+Avenue,+San+Francisco,+CA/@37.6957396,-122.4952311,12z/ */}
 {/* <Form action={window.open("https://www.google.com/maps/dir/"+ latitude + "," + longitude + "/" + splitUserLoc +"/@" + latlng.lat + "," + latlng.lng  + ",15z", "_blank")}><Button size='mini'>Take Me There</Button><Button size='mini'>More</Button></Form> */}
 
-      <Button onClick={"https://www.google.com/maps/@" + latitude + ',' + longitude + ',15z'} size='mini'>Take Me There</Button><Button size='mini' onClick ={() => menuClickPopup(eventName, medium, eventOrganizer, venueName, streetAddress, city, state, latitude, longitude, tags, about)}>More</Button>
+      <Button onClick={"https://www.google.com/maps/@" + userLocation + '/'+ latitude + ',' + longitude + ',15z'} size='mini'>Take Me There</Button><Button size='mini' onClick ={() => menuClickPopup(eventName, medium, eventOrganizer, venueName, streetAddress, city, state, latitude, longitude, tags, about)}>More</Button>
      </Popup>
    </CircleMarker>)
 }
@@ -148,6 +148,7 @@ export default class MainMap extends Component {
         lat:27.773056,
         lon: -82.639999
       },
+      userAddress: null,
 
       // sidebar to be used on the map ////////////////////
       collapsed: true,
@@ -282,11 +283,14 @@ export default class MainMap extends Component {
 
 // determine location of present user
   handleClick = () => {
+    var a = this.mapRef.current.leafletElement.locate()
     this.setState({
       viewport: {
-        center: this.state.userLocation,
+        center: [ a._lastCenter.lat, a._lastCenter.lng],
+        zoom: 14,
       }
     })
+    console.log(this.state.viewport)
   }
 
   handleLocationFound = e => {
@@ -304,18 +308,17 @@ export default class MainMap extends Component {
     // first try
 
     // geocoderReverse.reverseGeocode( parseFloat(e.latlng.lat), parseFloat(e.latlng.lng), function( err, response) {
+    //   if(err){
     //     console.log(parseFloat(e.latlng.lng))
-    //
     //     console.log('threw an error, ', err)
     //   } else {
     //     console.log(response)
-
-    //     // var address = response.results[0].formatted_address
-    //     // address = address[0] + ',' + address[1]
-    //     var address = "test"
-    //   if(err) {
+    //     var address = response.results[0].formatted_address
+    //     console.log(address)
+    //     address = address[0] + ',' + address[1]
+    //
     //     this.setState({
-    //       userLocation: address
+    //       userAddress: address
     //     })
     //     console.log('did the thing, ', response)
     //   }
@@ -521,6 +524,10 @@ export default class MainMap extends Component {
       }
     }
 
+    //////////////////////////////////////////////////////////////////////////////////////////
+
+    // filter through music / arts / performances
+
     if(this.state.filterArt===false){
       filterData=filterData.filter(item => item.medium !== "art")
     }
@@ -532,6 +539,8 @@ export default class MainMap extends Component {
       filterData=filterData.filter(item => item.medium !== "performance")
     }
 
+/// side menu tab template
+
     const menuSingleEvent = this.state.moreClicked ? (
         <div className="menuSingleEvent">
           <br/>
@@ -541,6 +550,8 @@ export default class MainMap extends Component {
           <p><b>About: </b>{this.state.menuAbout}</p>
       </div>
     ) : <Tab><p></p></Tab>
+
+// map constant
 
     const mapComponent = (<Map className="sidebar-map"
                     // onClick={this.setState({collapsed:true})}
@@ -556,7 +567,7 @@ export default class MainMap extends Component {
                       url="https://stamen-tiles-{s}.a.ssl.fastly.net/toner/{z}/{x}/{y}{r}.png"
                     />
                     <ZoomControl position="bottomright"/>
-                    <TestMarkerList data={filterData} latlng={this.state.latlng} userLocation={this.state.userLocation} menuClickPopup={(event, medium, artist, venue, address, city, state, lat, long, tags, about)=>this.menuClickPopup(event, medium, artist, venue, address, city, state, lat, long, tags, about)}/>
+                    <TestMarkerList data={filterData} latlng={this.state.latlng} userLocation={this.state.userAddress} menuClickPopup={(event, medium, artist, venue, address, city, state, lat, long, tags, about)=>this.menuClickPopup(event, medium, artist, venue, address, city, state, lat, long, tags, about)}/>
 
                     {/* past map tile of interest -- kept for reference */}
                     {/* L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
@@ -567,6 +578,7 @@ export default class MainMap extends Component {
                     {marker}
                   </Map>
                 )
+// loading screen for main map
 
     const mapLoading = (
         <Dimmer active inverted>
@@ -582,7 +594,7 @@ export default class MainMap extends Component {
             <button  className={this.state.filterArt ? "buttonArt" : "buttonOff" } onClick={(e) => { this.setState({filterArt: !this.state.filterArt}); }}>A</button>
             <Button onClick={this.findPlace}>Search</Button>
           </Grid.Row> */}
-          <Grid.Row><Button className="buttonFindMe" onClick={() => this.handleClick}>Find Me</Button></Grid.Row>
+          <Grid.Row><Button className="buttonFindMe" onClick={() => this.handleClick()}>Find Me</Button></Grid.Row>
           <Grid.Row><Button className="buttonWTF" onClick={() => this.handleClickWTF(filterData ? filterData : this.state.data)}>WTF</Button></Grid.Row>
 
           <Grid.Row>
@@ -633,94 +645,3 @@ export default class MainMap extends Component {
     )
   }
 }
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/// notes on maps : no more relevant content to map being generated in app
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////
-/// Working example done with react-leaflet
-//////////////////////////////////////////////
-
-// import { Map as LeafletMap, TileLayer, Marker, Popup } from 'react-leaflet'
-// import ReactDOM from 'react-dom'
-// import React, { Component } from 'react'
-//
-// export default class App extends React.Component {
-//   constructor() {
-//     super()
-//     this.state = {
-//       // user lat
-//       // user long
-//       // events lat
-//       // events long
-//       lat: 51.505,
-//       lng: -0.09,
-//       zoom: 13
-//     }
-//   }
-//
-//   render() {
-//     const position = [this.state.lat, this.state.lng];
-//     return (
-//         <div>
-//           <LeafletMap center={position} zoom={this.state.zoom}>
-//             <TileLayer
-//               attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-//               url='https://api.mapbox.com/styles/v1/ekmaus19/cjkaawem56j4j2rmc9wf1jahd/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoiZWttYXVzMTkiLCJhIjoiY2prYTAyc3JvMXppbjNrbWtmNTI5cmFheSJ9.SRlzG8UvBjRsNKoB1oY56Q'
-//             />
-//              <Marker position={position}>
-//                <Popup>
-//                  A pretty CSS3 popup. <br /> Easily customizable.
-//                </Popup>
-//              </Marker>
-//           </LeafletMap>
-//         </div>
-//     );
-//   }
-// }
-
-
-// export default class App extends Component {
-//   state = {
-//     lat: 51.505,
-//     lng: -0.09,
-//     zoom: 13,
-//   }
-//
-//   render() {
-//     const position = [this.state.lat, this.state.lng]
-//     return (
-//       <Map center={position} zoom={this.state.zoom}>
-//         <TileLayer
-//           attribution="&amp;copy <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
-//           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-//         />
-//         <Marker position={position}>
-//           <Popup>
-//             A pretty CSS3 popup. <br /> Easily customizable.
-//           </Popup>
-//         </Marker>
-//       </Map>
-//     )
-//   }
-// }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// var mymap = L.map('mapid').setView([51.505, -0.09], 13);
-// L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
-//   // attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-//   maxZoom: 18,
-//   id: 'mapbox.high-contrast',
-//   accessToken: "pk.eyJ1IjoiZWttYXVzMTkiLCJhIjoiY2prYTAyc3JvMXppbjNrbWtmNTI5cmFheSJ9.SRlzG8UvBjRsNKoB1oY56Q"
-// }).addTo(mymap)
-//
-// // add event here
-// var marker = L.marker([51.5, -0.09]).addTo(mymap);
-// var circle = L.circle([51.508, -0.11], {
-//   color: 'pink',
-//   fillColor: '#f03',
-//   fillOpacity: 0.5,
-//   radius: 500
-// }).addTo(mymap);
