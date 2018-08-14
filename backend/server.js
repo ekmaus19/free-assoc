@@ -7,9 +7,10 @@ import LocalStrategy from 'passport-local';
 import bodyParser from 'body-parser';
 import socketIO from 'socket.io';
 import cors from 'cors';
+import { emitKeypressEvents } from 'readline';
 
 const models = require('./models/models');
-const { Artist, User, Event } = require('./models/models')
+const { Artist, User, Event, Connection } = require('./models/models')
 
 const routes = require('./routes/routes');
 const auth = require('./routes/auth');
@@ -26,34 +27,33 @@ io.on('connection', (socket) => {
   console.log('connected--------')
   /////////////////////////////////
   // get latitude and longitude
-  socket.on('createEvent', (data, next) => {
-  //   /// ask about this
-  //   geocoder.search( { q: data.venueName + ', ' + data.streetAddress + ', ' data.city + ', ' + data.state + ', ' + data.country} )
-  //   .then((response) => {
-  //       console.log(response)
-  //   })
-  //   .catch((error) => {
-  //       console.log(error)
-  //   })
-    /////////////////////////////
-    console.log('Sweet Jesus it worked',data)
-    new Event({
-      eventName: data.eventName,
-      eventCreator: data.eventCreator,
-      venueName: data.venueName,
-      medium: data.medium,
-      date: data.date,
-      datesRange: data.datesRange,
-      time: data.time,
-      streetAddress: data.streetAddress,
-      city: data.city,
-      state: data.state,
-      country: data.country,
-      about: data.about,
-      latitude: data.latitude,
-      longitude: data.longitude,
-    }).save((err, event) => next({err, event}))
-  })
+  // socket.on('createEvent', (data, next) => {
+  // //   /// ask about this
+  // //   geocoder.search( { q: data.venueName + ', ' + data.streetAddress + ', ' data.city + ', ' + data.state + ', ' + data.country} )
+  // //   .then((response) => {
+  // //       console.log(response)
+  // //   })
+  // //   .catch((error) => {
+  // //       console.log(error)
+  // //   })
+  //   /////////////////////////////
+  //   console.log('Sweet Jesus it worked',data)
+  //   new Event({
+  //     eventName: data.eventName,
+  //     eventCreator: data.eventCreator,
+  //     venueName: data.venueName,
+  //     medium: data.medium,
+  //     date: data.date,
+  //     datesRange: data.datesRange,
+  //     time: data.time,
+  //     streetAddress: data.streetAddress,
+  //     city: data.city,
+  //     state: data.state,
+  //     country: data.country,
+  //     about: data.about,
+  //     tags: data.tags.map((tag)=> tag.text)
+  //   }).save((err, event) => next({err, event}))
+  // })
 
   socket.on('displayEvents', (data, next) => {
     event.find({}, (err, results) => {
@@ -63,7 +63,6 @@ io.on('connection', (socket) => {
           var query = results[i].streetAddress + ', ' + results[i].city + ', ' + results[i].state
           geocoder.search( { q: query } )
               .then((response) => {
-                  console.log(response)
                   results[i].latitude = response[0].latitude
                   results[i].longitude = response[0].longitude
               }).save((err, event) => next({err, event}))
@@ -77,13 +76,17 @@ io.on('connection', (socket) => {
 
   socket.on('getEvents', (data, next) => {
     Event
-    .find({userId: data.userId})
+    .find({eventCreator: data.userId})
+    .select('-img')
     .exec(function(err, events) {
-      next({err, events})
+  
+      // events.forEach((i)=> {
+      //  i.img.data = null 
+      // })
+      console.log(events[0],'****')
+      socket.emit('getEvents',{events})
+      })
     })
-
-  })
-
 
   });
 
@@ -107,13 +110,15 @@ app.use(session({
 }));
 
 // Initialize Passport
-app.use(passport.initialize());
-app.use(passport.session());
+
 
 app.use(express.static(path.join(__dirname, 'build')));
 app.use(bodyParser.json());
 app.use(cors());
 app.use(validator());
+
+//multer
+
 
 mongoose.connection.on('connected', () => {
   console.log('connected to mongoDB');
@@ -175,6 +180,9 @@ passport.use('artist', new LocalStrategy (
   },
 ));
 
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.use('/', auth(passport));
 app.use('/', routes);
 
@@ -183,7 +191,6 @@ app.get('/events', function (req, res) {
   Event.find({}, (err, results) => {
     if(err) console.log("a terrible horrible error")
     else {
-      console.log(results)
       return res.json(results)
     }
   })

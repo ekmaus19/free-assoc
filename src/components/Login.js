@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
-import {Button, Icon, Input} from 'semantic-ui-react';
+import {Button, Icon, Input, Image} from 'semantic-ui-react';
 import {connect} from 'react-redux';
 
-import url from './backend'
+const url = 'http://localhost:1337'
 
 class LoginScreen extends Component {
   constructor(props){
@@ -10,6 +10,7 @@ class LoginScreen extends Component {
     this.state = {
       username: '',
       password: '',
+      isArtist: props.isArtist ? true : false,
     }
   }
 
@@ -19,6 +20,7 @@ class LoginScreen extends Component {
       headers: {
         'Content-Type': 'application/json',
       },
+      credentials: 'same-origin',
       body: JSON.stringify({
         username: this.state.username,
         password: this.state.password
@@ -41,11 +43,16 @@ class LoginScreen extends Component {
   onLoginArtist = () => {
     console.log(url)
 
+    this.setState({
+      isArtist: true,
+    })
+
     fetch(url+'/login/artist', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
+      'credentials': 'same-origin',
       body: JSON.stringify({
         username: this.state.username,
         password: this.state.password
@@ -86,7 +93,9 @@ class LoginScreen extends Component {
       <div>
 
       <div className = "login">
-
+            <div style={{width:'30%', height:'30%',alignItems:'center',justifyContent:'center', marginLeft:'auto',marginRight:'auto', marginTop:'40px'}}>
+            <Image src='/img/font2.png' />
+            </div>
           <div className = "input-container">
             <Input onChange = {this.onUsernameChange}  className = "field" placeholder = "Username..."/>
             <br/>

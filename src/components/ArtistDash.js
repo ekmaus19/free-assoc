@@ -4,19 +4,20 @@ import {CreateEvent} from './CreateEvent.js'
 import MainMap from './Map';
 import ContactList from './ContactList';
 import EventHistory from './EventHistory'
+import {CreateEventDone} from './CreateEventDone'
 
-const url = 'http://36ab4809.ngrok.io'
+const url = 'http://localhost:1337'
 
 
 // toMap = () => this.props.redirect('Map')
 
 
-const renderContent=(mode, socket, artist) => { //functional component
+const renderContent=(mode, socket, artist,setMode) => { //functional component
   switch (mode) {
     case 'T1':
     return (
       <div>
-        <Header as='h3'>Events</Header>
+        <Header style={{padding:'10px'}} as='h2'>Events</Header>
         <EventHistory artist={artist} socket={socket}/>
       </div>
     )
@@ -24,14 +25,14 @@ const renderContent=(mode, socket, artist) => { //functional component
     return (
       <div>
         <Header as='h2'>Create Event</Header>
-        <CreateEvent socket={socket}/>
+        <CreateEvent socket={socket} artist={artist} setMode={setMode} />
 
       </div>
     )
     case 'T3':
     return (
       <div>
-        <Header as='h3'>Scout</Header>
+        <Header as='h2'>Scout</Header>
         <Image src='https://react.semantic-ui.com/images/wireframe/paragraph.png' />
       </div>
     )
@@ -39,14 +40,14 @@ const renderContent=(mode, socket, artist) => { //functional component
     return (
       <div>
         <Header as='h3'>Map View</Header>
-         <MainMap />
+         <MainMap isArtist={true} />
       </div>
     )
     case 'T5':
     return (
       <div>
-        <Header as='h3'>Message</Header>
-        <ContactList socket={socket}/>
+        <Header as='h2'>My Connections</Header>
+        <ContactList artist={artist}/>
       </div>
     )
 
@@ -92,7 +93,7 @@ const SidebarExampleVisible = (props) => (
 
     <Sidebar.Pusher>
       <Container style={{paddingTop:'20px',paddingLeft:'30px',paddingRight:'185px'}} basic >
-        {renderContent(props.mode, props.socket, props.artist)}
+        {renderContent(props.mode, props.socket, props.artist, props.setMode)}
 
       </Container>
     </Sidebar.Pusher>
@@ -106,9 +107,11 @@ class ArtistDash extends Component {
     this.state={
       mode:'T1',
       visible:false,
+      switched: false
 
     }
   }
+
 
 
   onLogout = () => {
@@ -132,18 +135,17 @@ class ArtistDash extends Component {
 
     return(
       <div>
-        <Container style={{display:'flex'}}>
-
-        </Container>
-        <Container>
+        <Container style={{width:'100%', padding:'100px'}}>
           {/* <br /> */}
           <br />
           <Grid>
             <Grid.Row>
-              <Grid.Column width={4}>
-                <Container>
+              <Grid.Column width={3}>
+                <Container >
                   <Card style={{justifyContent:'center', alignItems:'center'}}>
-                    <Image style={{width:'75%', height:'75%',padding:'10px'}} src='/img/1.png' />
+                    <Container >
+                    <Image style={{marginLeft:'auto',marginRight:'auto',width:'75%', height:'75%',padding:'10px'}} src='/img/1.png' />
+                    </Container>
                     <Card.Content>
                       <Card.Header>{this.props.artist.firstName} {this.props.artist.lastName}</Card.Header>
                       <Card.Meta>
@@ -165,33 +167,19 @@ class ArtistDash extends Component {
                         22 Friends
                       </a>
                     </Card.Content>
-                    <Button style={{marginLeft:'auto', marginRight:'auto'}} color = 'grey' className = "logout-button"  animated onClick = {this.onLogout}>
-                    <Button.Content visible>Logout</Button.Content>
-                    <Button.Content hidden>
-                      <Icon name='right arrow'   />
-                    </Button.Content>
-                  </Button>
-
+                    <Button style={{marginLeft:'auto', marginRight:'auto'}} basic color = 'grey' className = "logout-button"  animated onClick = {this.onLogout}>Logout</Button>
                   </Card>
 
 
                 </Container>
               </Grid.Column>
-              <Grid.Column width={12}>
-                <Container style={{height:'100%'}}  >
-                  <SidebarExampleVisible artist={this.props.artist} socket={this.props.socket} mode={this.state.mode} setMode={(mode)=> {this.setState({mode:mode})}}/>
+              <Grid.Column width={13}>
+                <Container style={{height:'100%'}} >
+                  <SidebarExampleVisible  artist={this.props.artist} socket={this.props.socket} mode={this.state.mode} setMode={(mode)=> {this.setState({mode:mode})}}/>
                 </Container>
               </Grid.Column>
             </Grid.Row>
           </Grid>
-        </Container>
-        <Container style={{display:'flex'}}>
-          <Button color = 'grey' className = "logout-button"  animated onClick = {this.onLogout}>
-            <Button.Content visible>Logout</Button.Content>
-            <Button.Content hidden>
-              <Icon name='right arrow'   />
-            </Button.Content>
-          </Button>
         </Container>
       </div>
     )
