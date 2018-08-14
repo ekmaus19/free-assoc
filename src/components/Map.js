@@ -37,40 +37,6 @@ const findMe = {
   zoom: 13
 }
 
-class DateTimeFormInline extends React.Component {
-  constructor(props) {
-  super(props);
-
-  this.state = {
-    date: '',
-    time: '',
-    dateTime: '',
-    datesRange: ''
-  };
-}
-
- handleChange = (event, {name, value}) => {
-    if (this.state.hasOwnProperty(name)) {
-      this.setState({ [name]: value });
-    }
-  }
-
-  render() {
-    return (
-      <Form>
-        <div className='ui grid container'>
-          <div className='two wide column'>
-            <DateInput
-              inline
-              name="date"
-              value={this.state.date}
-              onChange={this.handleDateChange} />
-          </div>
-        </div>
-      </Form>
-    );
-  }
-}
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // popup work
@@ -172,7 +138,9 @@ export default class MainMap extends Component {
       data: [],
       nowTime: null,
       nowHourTime: null,
-
+      instantGratification: false,
+      future: false,
+      date: '',
       // if a city was selected on the home page //////////
       cityLatLong: props.latlon ? true : false,
 
@@ -241,7 +209,6 @@ export default class MainMap extends Component {
           },
         })
       } else if(!this.props.latlon.lat) {
-        console.log('in 1st choice, near me search')
         await this.mapRef.current.leafletElement.locate()
         var a = await this.mapRef.current.leafletElement.locate()
         this.setState({
@@ -254,6 +221,7 @@ export default class MainMap extends Component {
             lon: a._lastCenter.lng,
           },
         })
+        console.log('in 1st choice, near me search')
       } else {
         console.log('in else statement')
         this.setState({
@@ -326,6 +294,7 @@ export default class MainMap extends Component {
     this.setState({
       hasLocation: true,
       userLocation: e.latlng,
+      //     console.log(parseFloat(e.latlng.lat))
       latlng: e.latlng,
       viewport: {
         center: e.latlng,
@@ -335,7 +304,6 @@ export default class MainMap extends Component {
     // first try
 
     // geocoderReverse.reverseGeocode( parseFloat(e.latlng.lat), parseFloat(e.latlng.lng), function( err, response) {
-    //     console.log(parseFloat(e.latlng.lat))
     //     console.log(parseFloat(e.latlng.lng))
     //
     //     console.log('threw an error, ', err)
@@ -359,7 +327,6 @@ export default class MainMap extends Component {
     //     'latitude': parseFloat(e.latlng.lat),
     //     'longitude': parseFloat(e.latlng.lng)
     // };
-    // geocoding.location(config, function (err, data){
     //     if(err){
     //           console.log('threw an error, ', err)
     //     }else{
@@ -368,6 +335,7 @@ export default class MainMap extends Component {
     // });
   }
 
+  // geocoding.location(config, function (err, data){
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -394,12 +362,12 @@ export default class MainMap extends Component {
 
       collapsed: false,
       selected: 'event',
-    })
-  }
+  })
+}
 
   handleClickWTF = (items) => {
-    var item = items[Math.floor(Math.random()*items.length)];
     console.log("WHAT THE ACTUAL ", item)
+    var item = items[Math.floor(Math.random()*items.length)];
     this.menuClickPopup(item.eventName, item.medium, item.artist, item.venueName, item.streetAddress, item.city, item.state, item.latitude, item.longitude, item.tags, item.about)
 
     return <CircleMarker fillColor={"red"} center={[item.latitude, item.longitude]} radius={.5}>
@@ -430,11 +398,12 @@ export default class MainMap extends Component {
 
   onNowTime = () => {
     var now = moment();
-    var now_date
     var now_time = moment().format("HH:mm")
     console.log("Right now ", now_time);
     this.setState({
       nowHourTime: now_time,
+      instantGratification: true,
+      future: false,
     })
   }
 
@@ -447,16 +416,29 @@ export default class MainMap extends Component {
   }
 
   onTodayTime = () => {
-    var month = moment().get('month')+1;
-    var day = moment().get('date');
-    var year = moment().get('year')
-
-    var currDate = day + '-' + month + '-' + year
+    var currDate = moment().format('YYYY-MM-DD');
+    var currTime = moment().format("HH:mm")
     this.setState({
       nowTime: currDate,
+      nowHourTime: currTime,
+      instantGratification: false,
+      future: false,
     })
     console.log(this.state.nowTime)
   }
+
+  handleSomeChange = (event, {name, value}) => {
+    console.log("event,", event, "; name,", name, "; value,",value)
+     if (this.state.hasOwnProperty(name)) {
+       var newDate = moment(value, "DD-MM-YYYY").format("YYYY-MM-DD")
+       this.setState({ [name]: value,
+         nowTime: newDate,
+         instantGratification: false,
+         future: true,
+        });
+     }
+   }
+
 
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -476,42 +458,68 @@ export default class MainMap extends Component {
     // copy data and allow the buttons to filter the map
     let filterData = this.state.data.slice()
 
-    // if(this.state.nowTime) {
-    //   let dud = []
-    //   for(var i=0; i<filterData.length; i++) {
-    //      if(filterData[i].datesRange.indexOf(this.state.nowTime) !== -1) {
-    //        dud.push(filterData[i])
-    //        console.log('wowee')
-    //      } else {
-    //        console.log("boooo")
-    //      }
-    //    }
-    //    filterData=dud
-    // }
+/// figure out the event times: display events happening right now vs events happening later today
 
-    if(this.state.nowHourTime && this.state.nowTime) {
-      let dud = []
-      // find events that are happening right now!!
-      // if the current timetime is less than the end time of event AND AFTER start time
-      for(var i=0; i<filterData.length; i++) {
-        console.log(String(this.state.nowTime))
-        console.log(filterData[i].datesRange)
-        if(filterData[i].datesRange.indexOf(String(this.state.nowTime)) !== -1) {
-          if(this.state.nowHourTime < filterData[i].endTime) {
-            dud.push(filterData[i])
-            console.log('today and still to happen')
+    if(this.state.instantGratification) {
+      if(this.state.nowHourTime && this.state.nowTime) {
+        let dud = []
+        // find events that are happening right now!!
+        // if the current timetime is less than the end time of event AND AFTER start time
+        for(var i=0; i<filterData.length; i++) {
+          console.log(String(this.state.nowTime))
+          console.log(filterData[i].datesRange)
+          if(filterData[i].datesRange.indexOf(String(this.state.nowTime)) !== -1) {
+            if(filterData[i].startTime <= this.state.nowHourTime < filterData[i].endTime) {
+              dud.push(filterData[i])
+              console.log('Event happening RIGHT NOW')
+            } else {
+              console.log("Event was today, but is not in the range", filterData[i].time, filterData[i].startTime, filterData[i].endTime)
+            }
           } else {
-            console.log("today but already happened")
+            console.log('event not happening today', filterData[i].time, filterData[i].startTime, filterData[i].endTime)
           }
-        } else {
-          console.log('not today')
         }
+        filterData=dud
+        console.log("All of these should show up >>>>>>>>>>>>>", dud)
       }
-      filterData=dud
-      console.log("All of these should show up >>>>>>>>>>>>>", dud)
+    } else if (this.state.future) {
+        let dud = []
+        // find events that are happening right now!!
+        // if the current timetime is less than the end time of event AND AFTER start time
+        for(var i=0; i<filterData.length; i++) {
+          console.log(String(this.state.nowTime))
+          console.log(filterData[i].datesRange)
+          if(filterData[i].datesRange.indexOf(String(this.state.nowTime)) !== -1) {
+            dud.push(filterData[i])
+          } else {
+            console.log('event not happening today', filterData[i].time, filterData[i].startTime, filterData[i].endTime)
+          }
+        }
+        filterData=dud
+        console.log("Future dates that should be rendered", dud)
+    } else {
+      if(this.state.nowHourTime && this.state.nowTime) {
+        let dud = []
+        // find events that are happening right now!!
+        // if the current timetime is less than the end time of event AND AFTER start time
+        for(var i=0; i<filterData.length; i++) {
+          console.log(String(this.state.nowTime))
+          console.log(filterData[i].datesRange)
+          if(filterData[i].datesRange.indexOf(String(this.state.nowTime)) !== -1) {
+            if(this.state.nowHourTime < filterData[i].endTime) {
+              dud.push(filterData[i])
+              console.log('today and still to happen')
+            } else {
+              console.log("today but already happened")
+            }
+          } else {
+            console.log('not today')
+          }
+        }
+        filterData=dud
+        console.log("All of these should show up >>>>>>>>>>>>>", dud)
+      }
     }
-
-
 
     if(this.state.filterArt===false){
       filterData=filterData.filter(item => item.medium !== "art")
@@ -600,10 +608,19 @@ export default class MainMap extends Component {
               </Tab>
               <Tab id="music" placeholder="M" icon="fa fa-clock-o">
                 <Button onClick={this.onNowTime}>Right Now</Button>
-                <Button onClick={this.onSoonTime}>Soon (+1hr)</Button>
+                {/* <Button onClick={this.onSoonTime}>Soon (+1hr)</Button> */}
                 <Button onClick={this.onTodayTime}>Today</Button>
-                <Button>Choose Time</Button>
-                <DateTimeFormInline />
+                <Form>
+                  <div className='ui grid container'>
+                    <div className='two wide column'>
+                      <DateInput
+                        inline
+                        name="date"
+                        value={this.state.date}
+                        onChange={this.handleSomeChange} />
+                    </div>
+                  </div>
+                </Form>
               </Tab>
               <Tab id="music" placeholder="M" icon="fa fa-meh-o"></Tab>
 
