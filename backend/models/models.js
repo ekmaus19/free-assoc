@@ -48,7 +48,10 @@ const artistSchema = mongoose.Schema({
   facebook: String,
   instagram: String,
   twitter: String,
-  tags: Array
+  connections: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Artist',
+  }],
 });
 
 const userSchema = mongoose.Schema({
@@ -73,6 +76,10 @@ const userSchema = mongoose.Schema({
 });
 
 const eventSchema = mongoose.Schema({
+  img: {
+    data:Buffer,
+    contentType:String,
+  },
   eventName: {
     type: String,
     required: true
@@ -93,7 +100,15 @@ const eventSchema = mongoose.Schema({
   datesRange: {
     type: String,
   },
-  time: {
+  startTime: {
+    type: String,
+    required: true
+  },
+  endTime: {
+    type: String,
+    required: true
+  },
+  price: {
     type: String,
     required: true
   },
@@ -121,6 +136,10 @@ const eventSchema = mongoose.Schema({
   longitude: String,
   tags: Array,
   about: String,
+  price:{
+    type:String,
+    required:true
+  }
 });
 
 const connectionSchema = mongoose.Schema({
@@ -148,5 +167,5 @@ module.exports = {
   Artist,
   User,
   Event,
-  Connection
+  Connection,
 };

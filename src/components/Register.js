@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
-import {Button, Icon, Input} from 'semantic-ui-react';
+import {Button, Icon, Input, Image} from 'semantic-ui-react';
 import validator from 'validator';
 
-import url from './backend'
+const url = 'http://localhost:1337'
 
 const required = (value) => {
   if (!value.toString().trim().length) {
@@ -78,6 +78,7 @@ class RegisterScreen extends Component {
   render(){
     return (
       <div>
+      
         <div>
         <Input onChange = {this.onNameChange} className = "field" placeholder = "Username" validations={[required]}/>
         <br />

@@ -16,6 +16,7 @@ import '../index.css'
 moment().format();
 // import { Sidebar, Tab } from './Sidebar';
 
+const url = 'http://localhost:1337'
 
 // ultimately, geocoder will be in the backend. In front for testing purposes
 const Nominatim = require('nominatim-geocoder')
