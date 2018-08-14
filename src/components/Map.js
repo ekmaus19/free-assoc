@@ -16,8 +16,6 @@ import '../index.css'
 moment().format();
 // import { Sidebar, Tab } from './Sidebar';
 
-const url = 'http://localhost:1337'
-
 // ultimately, geocoder will be in the backend. In front for testing purposes
 const Nominatim = require('nominatim-geocoder')
 const geocoder = new Nominatim()
@@ -199,16 +197,11 @@ export default class MainMap extends Component {
 
       if(this.state.artist) {
         await this.mapRef.current.leafletElement.locate()
-        console.log(this.mapRef.current.leafletElement.locate())
         this.setState({
           data: data_use,
           loading:false,
           nowTime: currDate,
           nowHourTime: currTime,
-          userLocation: {
-            lat: a._lastCenter.lat,
-            lon: a._lastCenter.lng,
-          },
         })
       } else if(!this.props.latlon.lat) {
         await this.mapRef.current.leafletElement.locate()

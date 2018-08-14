@@ -2,7 +2,7 @@ import React from 'react'
 import Gallery from 'react-grid-gallery';
 import { Checkbox,Card, Button, Icon, Image, Item, Label,Form, Container} from 'semantic-ui-react'
 
-const src = './img/music.jpg' 
+const src = './img/music.jpg'
 
 export default class EventHistory extends React.Component {
   constructor(props) {
@@ -23,14 +23,14 @@ export default class EventHistory extends React.Component {
     this.props.socket.emit('getEvents', {userId: this.props.artist._id});
     this.props.socket.on('getEvents', ({events})=> {
       console.log(events)
-  
+
 
       this.setState({event: events, pastevents:events.filter((event)=>{
         const date= new Date(event.datesRange.substr(0,9))
         if(date < Date.now()){
-          return true; 
+          return true;
         } else{
-          return false; 
+          return false;
         }
       }),futureevents: events.filter((event)=>{
         const date= new Date(event.datesRange.substr(0,9))
@@ -41,14 +41,13 @@ export default class EventHistory extends React.Component {
         }
       }) })
     })
-  
+
   }
 
   componentDidMount(){
     this.loadEvents()
   }
 
-  }
 
   toggleSwitch=()=> {
     this.setState(prevState => {
@@ -57,29 +56,29 @@ export default class EventHistory extends React.Component {
       }
     })
   }
-  
+
   render() {
-    
+
    console.log(this.state.event)
-    
+
    let {event,switched} = this.state
-    
+
    if (switched){
     event = event.filter((event)=>{
       const date= new Date(event.datesRange.substr(0,9))
       if(date < Date.now()){
-        return true; 
+        return true;
       } else{
-        return false; 
+        return false;
       }
    })
   }
-  
+
 
     return (
       <div style={{padding:'20px'}}>
 
-        <Container style={{display:'flex', justifyContent:'flex-end',marginBottom:'30px'}} > 
+        <Container style={{display:'flex', justifyContent:'flex-end',marginBottom:'30px'}} >
           <Label basic color='violet' pointing='right' style={{width:'80%',marginRight:'auto'}} >
           Current Events
           </Label>
@@ -87,12 +86,12 @@ export default class EventHistory extends React.Component {
         <Label basic color='violet' pointing='left' style={{marginLeft:'auto'}} >
           Past Events
           </Label>
-        </Container> 
+        </Container>
 
         <Card.Group itemsPerRow={5}>
           {event.map((event,i) =>
             <div>
-              <Card 
+              <Card
               style={{height:'100%'}}
               header={event.eventName}
               meta={event.medium}
@@ -100,29 +99,29 @@ export default class EventHistory extends React.Component {
               extra={
                 <a>
                 {event.price}
-                <br /> 
+                <br />
                 {event.venueName}
-                <br /> 
+                <br />
                 {event.datesRange}
-                <br /> 
+                <br />
                 {event.startTime} - {event.endTime}
-                <br /> 
+                <br />
                 {event.streetAddress}
-                <br /> 
+                <br />
                 {event.city},
                 {event.country}
-                <br /> 
-                Tags: 
+                <br />
+                Tags:
                 {event.tags}
-              </a> 
+              </a>
               }
               raised image={'http://localhost:1337/event/'+ event._id +'/profileimg'} />
 
             </div>
-          
+
           )}
-        </Card.Group> 
-      </div> 
+        </Card.Group>
+      </div>
     )
   }
 }
