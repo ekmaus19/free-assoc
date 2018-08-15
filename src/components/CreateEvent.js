@@ -1,22 +1,24 @@
 import React from 'react';
-import { Button,Form, Input, Select,TextArea,Icon } from 'semantic-ui-react'
+import TimeRangePicker from 'react-time-range-picker';
+import { Container,Button,Form, Input, Select,TextArea,Icon } from 'semantic-ui-react'
 import {
-    TimeInput,
     DatesRangeInput,
     DateTimeInput,
   } from 'semantic-ui-calendar-react';
 import { WithContext as ReactTags } from 'react-tag-input';
-import suggestionsList from './suggestion_categories'
-
-
+import axios from 'axios';
+import cors from 'cors';
 const Nominatim = require('nominatim-geocoder')
-const geocoder = new Nominatim()
+const geocoder = new Nominatim({
+  secure: true
+})
+
+
 //tags
 const KeyCodes = {
   comma: 188,
   enter: 13,
 };
-
 
 const options = [
   { key: 'art', text: 'Art', value: 'art' },
@@ -30,32 +32,31 @@ const delimiters = [KeyCodes.comma, KeyCodes.enter];
 
   export class CreateEvent extends React.Component {
     constructor(props) {
-      console.log("on top", suggestionsList)
-
       super(props);
 
       this.state = {
+        selectedFile:null,
         eventName: '',
         venueName: '',
         medium:'',
-        time: '',
+        startTime: '',
+        endTime:'',
         datesRange: '',
         streetAddress: '',
         city: '',
         state: '',
         country: '',
         medium: '',
+        price:'',
         about: '',
-        tags: [
-
-       ],
-
-
+        tags: [],
       suggestions: [
-          suggestionsList
-          // { id: 'Poetry', text: 'Poetry' },
-          // { id: 'Spoken Word', text: 'Spoken Word' },
-          // { id: 'Literary', text: 'Literary' },
+          { id: 'LGBT', text: 'LGBT' },
+          { id: 'Alternative', text: 'Alternative' },
+          { id: 'Free Event', text: 'Free Event' },
+          { id: 'Experimental', text: 'Experimental' },
+          { id: 'Metal', text: 'Metal' },
+          { id: 'Explicit Content', text: 'Explicit Content' }
        ]
       };
     }
@@ -78,13 +79,16 @@ const delimiters = [KeyCodes.comma, KeyCodes.enter];
         this.setState({ [name]: value });
       }
     }
+    // handleTimeChange = (event, {name, value}) => {
+    //   if (this.state.hasOwnProperty(name)) {
+    //     this.setState({ [name]: value });
+    //   }
+    // }
 
-    handleTimeChange = (event, {name, value}) => {
-      if (this.state.hasOwnProperty(name)) {
-        this.setState({ [name]: value });
-      }
+    pickerupdate = (start_time, end_time) => {
+      // start and end time in 24hour time
+      this.setState({startTime: start_time, endTime: end_time})
     }
-
 
     handleDrag=(tag, currPos, newPos)=>{
       const tags = [...this.state.tags];
@@ -98,39 +102,48 @@ const delimiters = [KeyCodes.comma, KeyCodes.enter];
   }
 
 
-  onCreate = () => {
-      // console.log('ON CREATE*********************',this.state)
-      let query = this.state.streetAddress + ', ' + this.state.city + ', ' + this.state.state + ', ' + this.state.country
-      geocoder.search( { q: query} )
-          .then((response) => {
-            this.props.socket.emit('createEvent', {
-                eventName: this.state.eventName,
-                eventCreator: this.state.eventCreator,
-                venueName: this.state.venueName,
-                date: this.state.date,
-                time: this.state.time,
-                datesRange: this.state.datesRange,
-                streetAddress: this.state.streetAddress,
-                city: this.state.city,
-                state: this.state.state,
-                country: this.state.country,
-                medium: this.state.medium,
-                latitude: response[0].lat,
-                longitude: response[0].lon,
-                about: this.state.about
-            }, (res) => {
-              console.log(res)
-              if(res.err) {
-                return alert('Opps Error')
-              } else {
-                alert('Saved')
-              }
-            })
-          })
-          .catch((error) => {
-            console.log("lookit this sexy error, " +error)
-        })
+  onCreate = (e) => {
+     let query = this.state.streetAddress + ', ' + this.state.city + ', ' + this.state.state + ', ' + this.state.country
+    const createEvent = {
+      eventName: this.state.eventName,
+      eventCreator: this.props.artist._id,
+      venueName: this.state.venueName,
+      medium: this.state.medium,
+      startTime: this.state.startTime,
+      endTime: this.state.endTime,
+      datesRange: this.state.datesRange,
+      streetAddress: this.state.streetAddress,
+      city: this.state.city,
+      state: this.state.state,
+      country: this.state.country,
+      about: this.state.about,
+      price: this.state.price,
+      tags: this.state.tags
+  }
+    const { description, selectedFile} = this.state;
+    e.preventDefault();
+    console.log(selectedFile)
+    let formData = new FormData();
+    formData.append('info', JSON.stringify(createEvent))
+    formData.append('selectedFile', selectedFile);
+    console.log(query)
+
+    geocoder.search({q:query})
+    .then((response)=> {
+
+      formData.append('latitude', response[0].lat)
+      formData.append('longitude', response[0].lon)
+
+      return axios.post('http://localhost:1337/fileUpload', formData);
+    }).then((result)=> {
+      console.log('redirect****')
+      this.props.setMode('T1')
+    }).catch((err)=> {
+      console.log(err)
+    })
+
     }
+
 
     onEventNameChange = (event) => {
       this.setState({
@@ -210,19 +223,33 @@ const delimiters = [KeyCodes.comma, KeyCodes.enter];
     })
 }
 
+  onPriceChange = (event) => {
+  this.setState({
+    price: event.target.value
+  })
+ }
+
+  fileSelectedHandler=(event)=>{
+    this.setState({
+      selectedFile: event.target.files[0]
+    })
+  }
+
+
+
     render() {
 
       const {tags,suggestions} = this.state
       return (
         <Form>
-          {console.log(suggestionsList, "in the state .......", this.state.suggestions)}
-          <Form.Group>
+          <Form.Group style={{display:'flex'}}>
           <Form.Field control={Input} label='Event Name' placeholder='Event Name' onChange={this.onEventNameChange} />
           <Form.Field control={Input} label='Venue Name' placeholder='Venue Name' onChange={this.onVenueNameChange}/>
         </Form.Group>
         <Form.Group inline>
-          <label>Medium</label>
-          <Select style={{width:'100%'}} onChange = {this.onMediumChange} compact options={options} className = "field" />
+           <label>Medium</label>
+           <br />
+          <Select label='Medium' style={{width:'100%'}} onChange = {this.onMediumChange} options={options} className = "field" />
         </Form.Group>
           From - To
           <DatesRangeInput
@@ -234,18 +261,13 @@ const delimiters = [KeyCodes.comma, KeyCodes.enter];
             onChange={this.handleDateChange} />
             <br />
           Event Time
-          <TimeInput
-          inline
-          name="time"
-          placeholder="Time"
-          value={this.state.time}
-          iconPosition="left"
-          onChange={this.handleTimeChange} />
+
+          <TimeRangePicker hourmarkers hourlines timeupdate={this.pickerupdate}/>
              <br />
             <Form.Field control={TextArea} label='About' placeholder='Tell us a little more about the event...' onChange={this.onAboutChange} />
 
           <br />
-
+             <Form.Field control={Input} label='$' placeholder='Price' onChange={this.onPriceChange} />
              <Form.Field control={Input} label='Street Address' placeholder='Street Address' onChange={this.onAddressChange} />
              <Form.Field control={Input} label='City' placeholder='City' onChange={this.onCityChange}/>
              <Form.Field control={Input} label='State' placeholder='State'  onChange={this.onStateChange}/>
@@ -255,13 +277,17 @@ const delimiters = [KeyCodes.comma, KeyCodes.enter];
                 <ReactTags
 
                     tags={tags}
-                    suggestions={suggestions[0]}
+                    suggestions={suggestions}
                     handleDelete={this.handleDelete}
                     handleAddition={this.handleAddition}
                     handleDrag={this.handleDrag}
                     delimiters={delimiters} />
             </div>
-
+            <br />
+            <div style={{display:'flex'}} >
+            <Input style={{marginRight:'auto', width:'70%'}} type='file' onChange={this.fileSelectedHandler} />
+            </div>
+            <br />
             <Button style={{margin:'20px',marginLeft:'auto',marginRight:'auto', alignItems:'center'}} color = 'pink' className = "logout-button"  animated onClick = {this.onCreate}>
              <Button.Content visible>Create Event Go!</Button.Content>
                  <Button.Content hidden>

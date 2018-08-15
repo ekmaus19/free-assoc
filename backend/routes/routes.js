@@ -249,20 +249,13 @@ router.post('/decline/:userId', (req, res) => {
 
 //delete contact
 router.post('/delete/:id', (req, res) => {
-  console.log(req.params.id,"OMGGGG")
-
-  Artist.findById
-  Connection.findByIdAndRemove({_id: req.params.id}, (err, connection) => {
+  Artist.connections.findByIdAndRemove({_id: req.body.id}, (err, artist) => {
     if (err) {
       res.send(err)
-    } else if (connection) {
-      res.json({
-        success: true,
-        connection: connection
-      })
     } else {
       res.json({
-        success:false
+        success: true,
+        contacts: artist.connections
       })
     }
   })
