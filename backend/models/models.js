@@ -9,6 +9,10 @@ const connect = process.env.MONGODB_URI;
 mongoose.connect(connect);
 
 const artistSchema = mongoose.Schema({
+  img: {
+    data:Buffer,
+    contentType:String,
+  },
   firstName: {
     type: String,
     required: true
@@ -39,6 +43,11 @@ const artistSchema = mongoose.Schema({
     type: String,
     required: true,
     unique: true
+  },
+  phone:{
+    type: Number,
+    required: true,
+    unique: true 
   },
   existingWork: {
     type: String,
@@ -129,10 +138,6 @@ const eventSchema = mongoose.Schema({
     required: true
   },
   latitude: String,
-  medium: {
-    type: String,
-    required: true,
-  },
   longitude: String,
   tags: Array,
   about: String,

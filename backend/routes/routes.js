@@ -14,11 +14,12 @@ var fs = require('fs');
 
 const upload =multer({dest:'uploads/'})
 
-
 router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({ extended: true }));
 
 router.use(validator());
+
+
 
 router.post('/fileUpload', upload.single('selectedFile'),function(req,res,next){
   console.log('file****', req.file,req.body)
@@ -61,6 +62,22 @@ router.get('/event/:id/profileimg',(req,res)=>{
     res.end(event.img.data, "binary")
   })
 })
+
+router.get('/artist/:id/profileimg',(req,res)=>{
+  Artist.findById(req.params.id, (err,event)=>{
+    res.contentType(event.img.contentType)
+    res.end(event.img.data, "binary")
+  })
+})
+
+router.get('/contacts/:id/profileimg',(req,res)=>{
+  Artist.connections.findById(req.params.id, (err,event)=>{
+    res.contentType(event.img.contentType)
+    res.end(event.img.data, "binary")
+  })
+})
+
+
 
 // router.post('/event/create', (req, res) => {
 
@@ -226,6 +243,47 @@ router.post('/decline/:userId', (req, res) => {
         success: true,
         connection: connection
       })
+    }
+  })
+});
+
+//delete contact
+router.post('/delete/:id', (req, res) => {
+  console.log(req.params.id,"OMGGGG")
+
+  Artist.findById
+  Connection.findByIdAndRemove({_id: req.params.id}, (err, connection) => {
+    if (err) {
+      res.send(err)
+    } else if (connection) {
+      res.json({
+        success: true,
+        connection: connection
+      })
+    } else {
+      res.json({
+        success:false
+      })
+    }
+  })
+});
+
+//scout artists
+router.post('/scout', (req, res) => {
+  Artist.find({medium: req.body.medium}, (err, artist) => {
+    if (err) {
+      res.send(err)
+    } else {
+      if (!artist) {
+        console.log('Artist does not exist')
+        res.send({error: 'Artist does not exist'})
+        return
+      } else {
+        res.json({
+          success: true,
+          artist: artist
+        })
+      }
     }
   })
 });

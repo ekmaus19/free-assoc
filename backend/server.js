@@ -167,6 +167,7 @@ passport.use('user', new LocalStrategy (
 // Passport Artist Strategy
 passport.use('artist', new LocalStrategy (
   (username, password, done) => {
+    console.log(username,'******')
     Artist.findOne({ username }, (err, artist) => {
       if (err) { return done(err); }
       if (!artist) {
@@ -175,6 +176,7 @@ passport.use('artist', new LocalStrategy (
       if (artist.password !== password) {
         return done(null, false, { message: 'Incorrect password' });
       }
+      console.log(artist,'#############')
       return done(null, artist);
     });
   },

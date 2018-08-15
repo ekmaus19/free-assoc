@@ -7,6 +7,7 @@ import RegisterArtist from './components/RegisterArtist';
 import ArtistDash from './components/ArtistDash';
 import {CreateEvent} from './components/CreateEvent';
 import About from './components/About';
+import Contact from './components/Contact';
 import Ethos from './components/Ethos';
 import MainMap from './components/Map';
 import {Button, Icon, Input, Menu, Image,Container} from 'semantic-ui-react';
@@ -31,7 +32,11 @@ class App extends Component {
         lon: null,
       },
       userId: '',
+<<<<<<< HEAD
       isArtist: false,
+=======
+      event:{},
+>>>>>>> 7bff57b63eed0cc62e20d07d4eaebf0cae357d10
       placeSearch: null,
       placeSearchCoords: {
         lat: null,
@@ -106,11 +111,11 @@ searchPlaceHome = () => {
                 </Menu.Item>
                 <Menu.Item onClick = {() => this.redirect('Home')} as='a' active>Home</Menu.Item>
                 <Menu.Item onClick = {() => this.redirect('Ethos')} as='a'>Ethos</Menu.Item>
-                <Menu.Item onClick= {() => this.redirect('About')}as='a'>About</Menu.Item>
-                <Menu.Item as='a'>Careers</Menu.Item>
+                <Menu.Item onClick= {()=>this.redirect('About')}as='a'>About</Menu.Item>
+                <Menu.Item onClick= {()=>this.redirect('Contact')} as='a'>Contact</Menu.Item>
                 </Container>
                 <Container style={{display:'flex',justifyContent:'flex-end'}}>
-                <Button style={{padding:'3px',height:'75%',width:'100px', textAlign:'center', margin:'10px'}} basic color = 'grey' className = "register-button"  animated onClick = {() => this.redirect('Registerpicker')}>Register</Button>
+                <Button style={{padding:'3px',height:'75%',width:'100px', textAlign:'center', margin:'10px'}} basic color = 'violet' className = "register-button"  animated onClick = {() => this.redirect('Registerpicker')}>Register</Button>
                 <Button style={{padding:'3px',width:'100px',height:'75%', textAlign:'center', margin:'10px'}} color = 'violet' className = "login-button"  animated onClick = {() => this.redirect('Login')}>Login</Button>
                 </Container>
             </Menu>
@@ -118,8 +123,7 @@ searchPlaceHome = () => {
          {this.state.currentPage === 'Home' ?
           <div>
              <div style={{width:'30%', height:'30%',alignItems:'center',justifyContent:'center', marginLeft:'auto',marginRight:'auto', marginTop:'40px'}}>
-             <Image className="mainlogo" src='/img/font2.png'/>
-             {/* <h1 className='App-logo'>AMP</h1> */}
+             <Image className="App-logo" src='/img/font2.png'/>
 
             </div>
 
@@ -149,6 +153,7 @@ searchPlaceHome = () => {
           </div>: null}
           {this.state.currentPage === 'Ethos' ? <div><Ethos/></div>:null}
           {this.state.currentPage === 'About' ? <div><About/></div>:null}
+          {this.state.currentPage === 'Contact' ? <div><Contact/></div>:null}
           {this.state.currentPage === 'Login' ? <div><LoginScreen onLogin={this.onLogin} artistInfo={(obj)=>this.setState({artist:obj})} redirect={(e) => this.redirect(e)}/></div> : null}
           {this.state.currentPage === 'Registerpicker' ? <div><RegisterScreenPicker redirect={(e) => this.redirect(e)}/></div> : null}
           {this.state.currentPage === 'RegisterUser' ? <div><RegisterScreen redirect={(e) => this.redirect(e)}/></div> : null}
