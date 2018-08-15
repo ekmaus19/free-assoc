@@ -48,22 +48,21 @@ export default class EventHistory extends React.Component {
     this.loadEvents()
   }
 
+toggleSwitch=()=> {
+  this.setState(prevState => {
+    return {
+      switched: !prevState.switched
+    }
+  })
+}
 
-  toggleSwitch=()=> {
-    this.setState(prevState => {
-      return {
-        switched: !prevState.switched
-      }
-    })
-  }
+render() {
 
-  render() {
+  console.log(this.state.event)
 
-   console.log(this.state.event)
+  let {event,switched} = this.state
 
-   let {event,switched} = this.state
-
-   if (switched){
+  if (switched){
     event = event.filter((event)=>{
       const date= new Date(event.datesRange.substr(0,9))
       if(date < Date.now()){
@@ -71,49 +70,49 @@ export default class EventHistory extends React.Component {
       } else{
         return false;
       }
-   })
+    })
   }
 
 
-    return (
-      <div style={{padding:'20px'}}>
+  return (
+    <div style={{padding:'20px'}}>
 
-        <Container style={{display:'flex', justifyContent:'flex-end',marginBottom:'30px'}} >
-          <Label basic color='violet' pointing='right' style={{width:'80%',marginRight:'auto'}} >
+      <Container style={{display:'flex', justifyContent:'flex-end',marginBottom:'30px'}} >
+        <Label basic color='violet' pointing='right' style={{width:'80%',marginRight:'auto'}} >
           Current Events
-          </Label>
+        </Label>
         <Checkbox slider style={{marginRight:'30px',marginRight:'30px',padding:'20px'}} onClick={this.toggleSwitch} on={this.state.switched}/>
         <Label basic color='violet' pointing='left' style={{marginLeft:'auto'}} >
           Past Events
-          </Label>
-        </Container>
+        </Label>
+      </Container>
 
-        <Card.Group itemsPerRow={5}>
-          {event.map((event,i) =>
-            <div>
-              <Card
+      <Card.Group itemsPerRow={5}>
+        {event.map((event,i) =>
+          <div>
+            <Card
               style={{height:'100%'}}
               header={event.eventName}
               meta={event.medium}
               description={event.about}
               extra={
                 <a>
-                {event.price}
-                <br />
-                {event.venueName}
-                <br />
-                {event.datesRange}
-                <br />
-                {event.startTime} - {event.endTime}
-                <br />
-                {event.streetAddress}
-                <br />
-                {event.city},
-                {event.country}
-                <br />
-                Tags:
-                {event.tags}
-              </a>
+                  {event.price}
+                  <br />
+                  {event.venueName}
+                  <br />
+                  {event.datesRange}
+                  <br />
+                  {event.startTime} - {event.endTime}
+                  <br />
+                  {event.streetAddress}
+                  <br />
+                  {event.city},
+                  {event.country}
+                  <br />
+                  Tags:
+                  {event.tags}
+                </a>
               }
               raised image={'http://localhost:1337/event/'+ event._id +'/profileimg'} />
 

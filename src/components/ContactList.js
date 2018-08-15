@@ -1,7 +1,7 @@
 import React from 'react';
-import Modal from 'react-modal';
 
-Modal.setAppElement('#root')
+import { Input, Button, Card, Image, Modal } from 'semantic-ui-react'
+
 
 const url = 'http://localhost:1337'
 
@@ -20,15 +20,15 @@ class Contact extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      contacts: [],
       sent: [],
       received: [],
       username: '',
-      connection: '',
+      connection: [],
       requester: '',
       invitee: '',
       modalSearchIsOpen: false,
-      modalPendingIsOpen: false
+      modalPendingIsOpen: false,
+      modalViewContactIsOpen: false,
     }
     this.openSearchModal = this.openSearchModal.bind(this);
     this.closeSearchModal = this.closeSearchModal.bind(this);
@@ -38,7 +38,7 @@ class Contact extends React.Component {
   }
 
   async componentDidMount() {
-    await this.contactList()
+    await this.props.contactList()
     await this.sentInvites()
     await this.receivedInvites()
   }
@@ -67,20 +67,38 @@ class Contact extends React.Component {
     });
   }
 
-  contactList = () => {
-    fetch(url + `/contacts/${this.props.artist._id}`, {
-      method: 'GET',
-    }).then(res => res.json())
-    .then(json => {
-      console.log('JSON ---->', json)
+    ///// View Contact Modal
+    openViewContactModal() {
+      this.setState({
+        modalViewContactIsOpen: true,
+      });
+    }
+
+    closeViewContactModal() {
+      this.setState({
+        modalViewContactIsOpen: false,
+      });
+    }
+   //////
+
+   deleteContactModal = (contactid) => {
+    console.log(this.state.contacts)
+     fetch(url + `/delete/${contactid}`,{
+       method: 'POST',
+     }).then(res => res.json())
+     .then(json => {
+       if (json.success){
       this.setState({
         contacts: json.contacts,
       })
-    })
-    .catch((err) => {
-      throw err
-    })
-  }
+      alert('Deleted')
+      this.componentDidMount()
+     }
+     })
+     .catch((err)=> {
+       throw err
+     })
+   }
 
   sentInvites = () => {
     fetch(url + `/pending/sent/${this.props.artist._id}`, {
@@ -198,14 +216,57 @@ class Contact extends React.Component {
     })
   }
 
+
+
   render() {
     const renderContacts = () => {
-      if (this.state.contacts) {
-        return this.state.contacts.map(contacts => {
+      if (this.props.contacts) {
+        return this.props.contacts.map(contacts => {
+          console.log(contacts)
           return (
             <div>
-              {contacts.username}
-            </div>
+            <Card.Group itemsPerRow={4}>
+            <Card  >
+              <Card.Content>
+                <Image floated='right' size='mini' src={'http://localhost:1337/contacts/'+ contacts._id +'/profileimg'} />
+                <Card.Header>{contacts.username}</Card.Header>
+                <Card.Meta>{contacts.medium}</Card.Meta>
+                <Card.Description textAlign='left'>
+                  {contacts.bio}
+                </Card.Description>
+              </Card.Content>
+              <Card.Content extra>
+                <div style={{display:'flex'}}>
+                  <Button basic color='orange' onClick={() => this.openViewContactModal()}>
+                    View Contact
+                  </Button>
+                  <Modal
+                  open={this.state.modalViewContactIsOpen}
+                  size={'tiny'}
+                  style={customStyles}
+                  dimmer={'inverted'}
+                  onClose={this.closeViewContactModal}
+                  >
+                  <div>
+                  Email:
+                  {contacts.email}
+                  <br />
+                  Phone #:
+                  </div>
+                  <div className='ui two buttons'>
+                  <Button basic color='violet' onClick={()=> this.deleteContactModal(contacts._id)} >
+                   Delete Contact
+                  </Button>
+                  <Button basic color='red' onClick={() => this.closeViewContactModal()}>
+                    Close
+                  </Button>
+                  </div>
+                  </Modal>
+                </div>
+              </Card.Content>
+            </Card>
+          </Card.Group>
+          </div>
           )
         })
       }
@@ -227,8 +288,17 @@ class Contact extends React.Component {
           return (
             <div key = {i}>
               {received.requester.username}
-              <button onClick={() => this.acceptConnection(received.requester._id)}>Accept</button>
-              <button onClick={() => this.declineConnection(received.requester._id)}>Decline</button>
+              <br /> 
+              <div style={{display:'inline', justifyContenet:'center', marginTop:'20px'}}> 
+               <Button
+              color='orange'
+              style={{display:'inline', justifyContent:'center',padding:'3px',height:'150%',width:'100px', textAlign:'center', margin:'10px'}}
+              onClick={() => this.acceptConnection(received.requester._id)}>Accept</Button>
+              <Button
+              color='violet'
+              style={{display:'inline', justifyContent:'center',padding:'3px',height:'150%',width:'100px', textAlign:'center', margin:'10px'}}
+              onClick={() => this.declineConnection(received.requester._id)}>Decline</Button>
+            </div> 
             </div>
           )
         })
@@ -236,26 +306,49 @@ class Contact extends React.Component {
     }
     return (
       <div>
+        <div style={{display:'flex',marginLeft:'auto',justifyContent:'flex-end',marginBottom:'30px'}}>
         <div>
-          {renderContacts()}
-        </div>
-        <div>
-          <button onClick={() => this.openSearchModal()}>Make a new friend!</button>
-          <Modal isOpen={this.state.modalSearchIsOpen} style={customStyles}>
-            <input type='text' placeholder='enter artist username' onChange={(e) => (this.setState({username:e.target.value}))}></input>
-            <button onClick={() => this.sendConnection()}>Connect</button>
-            <button onClick={() => this.closeSearchModal()}>Cancel</button>
+          <Button style={{display:'inline', padding:'3px',height:'75%',width:'100px', textAlign:'center', margin:'10px'}} basic color = 'violet' onClick={() => this.openSearchModal()}>New Connections</Button>
+          <Modal
+          onClose={this.state.closeSearchModal}
+          open={this.state.modalSearchIsOpen}
+          dimmer={'inverted'}
+          size={'small'}
+          style={customStyles}>
+            <Input stlye={{display:'block', margin:'10px', justifyContent:'center'}} type='text' placeholder='Artist Username ...' onChange={(e) => (this.setState({username:e.target.value}))}></Input>
+            <div style={{display:'flex', justifyContent:'center'}}>
+            <Button style={{display:'inline', justifyContent:'center',padding:'3px',height:'150%',width:'100px', textAlign:'center', margin:'10px'}} color = 'orange' onClick={() => this.sendConnection()}>Connect</Button>
+            <Button style={{display:'inline', justifyContent:'center',padding:'3px',height:'150%',width:'100px', textAlign:'center', margin:'10px'}} basic color = 'red' onClick={() => this.closeSearchModal()}>Cancel</Button>
+            </div>
           </Modal>
         </div>
         <div>
-          <button onClick={() => this.openPendingModal()}>Pending connections</button>
-          <Modal isOpen={this.state.modalPendingIsOpen} style={customStyles}>
-            Sent Invites
+          <Button style={{padding:'3px',height:'75%',width:'100px', textAlign:'center', margin:'10px'}} basic color = 'violet' onClick={() => this.openPendingModal()}>Pending</Button>
+          <Modal
+          onClose={this.state.closePendingModal}
+          dimmer={'inverted'}
+          size={'small'}
+          open={this.state.modalPendingIsOpen}
+          style={customStyles}>
+            Sent Invites: 
             {renderSent()}
-            Received invites
+            <br /> 
+            <br /> 
+            Received invites:
             {renderReceived()}
-            <button onClick={() => this.closePendingModal()}>Close</button>
+            <div style={{display:'flex', justifyContent:'center'}}>
+          
+             <Button
+            style={{display:'inline', justifyContent:'flex-end',padding:'3px',height:'150%',width:'100px', textAlign:'center', margin:'10px'}}
+            basic color = 'red'
+            onClick={() => this.closePendingModal()}>Close</Button>
+            </div>
+
           </Modal>
+        </div>
+        </div>
+        <div style={{marginBottom:'30px'}}>
+          {renderContacts()}
         </div>
       </div>
     )

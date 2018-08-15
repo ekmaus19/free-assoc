@@ -13,6 +13,22 @@ font-family: sans-serif;
 
 /* button styling ////////////////////////////////////////////////////////// */
 
+.timeLabels {
+  font-size: 16px;
+  padding-bottom: 10px;
+  padding-top: 10px;
+}
+
+.placeSearhBar {
+  width: 50%;
+  right: 10%;
+}
+
+.dateForm {
+  float:center;
+  z-index: 5000000000;
+}
+
 .buttonOff {
   font-size: 85px;
   padding: 32px 16px;

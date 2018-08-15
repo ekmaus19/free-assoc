@@ -1,31 +1,31 @@
 .App {
   text-align: center;
-  background-color:rgb(232,142,164);
+  background-color:#7586ff;
 }
 
-/* .App-logo{
-  font-size: 200px;
-  margin-bottom: 50px;
-  color: white;
+.App-logo{
+  animation-name:shimmy;
+  animation-duration: 4s; 
 }
+
  @keyframes shimmy {
   0%{
     transform: translate(0, 0);
   }
   100%{
-    transform: translate(20px, 20px);
+    transform: translate(30px, 30px);
     transition: transform 0.5s ease
   }
  
-} */
+}
 
 .menu{
-  background-color:rgb(232,142,164);
+  background-color:#7586ff;
 }
 
 
 body{
-  background-color:rgb(232,142,164);
+  background-color:#7586ff;
 }
 .App-title {
   font-size: 60px;
@@ -63,3 +63,7 @@ h2{
   margin-top:'20px'
 }
 
+p{
+  color: white;
+  font-size: 20px;
+}
