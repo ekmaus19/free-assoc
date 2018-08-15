@@ -95,7 +95,7 @@ class LoginScreen extends Component {
           <div className = "input-container">
             <Input onChange = {this.onUsernameChange}  className = "field" placeholder = "Username..."/>
             <br/>
-            <Input onChange = {this.onPassChange}  className = "field" placeholder = "Password..."/>
+            <Input onChange = {this.onPassChange}  type='password' className = "field" placeholder = "Password..."/>
             <br />
             <br />
             <Button color = 'orange' className = "login-button"  animated onClick = {this.onLoginArtist}>

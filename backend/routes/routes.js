@@ -70,6 +70,14 @@ router.get('/artist/:id/profileimg',(req,res)=>{
   })
 })
 
+router.get('/contacts/:id/profileimg',(req,res)=>{
+  Artist.connections.findById(req.params.id, (err,event)=>{
+    res.contentType(event.img.contentType)
+    res.end(event.img.data, "binary")
+  })
+})
+
+
 
 // router.post('/event/create', (req, res) => {
 

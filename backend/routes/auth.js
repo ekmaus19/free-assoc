@@ -79,6 +79,7 @@ router.post('/register/artist', upload.single('selectedFile'),(req, res) => {
       password: info.password,
       passwordRepeat: info.passwordRepeat,
       email: info.email,
+      phone: info.phone, 
       existingWork: info.existingWork,
       bio: info.bio,
       img: {data:readFile, contentType:'image/png'}

@@ -148,6 +148,7 @@ class ArtistDash extends Component {
   }
 
   render(){
+    console.log(this.props.artist)
     return(
       <div>
         <Container style={{width:'100%', padding:'100px'}}>

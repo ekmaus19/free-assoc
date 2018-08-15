@@ -222,12 +222,13 @@ class Contact extends React.Component {
     const renderContacts = () => {
       if (this.props.contacts) {
         return this.props.contacts.map(contacts => {
+          console.log(contacts)
           return (
             <div>
             <Card.Group itemsPerRow={4}>
             <Card  >
               <Card.Content>
-                <Image floated='right' size='mini' src='https://react.semantic-ui.com/images/avatar/large/steve.jpg' />
+                <Image floated='right' size='mini' src={'http://localhost:1337/contacts/'+ contacts._id +'/profileimg'} />
                 <Card.Header>{contacts.username}</Card.Header>
                 <Card.Meta>{contacts.medium}</Card.Meta>
                 <Card.Description textAlign='left'>
@@ -287,7 +288,17 @@ class Contact extends React.Component {
           return (
             <div key = {i}>
               {received.requester.username}
-
+              <br /> 
+              <div style={{display:'inline', justifyContenet:'center', marginTop:'20px'}}> 
+               <Button
+              color='orange'
+              style={{display:'inline', justifyContent:'center',padding:'3px',height:'150%',width:'100px', textAlign:'center', margin:'10px'}}
+              onClick={() => this.acceptConnection(received.requester._id)}>Accept</Button>
+              <Button
+              color='violet'
+              style={{display:'inline', justifyContent:'center',padding:'3px',height:'150%',width:'100px', textAlign:'center', margin:'10px'}}
+              onClick={() => this.declineConnection(received.requester._id)}>Decline</Button>
+            </div> 
             </div>
           )
         })
@@ -319,19 +330,14 @@ class Contact extends React.Component {
           size={'small'}
           open={this.state.modalPendingIsOpen}
           style={customStyles}>
-            Sent Invites
+            Sent Invites: 
             {renderSent()}
-            Received invites
+            <br /> 
+            <br /> 
+            Received invites:
             {renderReceived()}
             <div style={{display:'flex', justifyContent:'center'}}>
-            <Button
-              color='orange'
-              style={{display:'inline', justifyContent:'center',padding:'3px',height:'150%',width:'100px', textAlign:'center', margin:'10px'}}
-              onClick={() => this.acceptConnection(this.state.received.requester._id)}>Accept</Button>
-              <Button
-              color='violet'
-              style={{display:'inline', justifyContent:'center',padding:'3px',height:'150%',width:'100px', textAlign:'center', margin:'10px'}}
-              onClick={() => this.declineConnection(this.state.received.requester._id)}>Decline</Button>
+          
              <Button
             style={{display:'inline', justifyContent:'flex-end',padding:'3px',height:'150%',width:'100px', textAlign:'center', margin:'10px'}}
             basic color = 'red'

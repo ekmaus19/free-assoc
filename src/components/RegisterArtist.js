@@ -20,6 +20,7 @@ class RegisterArtist extends Component {
       password: '',
       passwordRepeat:'',
       email:'',
+      phone:'',
       medium: '',
       existingWork: '',
       bio: '',
@@ -51,6 +52,12 @@ class RegisterArtist extends Component {
   onEmailChange = (event) =>{
     this.setState({
       email: event.target.value
+    })
+  }
+
+  onPhoneChange = (event) =>{
+    this.setState({
+      phone: event.target.value
     })
   }
 
@@ -112,6 +119,7 @@ class RegisterArtist extends Component {
         password: this.state.password,
         passwordRepeat: this.state.passwordRepeat,
         email: this.state.email,
+        phone: this.state.phone, 
         existingWork: this.state.existingWork,
         bio: this.state.bio,
         facebook: this.state.facebook,
@@ -151,6 +159,8 @@ class RegisterArtist extends Component {
         <br />
         <Input onChange = {this.onEmailChange} className = "field" placeholder = "Email"/>
         <br />
+        <Input onChange = {this.onPhoneChange} className = "field" placeholder = "Phone"/>
+        <br /> 
         <Input type='password' onChange = {this.onPassChange} className = "field" placeholder = "Password"/>
         <br />
         <Input type='password' onChange = {this.onConfirmChange} className = "field" placeholder = "Confirm Password"/>
