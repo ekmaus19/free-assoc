@@ -74,9 +74,11 @@ render() {
   }
 
 
+  return (
+    <div style={{padding:'20px'}}>
 
-        <Container style={{display:'flex', justifyContent:'flex-end',marginBottom:'30px'}} >
-          <Label basic color='violet' pointing='right' style={{width:'80%',marginRight:'auto'}} >
+      <Container style={{display:'flex', justifyContent:'flex-end',marginBottom:'30px'}} >
+        <Label basic color='violet' pointing='right' style={{width:'80%',marginRight:'auto'}} >
           Current Events
         </Label>
         <Checkbox slider style={{marginRight:'30px',marginRight:'30px',padding:'20px'}} onClick={this.toggleSwitch} on={this.state.switched}/>

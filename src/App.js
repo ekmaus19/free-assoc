@@ -32,11 +32,8 @@ class App extends Component {
         lon: null,
       },
       userId: '',
-<<<<<<< HEAD
       isArtist: false,
-=======
       event:{},
->>>>>>> 7bff57b63eed0cc62e20d07d4eaebf0cae357d10
       placeSearch: null,
       placeSearchCoords: {
         lat: null,
