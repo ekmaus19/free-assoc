@@ -15,7 +15,7 @@ router.use(validator());
 module.exports = (passport) => {
 
   router.post('/register/user', (req, res) => {
-    
+
     req.checkBody("email", "Enter a valid email address").isEmail();
     req.checkBody("email", "Enter email address").notEmpty();
     req.checkBody("username", "Enter username").notEmpty();
@@ -50,7 +50,7 @@ module.exports = (passport) => {
   }
 });
 
-//conflicting usernames? 
+//conflicting usernames?
 router.post('/register/artist', upload.single('selectedFile'),(req, res) => {
   console.log('artist******', req.file,req.body)
 
@@ -79,6 +79,7 @@ router.post('/register/artist', upload.single('selectedFile'),(req, res) => {
       password: info.password,
       passwordRepeat: info.passwordRepeat,
       email: info.email,
+      phone: info.phone,
       existingWork: info.existingWork,
       bio: info.bio,
       img: {data:readFile, contentType:'image/png'}
@@ -101,7 +102,7 @@ router.post('/register/artist', upload.single('selectedFile'),(req, res) => {
   //     console.log("ERR ", err)
   //   })
 
-    
+
     // .save(((err,event)=>{
     //   if(err === req.validationErrors()){
     //     console.log(err)
@@ -112,7 +113,7 @@ router.post('/register/artist', upload.single('selectedFile'),(req, res) => {
     // })
     // )
   })
-    
+
 
     // router.post('/register/artist', upload.single('selectedFile'),(req, res) => {
     //   console.log('artist******', req.file)
@@ -154,8 +155,8 @@ router.post('/register/artist', upload.single('selectedFile'),(req, res) => {
     //     })
     //   )
     //   })
-        
-    
+
+
 
     router.post('/login/user', passport.authenticate('user'), (req, res) => {
       res.json({

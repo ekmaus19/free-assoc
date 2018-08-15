@@ -216,8 +216,6 @@ class Contact extends React.Component {
     })
   }
 
-
-
   render() {
     const renderContacts = () => {
       if (this.props.contacts) {

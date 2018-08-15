@@ -44,6 +44,11 @@ const artistSchema = mongoose.Schema({
     required: true,
     unique: true
   },
+  phone: {
+    type: Number,
+    required: true,
+    unique: true
+  },
   existingWork: {
     type: String,
     required: true
@@ -52,7 +57,6 @@ const artistSchema = mongoose.Schema({
   facebook: String,
   instagram: String,
   twitter: String,
-  tags: Array,
   connections: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Artist',

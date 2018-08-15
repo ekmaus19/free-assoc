@@ -20,6 +20,7 @@ class RegisterArtist extends Component {
       password: '',
       passwordRepeat:'',
       email:'',
+      phone: '',
       medium: '',
       existingWork: '',
       bio: '',
@@ -51,6 +52,12 @@ class RegisterArtist extends Component {
   onEmailChange = (event) =>{
     this.setState({
       email: event.target.value
+    })
+  }
+
+  onPhoneChange = (event) =>{
+    this.setState({
+      phone: event.target.value
     })
   }
 
@@ -100,7 +107,7 @@ class RegisterArtist extends Component {
         bio: event.target.value
     })
     }
-  
+
 
     onRegister = (e) => {
       console.log('register')
@@ -112,6 +119,7 @@ class RegisterArtist extends Component {
         password: this.state.password,
         passwordRepeat: this.state.passwordRepeat,
         email: this.state.email,
+        phone: this.state.phone,
         existingWork: this.state.existingWork,
         bio: this.state.bio,
         facebook: this.state.facebook,
@@ -119,7 +127,7 @@ class RegisterArtist extends Component {
         twitter: this.state.twitter
       }
 
-      const {description, selectedFile}=this.state; 
+      const {description, selectedFile}=this.state;
       e.preventDefault();
       console.log(selectedFile,'*******')
       let formData = new FormData();
@@ -129,7 +137,7 @@ class RegisterArtist extends Component {
       axios.post('http://localhost:1337/register/artist', formData)
       .then((result)=> {
           this.props.redirect('Login')
-        
+
       }).catch((error) => {
         console.log(error);
       })
@@ -142,7 +150,7 @@ class RegisterArtist extends Component {
     }
   render(){
     return (
-     
+
       <div style={{width:'70%', marginRight:'auto', marginLeft:'auto'}}>
         <Input style={{width:'190px', marginRight:'20px', marginBottom:'5px'}} onChange = {this.onFirstnameChange}  placeholder='First name' />
         <Input style={{width:'190px'}}  onChange = {this.onLastnameChange}  placeholder='Last name' />
@@ -150,6 +158,8 @@ class RegisterArtist extends Component {
         <Input onChange = {this.onUsernameChange} className = "field" placeholder = "Username"/>
         <br />
         <Input onChange = {this.onEmailChange} className = "field" placeholder = "Email"/>
+        <br />
+        <Input onChange = {this.onPhoneChange} className = "field" placeholder = "Phone"/>
         <br />
         <Input type='password' onChange = {this.onPassChange} className = "field" placeholder = "Password"/>
         <br />
@@ -180,9 +190,9 @@ class RegisterArtist extends Component {
         </Button>
         <Input style={{width:'280px'}} onChange = {this.onTwitterChange} className = "field" placeholder = "Link to Page"/>
         </div>
-        
+
         <Input style={{marginRight:'auto'}} type='file' onChange={this.fileSelectedHandler} />
-        </div> 
+        </div>
 
         <br />
         <Button color = 'pink' className = "register-button"  animated onClick={this.onRegister}>
