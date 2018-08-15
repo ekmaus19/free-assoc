@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, Icon, Header,Image, Container, Segment, Sidebar, Menu , Grid, Button} from 'semantic-ui-react'
+import { Card, Input, Icon, Header,Image, Container, Segment, Sidebar, Menu , Grid, Button} from 'semantic-ui-react'
 
 const url = 'http://localhost:1337'
 
@@ -8,7 +8,8 @@ class Scout extends React.Component {
     super(props);
     this.state = {
       medium: '',
-      artist: []
+      artist: [],
+      connection:[],
     }
   }
 
@@ -43,40 +44,78 @@ class Scout extends React.Component {
     })
   }
 
+
+  sendConnection = () => {
+    fetch(url + `/connect/${this.props.artist._id}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+    })
+    .then(res => res.json())
+    .then(json => {
+      console.log('JSON ----->', json)
+      if (json.success) {
+        this.setState({
+          connection: json.connection,
+        })
+        alert('Invite sent!')
+      }
+    })
+    .catch((err) => {
+      throw err
+    })
+  }
+
+
+
   render () {
     return (
-      <div>
-        Search for fellow artists<br /><br />
-        <input type='text' placeholder='enter medium' onChange={(e) => (this.setState({medium:e.target.value}))}></input>
-        <button onClick={() => this.findArtist()}>Go!</button>
+      <div style={{marginBotton:'20px'}} >
+          <br />
+          <br />
+        <div style={{display:'inline', marginBotton:'20px'}}> 
+        <Input style={{height:'200%', marginRight:'10px', marginBottom:'30px'}} 
+        type='text' 
+        placeholder='Search by Medium or Artist' 
+        onChange={(e) => (this.setState({medium:e.target.value}))}></Input>
+        <Button basic color='violet' onClick={() => this.findArtist()}>Go!</Button> 
+        </div> 
 
-        <Container >
+        <Container style={{marginBottom:'20px'}} >
+          <Card.Group itemsPerRow={4}> 
+
+          {this.state.artist.map((artist,i)=> 
           <Card style={{justifyContent:'center', alignItems:'center'}}>
             <Container >
-              <Image style={{marginLeft:'auto',marginRight:'auto',width:'75%', height:'75%',padding:'10px'}} src='/img/1.png' />
+              <Image style={{marginLeft:'auto',marginRight:'auto',width:'75%', height:'75%',padding:'10px'}} src={'http://localhost:1337/artist/'+ artist._id +'/profileimg'}/>
             </Container>
             <Card.Content>
-              <Card.Header>{this.props.artist.firstName} {this.props.artist.lastName}</Card.Header>
+              <Card.Header>{artist.firstName} {artist.lastName}</Card.Header>
               <Card.Meta>
                 <span className='date'>Joined in 2018</span>
               </Card.Meta>
               <Card.Description>
-                <h2> {this.props.artist.medium}</h2>
+                <h2> {artist.medium}</h2>
                 <br />
-                {this.props.artist.bio}
+                {artist.bio}
 
                 <br />
-                {this.props.artist.existingWork}
+                {artist.existingWork}
 
               </Card.Description>
             </Card.Content>
             <Card.Content extra>
               <a>
                 <Icon name='user' />
-                {this.props.contacts.length} Friends
+                {/* {this.props.contacts.length} Friends */}
+                <Button style={{display:'inline', justifyContent:'center',padding:'3px',height:'150%',width:'100px', textAlign:'center', margin:'10px'}} color = 'orange' onClick={() => this.sendConnection()}>Connect</Button>
               </a>
             </Card.Content>
           </Card>
+          )}
+
+          </Card.Group> 
         </Container>
       </div>
     )
