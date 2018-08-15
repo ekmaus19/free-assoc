@@ -14,7 +14,6 @@ var fs = require('fs');
 
 const upload =multer({dest:'uploads/'})
 
-
 router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({ extended: true }));
 
@@ -240,9 +239,10 @@ router.post('/decline/:userId', (req, res) => {
   })
 });
 
+//delete contact
 router.post('/delete/:id', (req, res) => {
   console.log(req.params.id,"OMGGGG")
-  
+
   Artist.findById
   Connection.findByIdAndRemove({_id: req.params.id}, (err, connection) => {
     if (err) {
@@ -259,5 +259,26 @@ router.post('/delete/:id', (req, res) => {
     }
   })
 });
+
+//scout artists
+router.post('/scout', (req, res) => {
+  Artist.find({medium: req.body.medium}, (err, artist) => {
+    if (err) {
+      res.send(err)
+    } else {
+      if (!artist) {
+        console.log('Artist does not exist')
+        res.send({error: 'Artist does not exist'})
+        return
+      } else {
+        res.json({
+          success: true,
+          artist: artist
+        })
+      }
+    }
+  })
+});
+
 
 module.exports = router;

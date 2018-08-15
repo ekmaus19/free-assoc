@@ -3,16 +3,16 @@ import { Card, Icon, Header,Image, Container, Segment, Sidebar, Menu , Grid, But
 import {CreateEvent} from './CreateEvent.js'
 import MainMap from './Map';
 import ContactList from './ContactList';
-import EventHistory from './EventHistory'
-import {CreateEventDone} from './CreateEventDone'
+import EventHistory from './EventHistory';
+import Scout from './Scout';
+import {CreateEventDone} from './CreateEventDone';
 
 const url = 'http://localhost:1337'
-
 
 // toMap = () => this.props.redirect('Map')
 
 
-const renderContent=(mode, socket, artist,setMode, contacts, contactList) => { //functional component
+const renderContent=(mode, socket, artist, setMode, contacts, contactList) => { //functional component
   switch (mode) {
     case 'T1':
     return (
@@ -33,7 +33,7 @@ const renderContent=(mode, socket, artist,setMode, contacts, contactList) => { /
     return (
       <div>
         <Header as='h2'>Scout</Header>
-        <Image src='https://react.semantic-ui.com/images/wireframe/paragraph.png' />
+        <Scout artist={artist} contacts={contacts}/>
       </div>
     )
     case 'T4':
@@ -148,8 +148,6 @@ class ArtistDash extends Component {
   }
 
   render(){
-    
-    
     return(
       <div>
         <Container style={{width:'100%', padding:'100px'}}>

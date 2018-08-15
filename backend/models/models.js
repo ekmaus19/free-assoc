@@ -52,6 +52,7 @@ const artistSchema = mongoose.Schema({
   facebook: String,
   instagram: String,
   twitter: String,
+  tags: Array,
   connections: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Artist',
@@ -133,10 +134,6 @@ const eventSchema = mongoose.Schema({
     required: true
   },
   latitude: String,
-  medium: {
-    type: String,
-    required: true,
-  },
   longitude: String,
   tags: Array,
   about: String,

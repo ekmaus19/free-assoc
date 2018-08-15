@@ -67,13 +67,13 @@ class Contact extends React.Component {
     });
   }
 
-    ///// View Contact Modal 
+    ///// View Contact Modal
     openViewContactModal() {
       this.setState({
         modalViewContactIsOpen: true,
       });
     }
-  
+
     closeViewContactModal() {
       this.setState({
         modalViewContactIsOpen: false,
@@ -96,9 +96,9 @@ class Contact extends React.Component {
      }
      })
      .catch((err)=> {
-       throw err 
+       throw err
      })
-   } 
+   }
 
   sentInvites = () => {
     fetch(url + `/pending/sent/${this.props.artist._id}`, {
@@ -224,7 +224,7 @@ class Contact extends React.Component {
         return this.props.contacts.map(contacts => {
           return (
             <div>
-            <Card.Group itemsPerRow={4}> 
+            <Card.Group itemsPerRow={4}>
             <Card  >
               <Card.Content>
                 <Image floated='right' size='mini' src='https://react.semantic-ui.com/images/avatar/large/steve.jpg' />
@@ -239,19 +239,19 @@ class Contact extends React.Component {
                   <Button basic color='orange' onClick={() => this.openViewContactModal()}>
                     View Contact
                   </Button>
-                  <Modal 
-                  open={this.state.modalViewContactIsOpen} 
+                  <Modal
+                  open={this.state.modalViewContactIsOpen}
                   size={'tiny'}
-                  style={customStyles} 
+                  style={customStyles}
                   dimmer={'inverted'}
                   onClose={this.closeViewContactModal}
                   >
                   <div>
                   Email:
                   {contacts.email}
-                  <br /> 
-                  Phone #: 
-                  </div> 
+                  <br />
+                  Phone #:
+                  </div>
                   <div className='ui two buttons'>
                   <Button basic color='violet' onClick={()=> this.deleteContactModal(contacts._id)} >
                    Delete Contact
@@ -259,12 +259,12 @@ class Contact extends React.Component {
                   <Button basic color='red' onClick={() => this.closeViewContactModal()}>
                     Close
                   </Button>
-                  </div> 
+                  </div>
                   </Modal>
                 </div>
               </Card.Content>
             </Card>
-          </Card.Group> 
+          </Card.Group>
           </div>
           )
         })
@@ -287,7 +287,7 @@ class Contact extends React.Component {
           return (
             <div key = {i}>
               {received.requester.username}
-             
+
             </div>
           )
         })
@@ -295,52 +295,52 @@ class Contact extends React.Component {
     }
     return (
       <div>
-        <div style={{display:'flex',marginLeft:'auto',justifyContent:'flex-end',marginBottom:'30px'}}> 
+        <div style={{display:'flex',marginLeft:'auto',justifyContent:'flex-end',marginBottom:'30px'}}>
         <div>
           <Button style={{display:'inline', padding:'3px',height:'75%',width:'100px', textAlign:'center', margin:'10px'}} basic color = 'violet' onClick={() => this.openSearchModal()}>New Connections</Button>
-          <Modal 
+          <Modal
           onClose={this.state.closeSearchModal}
-          open={this.state.modalSearchIsOpen} 
+          open={this.state.modalSearchIsOpen}
           dimmer={'inverted'}
           size={'small'}
           style={customStyles}>
             <Input stlye={{display:'block', margin:'10px', justifyContent:'center'}} type='text' placeholder='Artist Username ...' onChange={(e) => (this.setState({username:e.target.value}))}></Input>
-            <div style={{display:'flex', justifyContent:'center'}}> 
+            <div style={{display:'flex', justifyContent:'center'}}>
             <Button style={{display:'inline', justifyContent:'center',padding:'3px',height:'150%',width:'100px', textAlign:'center', margin:'10px'}} color = 'orange' onClick={() => this.sendConnection()}>Connect</Button>
             <Button style={{display:'inline', justifyContent:'center',padding:'3px',height:'150%',width:'100px', textAlign:'center', margin:'10px'}} basic color = 'red' onClick={() => this.closeSearchModal()}>Cancel</Button>
-            </div> 
+            </div>
           </Modal>
         </div>
         <div>
           <Button style={{padding:'3px',height:'75%',width:'100px', textAlign:'center', margin:'10px'}} basic color = 'violet' onClick={() => this.openPendingModal()}>Pending</Button>
-          <Modal 
+          <Modal
           onClose={this.state.closePendingModal}
           dimmer={'inverted'}
           size={'small'}
-          open={this.state.modalPendingIsOpen} 
+          open={this.state.modalPendingIsOpen}
           style={customStyles}>
             Sent Invites
             {renderSent()}
             Received invites
             {renderReceived()}
             <div style={{display:'flex', justifyContent:'center'}}>
-            <Button 
+            <Button
               color='orange'
-              style={{display:'inline', justifyContent:'center',padding:'3px',height:'150%',width:'100px', textAlign:'center', margin:'10px'}} 
+              style={{display:'inline', justifyContent:'center',padding:'3px',height:'150%',width:'100px', textAlign:'center', margin:'10px'}}
               onClick={() => this.acceptConnection(this.state.received.requester._id)}>Accept</Button>
-              <Button 
+              <Button
               color='violet'
-              style={{display:'inline', justifyContent:'center',padding:'3px',height:'150%',width:'100px', textAlign:'center', margin:'10px'}}  
+              style={{display:'inline', justifyContent:'center',padding:'3px',height:'150%',width:'100px', textAlign:'center', margin:'10px'}}
               onClick={() => this.declineConnection(this.state.received.requester._id)}>Decline</Button>
-             <Button 
-            style={{display:'inline', justifyContent:'flex-end',padding:'3px',height:'150%',width:'100px', textAlign:'center', margin:'10px'}} 
-            basic color = 'red' 
+             <Button
+            style={{display:'inline', justifyContent:'flex-end',padding:'3px',height:'150%',width:'100px', textAlign:'center', margin:'10px'}}
+            basic color = 'red'
             onClick={() => this.closePendingModal()}>Close</Button>
-            </div> 
-          
+            </div>
+
           </Modal>
         </div>
-        </div> 
+        </div>
         <div style={{marginBottom:'30px'}}>
           {renderContacts()}
         </div>
