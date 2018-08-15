@@ -211,6 +211,7 @@ export default class MainMap extends Component {
       for(var i=0; i < data_use.length; i++) {
         // tag format
         for(var j=0; j<data_use[i].tags.length; j++){
+          console.log("length of tags," ,data_use[i].tags.length)
           var a=data_use[i].tags[j]
           console.log(a)
           a = String(a)
@@ -411,8 +412,20 @@ export default class MainMap extends Component {
 
   handleClickWTF = (items) => {
     console.log("WHAT THE ACTUAL ", item)
-    var item = items[Math.floor(Math.random()*items.length)];
-    this.menuClickPopup(item.eventName, item.medium, item.artist, item.venueName, item.streetAddress, item.city, item.state, item.latitude, item.longitude, item.tags, item.about)
+    var usable = []
+    for(var i=0; i<items.length; i++) {
+      if(Math.abs(items[i].latitude-this.state.userLocation.lat) < 0.04347826086 && Math.abs(items[i].longitude-this.state.userLocation.lng) < 0.04347826086) {
+        usable.push(items[i])
+      }
+    }
+    if(usable.length >=1) {
+      var item = usable[Math.floor(Math.random()*usable.length)];
+      this.menuClickPopup(item.eventName, item.medium, item.artist, item.venueName, item.streetAddress, item.city, item.state, item.latitude, item.longitude, item.tags, item.about)
+    } else {
+      console.log("no events going on near you")
+      this.menuClickPopup("No events near you!", "", "", "", "", "", "", this.state.userLocation.lat, this.state.userLocation.lng, '', '')
+    }
+
 
     return <CircleMarker fillColor={"red"} center={[item.latitude, item.longitude]} radius={.5}>
       <Popup>
@@ -482,6 +495,20 @@ export default class MainMap extends Component {
         });
      }
    }
+
+   //////////////////////////////////////////////////////////////////////////////////////
+   // tag functions
+   handleTagDelete=(i)=> {
+     const {findTags} = this.state
+     this.setState({
+       findTags: findTags.filter((findTags,index)=> index !==i)
+     })
+   }
+
+   handleTagAddition=(tag)=>{
+     this.setState(state=> ({findTags:[...state.findTags,tag]}))
+   }
+
 
 
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -654,7 +681,7 @@ export default class MainMap extends Component {
                      onOpen={this.onSidebarOpen.bind(this)} onClose={this.onSidebarClose.bind(this)}>
               <Tab id="home1" header="Find a Place" icon="fa fa-globe">
               <br/>
-                <Input action="Search" className="placeSearhBar placeSearch" placeholder="Find a place..." onChange={this.onSearchChange}/>
+                <Input action="Search" className="placeSearhBar placeSearch" placeholder="Find a place..." onChange={this.onSearchChange} onDoubleClick={this.findPlace}/>
                 {/* <Input focus className="placeSearch" placeholder="Find a place..." onChange={this.onSearchChange}/><Button onClick={this.findPlace}>Search</Button> */}
               </Tab>
                 {menuSingleEvent}
@@ -682,16 +709,19 @@ export default class MainMap extends Component {
 
               </Tab>
               {/* <Tab id="music" placeholder="M" icon="fa fa-meh-o"></Tab> */}
-              <Tab header="What do you care about?" icon="fa fa-meh-o">>
-                <Input action="Search" className="placeSearhBar" placeholder="Search a tag..." onChange={this.onTagsAdd}/>
+              <Tab header="What do you care about?" icon="fa fa-meh-o">
+                {/* <Input action="Search" className="placeSearhBar" placeholder="Search a tag..." onChange={this.onTagsAdd}/> */}
+                <div style={{position:'relative', width:'100%', background:'light-grey'}}>
+
                 <ReactTags
                     tags={this.state.findTags}
                     suggestions={this.state.suggestions}
-                    handleDelete={this.handleDelete}
-                    handleAddition={this.handleAddition}
+                    handleDelete={this.handleTagDelete}
+                    handleAddition={this.handleTagAddition}
                     // handleDrag={this.handleDrag}
                     delimiters={delimiters}
                   />
+                </div>
               </Tab>
 
             </Sidebar>
