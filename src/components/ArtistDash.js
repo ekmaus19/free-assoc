@@ -40,7 +40,7 @@ const renderContent=(mode, socket, artist, setMode, contacts, contactList) => { 
     return (
       <div>
         <Header as='h3'>Map View</Header>
-         <MainMap />
+         <MainMap isArtist={true} />
       </div>
     )
     case 'T5':

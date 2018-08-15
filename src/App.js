@@ -12,13 +12,13 @@ import Ethos from './components/Ethos';
 import MainMap from './components/Map';
 import {Button, Icon, Input, Menu, Image,Container} from 'semantic-ui-react';
 import io from 'socket.io-client';
+import url from './components/backend'
 const Nominatim = require('nominatim-geocoder')
 const geocoder = new Nominatim({
   secure: true
 })
 
 console.log(url)
-const url = 'http://localhost:1337'
 
 class App extends Component {
   constructor(props){
@@ -32,6 +32,7 @@ class App extends Component {
         lon: null,
       },
       userId: '',
+      isArtist: false,
       event:{},
       placeSearch: null,
       placeSearchCoords: {
@@ -101,7 +102,7 @@ searchPlaceHome = () => {
               <Menu.Item>
                       <header style={{marginRight:'auto', height:'20px'}} className="App-header">
                         <Image width='30px' height='30px' src='/img/logo4.png'/>
-                
+
                        </header>
                     <h2 style={{marginTop:'auto', marginBottom:'auto', marginLeft:'10px'}}>  Free Associations  </h2>
                 </Menu.Item>
@@ -109,18 +110,18 @@ searchPlaceHome = () => {
                 <Menu.Item onClick = {() => this.redirect('Ethos')} as='a'>Ethos</Menu.Item>
                 <Menu.Item onClick= {()=>this.redirect('About')}as='a'>About</Menu.Item>
                 <Menu.Item onClick= {()=>this.redirect('Contact')} as='a'>Contact</Menu.Item>
-                </Container> 
-                <Container style={{display:'flex',justifyContent:'flex-end'}}> 
+                </Container>
+                <Container style={{display:'flex',justifyContent:'flex-end'}}>
                 <Button style={{padding:'3px',height:'75%',width:'100px', textAlign:'center', margin:'10px'}} basic color = 'violet' className = "register-button"  animated onClick = {() => this.redirect('Registerpicker')}>Register</Button>
                 <Button style={{padding:'3px',width:'100px',height:'75%', textAlign:'center', margin:'10px'}} color = 'violet' className = "login-button"  animated onClick = {() => this.redirect('Login')}>Login</Button>
-                </Container> 
+                </Container>
             </Menu>
 
          {this.state.currentPage === 'Home' ?
           <div>
              <div style={{width:'30%', height:'30%',alignItems:'center',justifyContent:'center', marginLeft:'auto',marginRight:'auto', marginTop:'40px'}}>
              <Image className="App-logo" src='/img/font2.png'/>
-          
+
             </div>
 
           <div>
@@ -154,9 +155,8 @@ searchPlaceHome = () => {
           {this.state.currentPage === 'Registerpicker' ? <div><RegisterScreenPicker redirect={(e) => this.redirect(e)}/></div> : null}
           {this.state.currentPage === 'RegisterUser' ? <div><RegisterScreen redirect={(e) => this.redirect(e)}/></div> : null}
           {this.state.currentPage === 'RegisterArtist' ? <div><RegisterArtist redirect={(e) => this.redirect(e)}/></div> : null}
-          {this.state.currentPage === 'ArtistDash' ? <div><ArtistDash socket={this.socket} event={this.state.event} artist={this.state.artist} redirect={(e) => this.redirect(e)}/></div> : null}
-          {this.state.currentPage === 'MainMap' ? <div><MainMap latlon={this.state.placeSearchCoords} socket={this.socket} redirect={(e) => this.redirect(e)}/></div> : null}
-
+          {this.state.currentPage === 'ArtistDash' ? <div><ArtistDash socket={this.socket} artist={this.state.artist} isArtist={this.state.isArtist} redirect={(e) => this.redirect(e)}/></div> : null}
+          {this.state.currentPage === 'MainMap' ? <div><MainMap latlon={this.state.placeSearchCoords} isArtist = {this.state.isArtist} redirect={(e) => this.redirect(e)}/></div> : null}
       </div>
     );
   }
