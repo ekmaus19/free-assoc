@@ -57,7 +57,7 @@
     "react-modal": "^3.5.1",
     "react-redux": "^5.0.7",
     "react-scripts": "1.1.4",
-    "react-tag-input": "^5.1.1",
+    "react-tag-input": "^5.1.2",
     "react-time-range": "^1.0.2",
     "react-time-range-picker": "^1.4.0",
     "react-toggle-switch": "^3.0.4",

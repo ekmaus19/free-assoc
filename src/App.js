@@ -11,13 +11,13 @@ import Ethos from './components/Ethos';
 import MainMap from './components/Map';
 import {Button, Icon, Input, Menu, Image,Container} from 'semantic-ui-react';
 import io from 'socket.io-client';
+import url from './components/backend'
 const Nominatim = require('nominatim-geocoder')
 const geocoder = new Nominatim({
   secure: true
 })
 
 console.log(url)
-const url = 'http://localhost:1337'
 
 class App extends Component {
   constructor(props){
