@@ -20,7 +20,6 @@ class Contact extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      contacts: [],
       sent: [],
       received: [],
       username: '',
@@ -38,7 +37,7 @@ class Contact extends React.Component {
   }
 
   async componentDidMount() {
-    await this.contactList()
+    await this.props.contactList()
     await this.sentInvites()
     await this.receivedInvites()
   }
@@ -65,21 +64,6 @@ class Contact extends React.Component {
     this.setState({
       modalPendingIsOpen: false,
     });
-  }
-
-  contactList = () => {
-    fetch(url + `/contacts/${this.props.artist._id}`, {
-      method: 'GET',
-    }).then(res => res.json())
-    .then(json => {
-      console.log('JSON ---->', json)
-      this.setState({
-        contacts: json.contacts,
-      })
-    })
-    .catch((err) => {
-      throw err
-    })
   }
 
   sentInvites = () => {
@@ -200,11 +184,11 @@ class Contact extends React.Component {
 
   render() {
     const renderContacts = () => {
-      if (this.state.contacts) {
-        return this.state.contacts.map(contacts => {
+      if (this.props.contacts) {
+        return this.props.contacts.map(contacts => {
           return (
             <div>
-              {contacts.username}
+              {contacts.username} : {contacts.email}
             </div>
           )
         })

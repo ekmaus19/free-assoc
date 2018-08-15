@@ -3,15 +3,16 @@ import { Card, Icon, Header,Image, Container, Segment, Sidebar, Menu , Grid, But
 import {CreateEvent} from './CreateEvent.js'
 import MainMap from './Map';
 import ContactList from './ContactList';
-import EventHistory from './EventHistory'
-import {CreateEventDone} from './CreateEventDone'
+import EventHistory from './EventHistory';
+import Scout from './Scout';
+import {CreateEventDone} from './CreateEventDone';
 
 const url = 'http://localhost:1337'
 
 // toMap = () => this.props.redirect('Map')
 
 
-const renderContent=(mode, socket, artist,setMode) => { //functional component
+const renderContent=(mode, socket, artist, setMode, contacts, contactList) => { //functional component
   switch (mode) {
     case 'T1':
     return (
@@ -32,7 +33,7 @@ const renderContent=(mode, socket, artist,setMode) => { //functional component
     return (
       <div>
         <Header as='h2'>Scout</Header>
-        <Image src='https://react.semantic-ui.com/images/wireframe/paragraph.png' />
+        <Scout artist={artist} contacts={contacts}/>
       </div>
     )
     case 'T4':
@@ -46,7 +47,7 @@ const renderContent=(mode, socket, artist,setMode) => { //functional component
     return (
       <div>
         <Header as='h2'>My Connections</Header>
-        <ContactList artist={artist}/>
+        <ContactList artist={artist} contacts={contacts} contactList={contactList}/>
       </div>
     )
 
@@ -92,7 +93,7 @@ const SidebarExampleVisible = (props) => (
 
     <Sidebar.Pusher>
       <Container style={{paddingTop:'20px',paddingLeft:'30px',paddingRight:'185px'}} basic >
-        {renderContent(props.mode, props.socket, props.artist, props.setMode)}
+        {renderContent(props.mode, props.socket, props.artist, props.setMode, props.contacts, props.contactList)}
 
       </Container>
     </Sidebar.Pusher>
@@ -106,12 +107,14 @@ class ArtistDash extends Component {
     this.state={
       mode:'T1',
       visible:false,
-      switched: false
-
+      switched: false,
+      contacts: []
     }
   }
 
-
+  componentDidMount() {
+    this.contactList()
+  }
 
   onLogout = () => {
     console.log('loggingout !!!')
@@ -128,10 +131,22 @@ class ArtistDash extends Component {
     })
   }
 
-
+  contactList = () => {
+    fetch(url + `/contacts/${this.props.artist._id}`, {
+      method: 'GET',
+    }).then(res => res.json())
+    .then(json => {
+      console.log('JSON ---->', json)
+      this.setState({
+        contacts: json.contacts,
+      })
+    })
+    .catch((err) => {
+      throw err
+    })
+  }
 
   render(){
-
     return(
       <div>
         <Container style={{width:'100%', padding:'100px'}}>
@@ -163,7 +178,7 @@ class ArtistDash extends Component {
                     <Card.Content extra>
                       <a>
                         <Icon name='user' />
-                        22 Friends
+                        {this.state.contacts.length} Friends
                       </a>
                     </Card.Content>
                     <Button style={{marginLeft:'auto', marginRight:'auto'}} basic color = 'grey' className = "logout-button"  animated onClick = {this.onLogout}>Logout</Button>
@@ -174,7 +189,7 @@ class ArtistDash extends Component {
               </Grid.Column>
               <Grid.Column width={13}>
                 <Container style={{height:'100%'}} >
-                  <SidebarExampleVisible  artist={this.props.artist} socket={this.props.socket} mode={this.state.mode} setMode={(mode)=> {this.setState({mode:mode})}}/>
+                  <SidebarExampleVisible  artist={this.props.artist} socket={this.props.socket} mode={this.state.mode} setMode={(mode)=> {this.setState({mode:mode})}} contacts={this.state.contacts} contactList={this.contactList}/>
                 </Container>
               </Grid.Column>
             </Grid.Row>

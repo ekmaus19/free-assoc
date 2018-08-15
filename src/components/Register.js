@@ -20,7 +20,7 @@ class RegisterScreen extends Component {
   constructor(props){
     super(props);
     this.state = {
-      name: '',
+      username: '',
       password: '',
       email:'',
       passwordRepeat:''
@@ -78,7 +78,7 @@ class RegisterScreen extends Component {
   render(){
     return (
       <div>
-      
+
         <div>
         <Input onChange = {this.onNameChange} className = "field" placeholder = "Username" validations={[required]}/>
         <br />

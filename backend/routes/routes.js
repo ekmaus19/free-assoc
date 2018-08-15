@@ -229,5 +229,25 @@ router.post('/decline/:userId', (req, res) => {
   })
 });
 
+//scout artists
+router.post('/scout', (req, res) => {
+  Artist.find({medium: req.body.medium}, (err, artist) => {
+    if (err) {
+      res.send(err)
+    } else {
+      if (!artist) {
+        console.log('Artist does not exist')
+        res.send({error: 'Artist does not exist'})
+        return
+      } else {
+        res.json({
+          success: true,
+          artist: artist
+        })
+      }
+    }
+  })
+});
+
 
 module.exports = router;
