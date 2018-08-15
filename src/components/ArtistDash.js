@@ -32,7 +32,7 @@ const renderContent=(mode, socket, artist, setMode, contacts, contactList) => { 
     case 'T3':
     return (
       <div>
-        <Header as='h2'>Scout</Header>
+        <Header as='h2'>Search for fellow artists</Header>
         <Scout artist={artist} contacts={contacts}/>
       </div>
     )
