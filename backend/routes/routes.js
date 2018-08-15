@@ -71,7 +71,7 @@ router.get('/artist/:id/profileimg',(req,res)=>{
 })
 
 router.get('/contacts/:id/profileimg',(req,res)=>{
-  Artist.connections.findById(req.params.id, (err,event)=>{
+  Artist.findById(req.params.id, (err,event)=>{
     res.contentType(event.img.contentType)
     res.end(event.img.data, "binary")
   })
@@ -179,8 +179,8 @@ router.get('/pending/received/:userId', (req, res) => {
 
 // send connection invite
 router.post('/connect/:userId', (req, res) => {
-  console.log('username', req.body.username)
-  Artist.findOne({username: req.body.username}, (err, artist) => {
+  console.log('****', req.params.userId)
+  Artist.findById(req.params.userId, (err, artist) => {
     if (err) {
       res.send(err)
     } else {
