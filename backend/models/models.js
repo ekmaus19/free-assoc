@@ -9,6 +9,10 @@ const connect = process.env.MONGODB_URI;
 mongoose.connect(connect);
 
 const artistSchema = mongoose.Schema({
+  img: {
+    data:Buffer,
+    contentType:String,
+  },
   firstName: {
     type: String,
     required: true

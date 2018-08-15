@@ -48,7 +48,6 @@ export default class EventHistory extends React.Component {
     this.loadEvents()
   }
 
-  }
 
   toggleSwitch=()=> {
     this.setState(prevState => {

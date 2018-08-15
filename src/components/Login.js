@@ -63,6 +63,7 @@ class LoginScreen extends Component {
       } else{ alert('Invalid Login') }
     })
     .catch((error) => {
+      console.log('****',error)
       alert('Invalid Login')
     })
   }
@@ -97,13 +98,13 @@ class LoginScreen extends Component {
             <Input onChange = {this.onPassChange}  className = "field" placeholder = "Password..."/>
             <br />
             <br />
-            <Button color = 'blue' className = "login-button"  animated onClick = {this.onLoginArtist}>
+            <Button color = 'orange' className = "login-button"  animated onClick = {this.onLoginArtist}>
             <Button.Content visible>Artist Login</Button.Content>
             <Button.Content hidden>
               <Icon name='right arrow'   />
             </Button.Content>
           </Button>
-          <Button color = 'grey' className = "login-button"  animated onClick = {this.onLoginUser}>
+          <Button color = 'violet' className = "login-button"  animated onClick = {this.onLoginUser}>
             <Button.Content visible>User Login</Button.Content>
             <Button.Content hidden>
               <Icon name='right arrow' />

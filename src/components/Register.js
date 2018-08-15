@@ -20,7 +20,7 @@ class RegisterScreen extends Component {
   constructor(props){
     super(props);
     this.state = {
-      name: '',
+      username: '',
       password: '',
       email:'',
       passwordRepeat:''
@@ -67,6 +67,7 @@ class RegisterScreen extends Component {
     .then((response) => response.json())
     .then((responseJson) => {
       if (responseJson.success) {
+        console.log('user registered!!!!! ')
         this.props.redirect('Login')
       }
     })

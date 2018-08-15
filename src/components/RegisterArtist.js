@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {Button,Icon, Select,Input, Image} from 'semantic-ui-react';
-
+import axios from 'axios';
 const url = 'http://localhost:1337'
 
 const options = [
@@ -13,6 +13,7 @@ class RegisterArtist extends Component {
   constructor(props){
     super(props);
     this.state = {
+      selectedFile:null,
       firstName: '',
       lastName: '',
       username:'',
@@ -99,40 +100,46 @@ class RegisterArtist extends Component {
         bio: event.target.value
     })
     }
+  
 
+    onRegister = (e) => {
+      console.log('register')
+      const registerArtist ={
+        firstName: this.state.firstName,
+        lastName: this.state.lastName,
+        medium: this.state.medium,
+        username: this.state.username,
+        password: this.state.password,
+        passwordRepeat: this.state.passwordRepeat,
+        email: this.state.email,
+        existingWork: this.state.existingWork,
+        bio: this.state.bio,
+        facebook: this.state.facebook,
+        instagram: this.state.instagram,
+        twitter: this.state.twitter
+      }
 
-    onRegister = () => {
-      fetch(url + '/register/artist', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          firstName: this.state.firstName,
-          lastName: this.state.lastName,
-          medium: this.state.medium,
-          username: this.state.username,
-          password: this.state.password,
-          passwordRepeat: this.state.passwordRepeat,
-          email: this.state.email,
-          existingWork: this.state.existingWork,
-          bio: this.state.bio,
-          facebook: this.state.facebook,
-          instagram: this.state.instagram,
-          twitter: this.state.twitter
-        })
-      })
-      .then((response) => response.json())
-      .then((responseJson) => {
-        if (responseJson.success) {
+      const {description, selectedFile}=this.state; 
+      e.preventDefault();
+      console.log(selectedFile,'*******')
+      let formData = new FormData();
+      formData.append('info', JSON.stringify(registerArtist))
+      formData.append('selectedFile', selectedFile)
+
+      axios.post('http://localhost:1337/register/artist', formData)
+      .then((result)=> {
           this.props.redirect('Login')
-        }
-      })
-      .catch((error) => {
+        
+      }).catch((error) => {
         console.log(error);
       })
     }
 
+    fileSelectedHandler=(event)=>{
+      this.setState({
+        selectedFile: event.target.files[0]
+      })
+    }
   render(){
     return (
      
@@ -173,7 +180,9 @@ class RegisterArtist extends Component {
         </Button>
         <Input style={{width:'280px'}} onChange = {this.onTwitterChange} className = "field" placeholder = "Link to Page"/>
         </div>
-        </div>
+        
+        <Input style={{marginRight:'auto'}} type='file' onChange={this.fileSelectedHandler} />
+        </div> 
 
         <br />
         <Button color = 'pink' className = "register-button"  animated onClick={this.onRegister}>
