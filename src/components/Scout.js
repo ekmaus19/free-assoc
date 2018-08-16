@@ -10,6 +10,8 @@ class Scout extends React.Component {
       medium: '',
       artist: [],
       connection:[],
+      requester: '',
+      invitee: '',
     }
   }
 
@@ -44,13 +46,15 @@ class Scout extends React.Component {
     })
   }
 
-
-  sendConnection = () => {
+  sendConnection = (artist) => {
     fetch(url + `/connect/${this.props.artist._id}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
+      body: JSON.stringify({
+        artist: artist
+      })
     })
     .then(res => res.json())
     .then(json => {
@@ -67,25 +71,23 @@ class Scout extends React.Component {
     })
   }
 
-
-
   render () {
     return (
       <div style={{marginBotton:'20px'}} >
           <br />
           <br />
-        <div style={{display:'inline', marginBotton:'20px'}}> 
-        <Input style={{height:'200%', marginRight:'10px', marginBottom:'30px'}} 
-        type='text' 
-        placeholder='Search by Medium or Artist' 
+        <div style={{display:'inline', marginBotton:'20px'}}>
+        <Input style={{height:'200%', marginRight:'10px', marginBottom:'30px'}}
+        type='text'
+        placeholder='Search by Medium'
         onChange={(e) => (this.setState({medium:e.target.value}))}></Input>
-        <Button basic color='violet' onClick={() => this.findArtist()}>Go!</Button> 
-        </div> 
+        <Button basic color='violet' onClick={() => this.findArtist()}>Go!</Button>
+        </div>
 
         <Container style={{marginBottom:'20px'}} >
-          <Card.Group itemsPerRow={4}> 
+          <Card.Group itemsPerRow={4}>
 
-          {this.state.artist.map((artist,i)=> 
+          {this.state.artist.map((artist,i)=>
           <Card style={{justifyContent:'center', alignItems:'center'}}>
             <Container >
               <Image style={{marginLeft:'auto',marginRight:'auto',width:'75%', height:'75%',padding:'10px'}} src={'http://localhost:1337/artist/'+ artist._id +'/profileimg'}/>
@@ -109,13 +111,13 @@ class Scout extends React.Component {
               <a>
                 <Icon name='user' />
                 {/* {this.props.contacts.length} Friends */}
-                <Button style={{display:'inline', justifyContent:'center',padding:'3px',height:'150%',width:'100px', textAlign:'center', margin:'10px'}} color = 'orange' onClick={() => this.sendConnection()}>Connect</Button>
+                <Button style={{display:'inline', justifyContent:'center',padding:'3px',height:'150%',width:'100px', textAlign:'center', margin:'10px'}} color = 'orange' onClick={() => this.sendConnection(artist)}>Connect</Button>
               </a>
             </Card.Content>
           </Card>
           )}
 
-          </Card.Group> 
+          </Card.Group>
         </Container>
       </div>
     )

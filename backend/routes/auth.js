@@ -58,7 +58,7 @@ router.post('/register/artist', upload.single('selectedFile'),(req, res) => {
   req.checkBody("firstName", "Enter first name").notEmpty();
   req.checkBody("lastName", "Enter last name").notEmpty();
   req.checkBody("email", "Enter email address").notEmpty();
-  req.checkBody("medreq.bodyium", "Enter medium").notEmpty();
+  req.checkBody("medium", "Enter medium").notEmpty();
   req.checkBody("username", "Enter username").notEmpty();
   req.checkBody("username", "Username must be at least 3 characters").isLength({min:3, max: 20});
   req.checkBody("password", "Enter password").notEmpty();

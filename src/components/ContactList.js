@@ -24,8 +24,6 @@ class Contact extends React.Component {
       received: [],
       username: '',
       connection: [],
-      requester: '',
-      invitee: '',
       modalSearchIsOpen: false,
       modalPendingIsOpen: false,
       modalViewContactIsOpen: false,
@@ -79,15 +77,19 @@ class Contact extends React.Component {
         modalViewContactIsOpen: false,
       });
     }
-   //////
 
-   deleteContactModal = (contactid) => {
-    console.log(this.state.contacts)
-     fetch(url + `/delete/${contactid}`,{
+   deleteContactModal = (artist2) => {
+     fetch(url + `/delete/${this.props.artist._id}`,{
        method: 'POST',
+       headers: {
+         'Content-Type': 'application/json'
+       },
+       body: JSON.stringify({
+         artist: artist2
+       })
      }).then(res => res.json())
      .then(json => {
-       if (json.success){
+       if (json.success) {
       this.setState({
         contacts: json.contacts,
       })
@@ -250,6 +252,7 @@ class Contact extends React.Component {
                   {contacts.email}
                   <br />
                   Phone #:
+                  {contacts.phone}
                   </div>
                   <div className='ui two buttons'>
                   <Button basic color='violet' onClick={()=> this.deleteContactModal(contacts._id)} >
@@ -286,8 +289,8 @@ class Contact extends React.Component {
           return (
             <div key = {i}>
               {received.requester.username}
-              <br /> 
-              <div style={{display:'inline', justifyContenet:'center', marginTop:'20px'}}> 
+              <br />
+              <div style={{display:'inline', justifyContenet:'center', marginTop:'20px'}}>
                <Button
               color='orange'
               style={{display:'inline', justifyContent:'center',padding:'3px',height:'150%',width:'100px', textAlign:'center', margin:'10px'}}
@@ -296,7 +299,7 @@ class Contact extends React.Component {
               color='violet'
               style={{display:'inline', justifyContent:'center',padding:'3px',height:'150%',width:'100px', textAlign:'center', margin:'10px'}}
               onClick={() => this.declineConnection(received.requester._id)}>Decline</Button>
-            </div> 
+            </div>
             </div>
           )
         })
@@ -315,7 +318,6 @@ class Contact extends React.Component {
           style={customStyles}>
             <Input stlye={{display:'block', margin:'10px', justifyContent:'center'}} type='text' placeholder='Artist Username ...' onChange={(e) => (this.setState({username:e.target.value}))}></Input>
             <div style={{display:'flex', justifyContent:'center'}}>
-            <Button style={{display:'inline', justifyContent:'center',padding:'3px',height:'150%',width:'100px', textAlign:'center', margin:'10px'}} color = 'orange' onClick={() => this.sendConnection()}>Connect</Button>
             <Button style={{display:'inline', justifyContent:'center',padding:'3px',height:'150%',width:'100px', textAlign:'center', margin:'10px'}} basic color = 'red' onClick={() => this.closeSearchModal()}>Cancel</Button>
             </div>
           </Modal>
@@ -328,14 +330,14 @@ class Contact extends React.Component {
           size={'small'}
           open={this.state.modalPendingIsOpen}
           style={customStyles}>
-            Sent Invites: 
+            Sent Invites:
             {renderSent()}
-            <br /> 
-            <br /> 
+            <br />
+            <br />
             Received invites:
             {renderReceived()}
             <div style={{display:'flex', justifyContent:'center'}}>
-          
+
              <Button
             style={{display:'inline', justifyContent:'flex-end',padding:'3px',height:'150%',width:'100px', textAlign:'center', margin:'10px'}}
             basic color = 'red'
