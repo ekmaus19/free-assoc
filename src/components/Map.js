@@ -12,6 +12,7 @@ import {
     DateTimeInput,
   } from 'semantic-ui-calendar-react';
 import moment from 'moment';
+import suggestionsList from './suggestion_categories'
 import '../index.css'
 
 moment().format();
@@ -40,6 +41,17 @@ const delimiters = [KeyCodes.comma, KeyCodes.enter];
 const findMe = {
   center: [51.505, -0.09],
   zoom: 13
+}
+
+const  containsObject = (obj, list) => {
+    var i;
+    for (i = 0; i < list.length; i++) {
+        if (list[i] === obj) {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -99,7 +111,7 @@ console.log(medium, latitude, longitude)
 
 const TestMarkerList = ({ data, latlng, userLocation, menuClickPopup }) => {
   const items = data.map(({ _id, ...props}) => (
-    <TestPopupMarker userLocation={userLocation} latlng={latlng} key={_id} {...props} menuClickPopup= {(event, medium, artist, venue, address, city, state, lat, long, tags, about) => menuClickPopup(event, medium, artist, venue, address, city, state, lat, long, tags, about)}></TestPopupMarker>
+    <TestPopupMarker userLocation={userLocation} latlng={latlng} key={_id} {...props} menuClickPopup= {(event, medium, artist, venue, address, city, state, lat, long, tags, about, price, ) => menuClickPopup(event, medium, artist, venue, address, city, state, lat, long, tags, about)}></TestPopupMarker>
   ))
   return <div style={{ display: 'none' }}>{items}</div>
 }
@@ -125,11 +137,11 @@ export default class MainMap extends Component {
       // for event sorting on the map ////////////////////
       searchingPlace: null,
       filterMusic: true,
+      hasLocation: false,
       filterPerf: true,
       filterArt: true,
 
       // for displaying all of the different places //////
-      hasLocation: false,
 
       // main user map set up
       latlng: props.latlon ? {lat: props.latlon.lat, lon: props.latlon.lon} : {lat:27.773056, lon: -82.639999},
@@ -164,7 +176,7 @@ export default class MainMap extends Component {
 
       /// stuff for tag searches
       findTags: [],
-      suggestions: [],
+      suggestions: [suggestionsList],
     }
   }
 
@@ -181,7 +193,6 @@ export default class MainMap extends Component {
       console.log(currDate)
       // currDate = moment(String(currDate))
       // console.log("TESTING DATE ", currDate)
-
 
       console.log(json[1])
       for(var i=0; i<json.length; i++) {
@@ -203,29 +214,7 @@ export default class MainMap extends Component {
         console.log(moment(two, "DD-MM-YYYY").format('YYYY-MM-DD'))
         data_use[i].datesRange[0] = moment(one, "DD-MM-YYYY").format('YYYY-MM-DD');
         data_use[i].datesRange[1] = moment(two, "DD-MM-YYYY").format('YYYY-MM-DD');
-
       }
-      console.log(data_use)
-
-      let suggestions_tags = []
-      for(var i=0; i < data_use.length; i++) {
-        // tag format
-        for(var j=0; j<data_use[i].tags.length; j++){
-          console.log("length of tags," ,data_use[i].tags.length)
-          var a=data_use[i].tags[j]
-          console.log(a)
-          a = String(a)
-          a = a.toLowerCase()
-          if(suggestions_tags.indexOf(a) !== -1) {
-            console.log('There')
-          } else {
-            suggestions_tags.push({id: String(a), text: String(a)})
-
-          }
-        }
-        // console.log("this is the current array of tags for data available", suggestions_tags)
-      }
-
 
       if(this.state.artist) {
         await this.mapRef.current.leafletElement.locate()
@@ -234,7 +223,6 @@ export default class MainMap extends Component {
           loading:false,
           nowTime: currDate,
           nowHourTime: currTime,
-          suggestions: suggestions_tags,
         })
       } else if(!this.props.latlon.lat) {
         await this.mapRef.current.leafletElement.locate()
@@ -248,7 +236,6 @@ export default class MainMap extends Component {
             lat: a._lastCenter.lat,
             lon: a._lastCenter.lng,
           },
-          suggestions: suggestions_tags,
         })
         console.log('in 1st choice, near me search')
       } else {
@@ -259,7 +246,6 @@ export default class MainMap extends Component {
           },
           nowTime: currDate,
           nowHourTime: currTime,
-          suggestions: suggestions_tags,
         })
       }
   }).catch((err) => {
@@ -423,7 +409,7 @@ export default class MainMap extends Component {
       this.menuClickPopup(item.eventName, item.medium, item.artist, item.venueName, item.streetAddress, item.city, item.state, item.latitude, item.longitude, item.tags, item.about)
     } else {
       console.log("no events going on near you")
-      this.menuClickPopup("No events near you!", "", "", "", "", "", "", this.state.userLocation.lat, this.state.userLocation.lng, '', '')
+      // this.menuClickPopup("No events near you!", "", "", "", , item.city, item.state, item.latitude, item.longitude, item.tags, item.about)
     }
 
 
@@ -507,6 +493,7 @@ export default class MainMap extends Component {
 
    handleTagAddition=(tag)=>{
      this.setState(state=> ({findTags:[...state.findTags,tag]}))
+
    }
 
 
@@ -593,6 +580,28 @@ export default class MainMap extends Component {
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////
+    /// filter data based on tags
+
+    if(this.state.findTags.length >0){
+      var use_tags = []
+
+        filterData=filterData.filter(item => {
+          for(var j=0; j< item.tags.length; j++){
+            console.log("filter getting there")
+            for(var q=0; q<this.state.findTags.length; q++) {
+              if(this.state.findTags[q].id ===item.tags[j]){
+                console.log('FOUND THE TAG!!!')
+                if(containsObject(item, use_tags)===false) { use_tags.push(item) }
+              }
+            }
+          }
+        }
+      )
+        filterData=use_tags
+    }
+
+
+    //////////////////////////////////////////////////////////////////////////////////////////
 
     // filter through music / arts / performances
 
@@ -607,6 +616,9 @@ export default class MainMap extends Component {
       filterData=filterData.filter(item => item.medium !== "performance")
     }
 
+    //////////////////////////////////////////////////////////////////////////////////////////
+
+
 /// side menu tab template
 
     const menuSingleEvent = this.state.moreClicked ? (
@@ -617,8 +629,8 @@ export default class MainMap extends Component {
           <p>{this.state.menuArtist}</p>
           <p><b className="listingVenueName">{this.state.menuVenue}</b> {this.state.menuAddress}, {this.state.menuState}</p>
           <p><b>About: </b>{this.state.menuAbout}</p>
-      </div>
-    </Tab>
+        </div>
+      </Tab>
   ) : <Tab id="event" header="More Info" icon="fa fa-info-circle"><p className="timeLabels">No Event Selected</p></Tab>
 
 // map constant
@@ -663,8 +675,8 @@ export default class MainMap extends Component {
             <button  className={this.state.filterArt ? "buttonArt" : "buttonOff" } onClick={(e) => { this.setState({filterArt: !this.state.filterArt}); }}>A</button>
             <Button onClick={this.findPlace}>Search</Button>
           </Grid.Row> */}
-          <Grid.Row><Button className="buttonFindMe" onClick={() => this.handleClick()}>Find Me</Button></Grid.Row>
-          <Grid.Row><Button className="buttonWTF" onClick={() => this.handleClickWTF(filterData ? filterData : this.state.data)}>WTF</Button></Grid.Row>
+          <Grid.Row><Button compact small inverted color ="orange" className="buttonFindMe buttonSmaller" onClick={() => this.handleClick()}>Find Me</Button></Grid.Row>
+          <Grid.Row><Button massive basic inverted color="red" className="buttonWTF buttonSmaller" onClick={() => this.handleClickWTF(filterData ? filterData : this.state.data)}>WTF</Button></Grid.Row>
 
           <Grid.Row>
             {this.state.loading ? mapLoading : null }
@@ -711,19 +723,17 @@ export default class MainMap extends Component {
               {/* <Tab id="music" placeholder="M" icon="fa fa-meh-o"></Tab> */}
               <Tab header="What do you care about?" icon="fa fa-meh-o">
                 {/* <Input action="Search" className="placeSearhBar" placeholder="Search a tag..." onChange={this.onTagsAdd}/> */}
-                <div style={{position:'relative', width:'100%', background:'light-grey'}}>
-
+                  <br/>
                 <ReactTags
                     tags={this.state.findTags}
-                    suggestions={this.state.suggestions}
+                    suggestions={this.state.suggestions[0]}
                     handleDelete={this.handleTagDelete}
                     handleAddition={this.handleTagAddition}
                     // handleDrag={this.handleDrag}
                     delimiters={delimiters}
+                    placeholder= "Add a new tag..."
                   />
-                </div>
               </Tab>
-
             </Sidebar>
               {mapComponent}
             </Grid.Row>
