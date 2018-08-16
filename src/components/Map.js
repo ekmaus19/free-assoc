@@ -216,6 +216,16 @@ export default class MainMap extends Component {
         data_use[i].datesRange[1] = moment(two, "DD-MM-YYYY").format('YYYY-MM-DD');
       }
 
+      for(var i=0; i < data_use.length; i++) {
+        if(data_use[i].datesRange[0] === "Invalid date"){
+          data_use[i].datesRange[0] = data_use[i].datesRange[1]
+        }
+
+        if(data_use[i].datesRange[1] === "Invalid date"){
+          data_use[i].datesRange[1] = data_use[i].datesRange[0]
+        }
+      }
+
       if(this.state.artist) {
         await this.mapRef.current.leafletElement.locate()
         this.setState({
@@ -262,18 +272,6 @@ export default class MainMap extends Component {
     this.setState({
       searchingPlace: event.target.value
     })
-  }
-
-  onTagsDelete=(i)=> {
-    // this.setState({
-    //   findTags: tags.filter((tag,index)=> index !==i)
-    // })
-  }
-
-  onTagsAdd=(tag)=>{
-    // this.setState({
-    //   findTags:[...state.findTags,tag]
-    // })
   }
 
   handleDateChange = (event, {name, value}) => {
@@ -505,7 +503,7 @@ export default class MainMap extends Component {
     console.log(this.state)
     // locate present user on the map
     const marker = this.state.hasLocation ? (
-      <CircleMarker center={this.state.latlng} radius={10}>
+      <CircleMarker center={this.state.userLocation} radius={10}>
         <Popup>
           <span>You are here</span>
         </Popup>
@@ -526,7 +524,7 @@ export default class MainMap extends Component {
         for(var i=0; i<filterData.length; i++) {
           console.log(String(this.state.nowTime))
           console.log(filterData[i].datesRange)
-          if(filterData[i].datesRange.indexOf(String(this.state.nowTime)) !== -1) {
+          if(this.state.nowTime >=filterData[i].datesRange[0] && this.state.nowTime <= filterData[i].datesRange[1]) {
             if(filterData[i].startTime <= this.state.nowHourTime < filterData[i].endTime) {
               dud.push(filterData[i])
               console.log('Event happening RIGHT NOW')
@@ -547,7 +545,7 @@ export default class MainMap extends Component {
         for(var i=0; i<filterData.length; i++) {
           console.log(String(this.state.nowTime))
           console.log(filterData[i].datesRange)
-          if(filterData[i].datesRange.indexOf(String(this.state.nowTime)) !== -1) {
+          if(this.state.nowTime >=filterData[i].datesRange[0] && this.state.nowTime <= filterData[i].datesRange[1]) {
             dud.push(filterData[i])
           } else {
             console.log('event not happening today', filterData[i].time, filterData[i].startTime, filterData[i].endTime)
@@ -563,7 +561,7 @@ export default class MainMap extends Component {
         for(var i=0; i<filterData.length; i++) {
           console.log(String(this.state.nowTime))
           console.log(filterData[i].datesRange)
-          if(filterData[i].datesRange.indexOf(String(this.state.nowTime)) !== -1) {
+          if(this.state.nowTime >=filterData[i].datesRange[0] && this.state.nowTime <= filterData[i].datesRange[1]) {
             if(this.state.nowHourTime < filterData[i].endTime) {
               dud.push(filterData[i])
               console.log('today and still to happen')
