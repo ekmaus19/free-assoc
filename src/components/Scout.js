@@ -23,6 +23,8 @@ class Scout extends React.Component {
       event:[], 
       connection:[],
       modalViewCardIsOpen: false,
+      requester: '',
+      invitee: '',
     }
   }
 
@@ -63,16 +65,15 @@ class Scout extends React.Component {
     })
   }
 
-
   sendConnection = (artist) => {
-    console.log(artist)
     fetch(url + `/connect/${this.props.artist._id}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body:JSON.stringify({
-        artist:artist
+      body: JSON.stringify({
+        artist: artist
+      })
     })
   })
     .then(res => res.json())
@@ -109,18 +110,18 @@ class Scout extends React.Component {
       <div style={{marginBotton:'20px'}} >
           <br />
           <br />
-        <div style={{display:'inline', marginBotton:'20px'}}> 
-        <Input style={{height:'200%', marginRight:'10px', marginBottom:'30px'}} 
-        type='text' 
-        placeholder='Search by Medium or Artist' 
+        <div style={{display:'inline', marginBotton:'20px'}}>
+        <Input style={{height:'200%', marginRight:'10px', marginBottom:'30px'}}
+        type='text'
+        placeholder='Search by Medium'
         onChange={(e) => (this.setState({medium:e.target.value}))}></Input>
         <Button basic color='violet' onClick={()=> {this.findArtist()}}> Go!</Button> 
         </div> 
 
         <Container style={{marginBottom:'20px'}} >
-          <Card.Group itemsPerRow={4}> 
+          <Card.Group itemsPerRow={4}>
 
-          {this.state.artist.map((artist,i)=> 
+          {this.state.artist.map((artist,i)=>
           <Card style={{justifyContent:'center', alignItems:'center'}}>
             <Container >
               <Image style={{marginLeft:'auto',marginRight:'auto',width:'75%', height:'75%',padding:'10px'}} src={'http://localhost:1337/artist/'+ artist._id +'/profileimg'}/>
@@ -173,7 +174,7 @@ class Scout extends React.Component {
           </Card>
           )}
 
-          </Card.Group> 
+          </Card.Group>
         </Container>
       </div>
     )

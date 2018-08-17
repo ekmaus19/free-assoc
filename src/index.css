@@ -11,12 +11,15 @@ font-family: sans-serif;
   width: 100%;
 }
 
+/* @import url('~react-leaflet-markercluster/dist/styles.min.css'); */
+
 /* button styling ////////////////////////////////////////////////////////// */
 
 .timeLabels {
   font-size: 16px;
   padding-bottom: 10px;
   padding-top: 10px;
+  color: #504c77;
 }
 
 .placeSearhBar {
@@ -49,8 +52,8 @@ font-family: sans-serif;
 .buttonArt {
   font-size: 85px;
   padding: 32px 16px;
-  border-radius: 2px;
-  background-color: #594b66;
+  border-radius: 6px;
+  background-color: #5508c9;
   /* color: #594b66; */
   border: none;
   /* 2px solid "dark gray"; */
@@ -63,6 +66,20 @@ font-family: sans-serif;
   display: block;
 }
 
+.buttonSmaller {
+  /* padding: 8px 4px; */
+  border-radius: 4px;
+  /* background-color: #f9a004; */
+  /* color: #594b66; */
+  border: none;
+  /* 2px solid "dark gray"; */
+  /* height: 75px; */
+  color: white;
+  width: 125px;
+  font-family: 'arial';
+  /* display: block; */
+}
+
 .floatbox {
   /* border:1px solid red;
   padding:10px;
@@ -72,17 +89,29 @@ font-family: sans-serif;
 
 
 .buttonFindMe {
+  text-align: center;
+  background-color: #34a9c1;
+  /* line-height: 25px; */
   position: absolute;
-  bottom: 60px;
+  bottom: 40px;
   right: 75px;
   z-index: 3000;
+  /* font-size: 50px; */
+  /* display: block; */
 }
 
 .buttonWTF {
+  /* font-size: 35px;
+  text-align: center;
+  line-height: 25px; */
+  /* background-color: #54c979; */
+  /* color: #5508c9; */
   position: absolute;
-  bottom: 100px;
+  bottom: 75px;
   right: 75px;
   z-index: 30000;
+  /* display: block; */
+
 }
 
 .buttonMain {
@@ -94,24 +123,124 @@ font-family: sans-serif;
   z-index: 3000;
 }
 
+
+/*  tag search /////////////////////////////////////////////////////////////////// */
+/* Example Styles for React Tags*/
+#app {
+  padding: 40px;
+}
+
+div.ReactTags__tags {
+  position: relative;
+  /* float:bottom; */
+}
+
+/* Styles for the input */
+div.ReactTags__tagInput {
+    /* position:absolute; */
+    /* left:10px;
+    top: 10px; */
+    width: 400px;
+    border-radius: 2px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    display: block;
+    /* bottom:10px; */
+}
+div.ReactTags__tagInput input.ReactTags__tagInputField,
+div.ReactTags__tagInput input.ReactTags__tagInputField:focus {
+
+    height: 40px;
+    margin: 0;
+    font-size: 14px;
+    width: 50%;
+    border: 1px solid #e0e2e5;
+    border-radius: 4px;
+    padding: 0 4px;
+}
+
+div.ReactTags__tagInput input.ReactTags__tagInputField::placeholder{
+  color: #b4bbc6;
+}
+
+
+/* Styles for selected tags */
+div.ReactTags__selected span.ReactTags__tag {
+  z-index: 100;
+    border: 1px solid #ddd;
+    background: #eee;
+    font-size: 12px;
+    display: inline-block;
+    padding: 5px;
+    margin: 0 5px;
+    cursor: move;
+    border-radius: 2px;
+}
+div.ReactTags__selected a.ReactTags__remove {
+    color: #aaa;
+    margin-left: 5px;
+    cursor: pointer;
+}
+
+/* Styles for suggestions */
+div.ReactTags__suggestions {
+    top:150px;
+    left:100px;
+}
+div.ReactTags__suggestions ul {
+    list-style-type: none;
+    box-shadow: .05em .01em .5em rgba(0,0,0,.2);
+    background: white;
+    width: 200px;
+}
+div.ReactTags__suggestions li {
+    border-bottom: 1px solid #ddd;
+    padding: 5px 10px;
+    margin: 0;
+}
+div.ReactTags__suggestions li mark {
+    text-decoration: underline;
+    background: none;
+    font-weight: 600;
+}
+div.ReactTags__suggestions ul li.ReactTags__activeSuggestion {
+    background: #b7cfe0;
+    cursor: pointer;
+}
+
 /* listing edits ///////////////////////////////////////////////////////////////// */
 
 .menuSingleEvent {
   text-align: left;
+  color: #4286f4;
 }
 
 #listingEventName {
   font-size: 24px;
+  text-align: left;
 }
 
 .listingL2 {
+  text-align: left;
   font-size: 18px;
+  color: #504c77;
+}
+
+.artistName {
+  color:#504c77;
+  text-align: left;
 }
 
 .listingVenueName {
   font-size: 14px;
+  color: #504c77;
+  text-align: left;
 }
 
+.aboutEvent {
+  color: #504c77;
+  text-align: left;
+}
 
 /* popup styling ////////////////////////////////////////////////////////// */
 
@@ -218,6 +347,7 @@ bottom: 10px
         .sidebar-tabs>li.disabled,.sidebar-tabs>ul>li.disabled{
           color:rgba(51,51,51,.4)
           }.sidebar-tabs>li.disabled:hover,.sidebar-tabs>ul>li.disabled:hover{
+
             background:0 0
             }
         .sidebar-tabs>li.disabled>a,.sidebar-tabs>ul>li.disabled>a{
@@ -241,15 +371,18 @@ bottom: 10px
           bottom:0;
           background-color:rgba(255,255,255,.95);
           overflow-x:hidden;
-          overflow-y:auto
+          overflow-y:auto;
+          color:#4286f4;
           }
         .sidebar-left .sidebar-content{
           left:40px;
-          right:0
+          right:0;
+          color: 'black';
         }
       .sidebar-right .sidebar-content{
         left:0;
-        right:40px
+        right:40px;
+        color: 'black';
       }
       .sidebar.collapsed>.sidebar-content{
         overflow-y:hidden
@@ -259,7 +392,9 @@ bottom: 10px
           left:0;
           right:0;
           box-sizing:border-box;
-          padding:10px 10px
+          padding:10px 10px;
+          color: 'black';
+
           }
 
           /* the actual header and text */
@@ -271,7 +406,7 @@ bottom: 10px
             line-height:30px;
             font-size:20pt;
             color:#fff;
-            background-color:#bccdd8}
+            background-color:#40e89a}
             .sidebar-right .sidebar-header{
               padding-left:40px
             }

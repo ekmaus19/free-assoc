@@ -44,10 +44,10 @@ const artistSchema = mongoose.Schema({
     required: true,
     unique: true
   },
-  phone:{
+  phone: {
     type: Number,
     required: true,
-    unique: true 
+    unique: true
   },
   existingWork: {
     type: String,

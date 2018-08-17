@@ -12,6 +12,7 @@ import {
     DateTimeInput,
   } from 'semantic-ui-calendar-react';
 import moment from 'moment';
+import suggestionsList from './suggestion_categories'
 import '../index.css'
 
 moment().format();
@@ -42,6 +43,17 @@ const findMe = {
   zoom: 13
 }
 
+const  containsObject = (obj, list) => {
+    var i;
+    for (i = 0; i < list.length; i++) {
+        if (list[i] === obj) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // popup work
@@ -54,7 +66,7 @@ const green_button = "http://purepng.com/public/uploads/large/purepng.com-greent
 let splitUserLoc
 /////// 8.8.2018 WPS
 
-const TestPopupMarker = ({ eventName, eventOrganizer, venueName, streetAddress, city, state, latitude, longitude, medium, latlng, userLocation, tags, about, menuClickPopup }) => {
+const TestPopupMarker = ({ eventName, eventCreator, venueName, streetAddress, city, state, latitude, longitude, medium, latlng, userLocation, tags, about, price, startTime, endTime, datesRange, menuClickPopup }) => {
 let customMarker
 console.log(medium, latitude, longitude)
   // if(medium === "art"){
@@ -92,14 +104,14 @@ console.log(medium, latitude, longitude)
 {/* https://www.google.com/maps/dir/SFO,+San+Francisco,+CA/AMC+Van+Ness+14,+Van+Ness+Avenue,+San+Francisco,+CA/@37.6957396,-122.4952311,12z/ */}
 {/* <Form action={window.open("https://www.google.com/maps/dir/"+ latitude + "," + longitude + "/" + splitUserLoc +"/@" + latlng.lat + "," + latlng.lng  + ",15z", "_blank")}><Button size='mini'>Take Me There</Button><Button size='mini'>More</Button></Form> */}
 
-      <Button onClick={"https://www.google.com/maps/@" + userLocation + '/'+ latitude + ',' + longitude + ',15z'} size='mini'>Take Me There</Button><Button size='mini' onClick ={() => menuClickPopup(eventName, medium, eventOrganizer, venueName, streetAddress, city, state, latitude, longitude, tags, about)}>More</Button>
+      <Button onClick={"https://www.google.com/maps/@" + userLocation + '/'+ latitude + ',' + longitude + ',15z'} size='mini'>Take Me There</Button><Button size='mini' onClick ={() => menuClickPopup(eventName, medium, eventCreator.username, venueName, streetAddress, city, state, latitude, longitude, tags, about, price, startTime, endTime, datesRange)}>More</Button>
      </Popup>
    </CircleMarker>)
 }
 
 const TestMarkerList = ({ data, latlng, userLocation, menuClickPopup }) => {
   const items = data.map(({ _id, ...props}) => (
-    <TestPopupMarker userLocation={userLocation} latlng={latlng} key={_id} {...props} menuClickPopup= {(event, medium, artist, venue, address, city, state, lat, long, tags, about) => menuClickPopup(event, medium, artist, venue, address, city, state, lat, long, tags, about)}></TestPopupMarker>
+    <TestPopupMarker userLocation={userLocation} latlng={latlng} key={_id} {...props} menuClickPopup= {(event, medium, artist, venue, address, city, state, lat, long, tags, about, price, startTime, endTime, datesRange ) => menuClickPopup(event, medium, artist, venue, address, city, state, lat, long, tags, about, price, startTime, endTime, datesRange)}></TestPopupMarker>
   ))
   return <div style={{ display: 'none' }}>{items}</div>
 }
@@ -125,11 +137,11 @@ export default class MainMap extends Component {
       // for event sorting on the map ////////////////////
       searchingPlace: null,
       filterMusic: true,
+      hasLocation: false,
       filterPerf: true,
       filterArt: true,
 
       // for displaying all of the different places //////
-      hasLocation: false,
 
       // main user map set up
       latlng: props.latlon ? {lat: props.latlon.lat, lon: props.latlon.lon} : {lat:27.773056, lon: -82.639999},
@@ -164,7 +176,7 @@ export default class MainMap extends Component {
 
       /// stuff for tag searches
       findTags: [],
-      suggestions: [],
+      suggestions: [suggestionsList],
     }
   }
 
@@ -181,7 +193,6 @@ export default class MainMap extends Component {
       console.log(currDate)
       // currDate = moment(String(currDate))
       // console.log("TESTING DATE ", currDate)
-
 
       console.log(json[1])
       for(var i=0; i<json.length; i++) {
@@ -204,28 +215,24 @@ export default class MainMap extends Component {
         data_use[i].datesRange[0] = moment(one, "DD-MM-YYYY").format('YYYY-MM-DD');
         data_use[i].datesRange[1] = moment(two, "DD-MM-YYYY").format('YYYY-MM-DD');
 
-      }
-      console.log(data_use)
-
-      let suggestions_tags = []
-      for(var i=0; i < data_use.length; i++) {
-        // tag format
-        for(var j=0; j<data_use[i].tags.length; j++){
-          console.log("length of tags," ,data_use[i].tags.length)
-          var a=data_use[i].tags[j]
-          console.log(a)
-          a = String(a)
-          a = a.toLowerCase()
-          if(suggestions_tags.indexOf(a) !== -1) {
-            console.log('There')
-          } else {
-            suggestions_tags.push({id: String(a), text: String(a)})
-
-          }
+        if(data_use[i].datesRange[0] === "Invalid date"){
+          data_use[i].datesRange[0] = data_use[i].datesRange[1]
         }
-        // console.log("this is the current array of tags for data available", suggestions_tags)
+
+        if(data_use[i].datesRange[1] === "Invalid date"){
+          data_use[i].datesRange[1] = data_use[i].datesRange[0]
+        }
       }
 
+      // for(var i=0; i < data_use.length; i++) {
+      //   if(data_use[i].datesRange[0] === "Invalid date"){
+      //     data_use[i].datesRange[0] = data_use[i].datesRange[1]
+      //   }
+      //
+      //   if(data_use[i].datesRange[1] === "Invalid date"){
+      //     data_use[i].datesRange[1] = data_use[i].datesRange[0]
+      //   }
+      // }
 
       if(this.state.artist) {
         await this.mapRef.current.leafletElement.locate()
@@ -234,11 +241,11 @@ export default class MainMap extends Component {
           loading:false,
           nowTime: currDate,
           nowHourTime: currTime,
-          suggestions: suggestions_tags,
         })
       } else if(!this.props.latlon.lat) {
         await this.mapRef.current.leafletElement.locate()
         var a = await this.mapRef.current.leafletElement.locate()
+        console.log(a)
         this.setState({
           data: data_use,
           loading:false,
@@ -248,7 +255,6 @@ export default class MainMap extends Component {
             lat: a._lastCenter.lat,
             lon: a._lastCenter.lng,
           },
-          suggestions: suggestions_tags,
         })
         console.log('in 1st choice, near me search')
       } else {
@@ -259,7 +265,6 @@ export default class MainMap extends Component {
           },
           nowTime: currDate,
           nowHourTime: currTime,
-          suggestions: suggestions_tags,
         })
       }
   }).catch((err) => {
@@ -276,18 +281,6 @@ export default class MainMap extends Component {
     this.setState({
       searchingPlace: event.target.value
     })
-  }
-
-  onTagsDelete=(i)=> {
-    // this.setState({
-    //   findTags: tags.filter((tag,index)=> index !==i)
-    // })
-  }
-
-  onTagsAdd=(tag)=>{
-    // this.setState({
-    //   findTags:[...state.findTags,tag]
-    // })
   }
 
   handleDateChange = (event, {name, value}) => {
@@ -423,7 +416,7 @@ export default class MainMap extends Component {
       this.menuClickPopup(item.eventName, item.medium, item.artist, item.venueName, item.streetAddress, item.city, item.state, item.latitude, item.longitude, item.tags, item.about)
     } else {
       console.log("no events going on near you")
-      this.menuClickPopup("No events near you!", "", "", "", "", "", "", this.state.userLocation.lat, this.state.userLocation.lng, '', '')
+      // this.menuClickPopup("No events near you!", "", "", "", , item.city, item.state, item.latitude, item.longitude, item.tags, item.about)
     }
 
 
@@ -507,6 +500,7 @@ export default class MainMap extends Component {
 
    handleTagAddition=(tag)=>{
      this.setState(state=> ({findTags:[...state.findTags,tag]}))
+
    }
 
 
@@ -518,7 +512,7 @@ export default class MainMap extends Component {
     console.log(this.state)
     // locate present user on the map
     const marker = this.state.hasLocation ? (
-      <CircleMarker center={this.state.latlng} radius={10}>
+      <CircleMarker center={this.state.userLocation} radius={10}>
         <Popup>
           <span>You are here</span>
         </Popup>
@@ -539,7 +533,7 @@ export default class MainMap extends Component {
         for(var i=0; i<filterData.length; i++) {
           console.log(String(this.state.nowTime))
           console.log(filterData[i].datesRange)
-          if(filterData[i].datesRange.indexOf(String(this.state.nowTime)) !== -1) {
+          if(this.state.nowTime >=filterData[i].datesRange[0] && this.state.nowTime <= filterData[i].datesRange[1]) {
             if(filterData[i].startTime <= this.state.nowHourTime < filterData[i].endTime) {
               dud.push(filterData[i])
               console.log('Event happening RIGHT NOW')
@@ -560,7 +554,7 @@ export default class MainMap extends Component {
         for(var i=0; i<filterData.length; i++) {
           console.log(String(this.state.nowTime))
           console.log(filterData[i].datesRange)
-          if(filterData[i].datesRange.indexOf(String(this.state.nowTime)) !== -1) {
+          if(this.state.nowTime >=filterData[i].datesRange[0] && this.state.nowTime <= filterData[i].datesRange[1]) {
             dud.push(filterData[i])
           } else {
             console.log('event not happening today', filterData[i].time, filterData[i].startTime, filterData[i].endTime)
@@ -576,7 +570,7 @@ export default class MainMap extends Component {
         for(var i=0; i<filterData.length; i++) {
           console.log(String(this.state.nowTime))
           console.log(filterData[i].datesRange)
-          if(filterData[i].datesRange.indexOf(String(this.state.nowTime)) !== -1) {
+          if(this.state.nowTime >=filterData[i].datesRange[0] && this.state.nowTime <= filterData[i].datesRange[1]) {
             if(this.state.nowHourTime < filterData[i].endTime) {
               dud.push(filterData[i])
               console.log('today and still to happen')
@@ -593,6 +587,28 @@ export default class MainMap extends Component {
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////
+    /// filter data based on tags
+
+    if(this.state.findTags.length >0){
+      var use_tags = []
+
+        filterData=filterData.filter(item => {
+          for(var j=0; j< item.tags.length; j++){
+            console.log("filter getting there")
+            for(var q=0; q<this.state.findTags.length; q++) {
+              if(this.state.findTags[q].id ===item.tags[j]){
+                console.log('FOUND THE TAG!!!')
+                if(containsObject(item, use_tags)===false) { use_tags.push(item) }
+              }
+            }
+          }
+        }
+      )
+        filterData=use_tags
+    }
+
+
+    //////////////////////////////////////////////////////////////////////////////////////////
 
     // filter through music / arts / performances
 
@@ -607,19 +623,28 @@ export default class MainMap extends Component {
       filterData=filterData.filter(item => item.medium !== "performance")
     }
 
+    //////////////////////////////////////////////////////////////////////////////////////////
+
+
 /// side menu tab template
 
-    const menuSingleEvent = this.state.moreClicked ? (
-      <Tab id="event" header={this.state.menuEvent} icon="fa fa-info-circle">
-        <div className="menuSingleEvent">
-          <br/>
-          <p className="listingL2"><b>Artist:</b> {this.state.menuArtist}</p>
-          <p>{this.state.menuArtist}</p>
-          <p><b className="listingVenueName">{this.state.menuVenue}</b> {this.state.menuAddress}, {this.state.menuState}</p>
-          <p><b>About: </b>{this.state.menuAbout}</p>
-      </div>
-    </Tab>
-  ) : <Tab id="event" header="More Info" icon="fa fa-info-circle"><p className="timeLabels">No Event Selected</p></Tab>
+    const menuSingleEvent =() => {
+      console.log('I fired')
+
+    if(this.state.moreClicked) {
+      return ( <Tab id="event" header={this.state.menuEvent} icon="fa fa-info-circle">
+                <div className="menuSingleEvent">
+                  <br/>
+                  <p className="listingL2"><b>Artist:</b> {this.state.menuArtist}</p>
+                  {/* <p className='artistName'>{this.state.menuArtist}</p> */}
+                  <p className="listingVenueName"><b>{this.state.menuVenue}</b> {this.state.menuAddress}, {this.state.menuState}</p>
+                  <p className="aboutEvent">About: {this.state.menuAbout}</p>
+                </div>
+              </Tab>)
+    } else {
+      return ( <Tab id="event" header="More Info" icon="fa fa-info-circle"><p className="timeLabels">No Event Selected</p></Tab>)
+    }
+  }
 
 // map constant
 
@@ -637,7 +662,7 @@ export default class MainMap extends Component {
                       url="https://stamen-tiles-{s}.a.ssl.fastly.net/toner/{z}/{x}/{y}{r}.png"
                     />
                     <ZoomControl position="bottomright"/>
-                    <TestMarkerList data={filterData} latlng={this.state.latlng} userLocation={this.state.userAddress} menuClickPopup={(event, medium, artist, venue, address, city, state, lat, long, tags, about)=>this.menuClickPopup(event, medium, artist, venue, address, city, state, lat, long, tags, about)}/>
+                    <TestMarkerList data={filterData} latlng={this.state.latlng} userLocation={this.state.userAddress} menuClickPopup={(event, medium, artist, venue, address, city, state, lat, long, tags, about, price, startTime, endTime, datesRange)=>this.menuClickPopup(event, medium, artist, venue, address, city, state, lat, long, tags, about, price, startTime, endTime, datesRange)}/>
 
                     {/* past map tile of interest -- kept for reference */}
                     {/* L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
@@ -663,8 +688,8 @@ export default class MainMap extends Component {
             <button  className={this.state.filterArt ? "buttonArt" : "buttonOff" } onClick={(e) => { this.setState({filterArt: !this.state.filterArt}); }}>A</button>
             <Button onClick={this.findPlace}>Search</Button>
           </Grid.Row> */}
-          <Grid.Row><Button className="buttonFindMe" onClick={() => this.handleClick()}>Find Me</Button></Grid.Row>
-          <Grid.Row><Button className="buttonWTF" onClick={() => this.handleClickWTF(filterData ? filterData : this.state.data)}>WTF</Button></Grid.Row>
+          <Grid.Row><Button compact small inverted color ="orange" className="buttonFindMe buttonSmaller" onClick={() => this.handleClick()}>Find Me</Button></Grid.Row>
+          <Grid.Row><Button massive basic inverted color="red" className="buttonWTF buttonSmaller" onClick={() => this.handleClickWTF(filterData ? filterData : this.state.data)}>WTF</Button></Grid.Row>
 
           <Grid.Row>
             {this.state.loading ? mapLoading : null }
@@ -684,7 +709,7 @@ export default class MainMap extends Component {
                 <Input action="Search" className="placeSearhBar placeSearch" placeholder="Find a place..." onChange={this.onSearchChange} onDoubleClick={this.findPlace}/>
                 {/* <Input focus className="placeSearch" placeholder="Find a place..." onChange={this.onSearchChange}/><Button onClick={this.findPlace}>Search</Button> */}
               </Tab>
-                {menuSingleEvent}
+                {menuSingleEvent()}
               <Tab id="music" placeholder="M" header = "Find a Time" icon="fa fa-clock-o">
                 <div>
                   <div className="timeLabels">Sometime Soon:</div>
@@ -711,19 +736,17 @@ export default class MainMap extends Component {
               {/* <Tab id="music" placeholder="M" icon="fa fa-meh-o"></Tab> */}
               <Tab header="What do you care about?" icon="fa fa-meh-o">
                 {/* <Input action="Search" className="placeSearhBar" placeholder="Search a tag..." onChange={this.onTagsAdd}/> */}
-                <div style={{position:'relative', width:'100%', background:'light-grey'}}>
-
+                  <br/>
                 <ReactTags
                     tags={this.state.findTags}
-                    suggestions={this.state.suggestions}
+                    suggestions={this.state.suggestions[0]}
                     handleDelete={this.handleTagDelete}
                     handleAddition={this.handleTagAddition}
                     // handleDrag={this.handleDrag}
                     delimiters={delimiters}
+                    placeholder= "Add a new tag..."
                   />
-                </div>
               </Tab>
-
             </Sidebar>
               {mapComponent}
             </Grid.Row>

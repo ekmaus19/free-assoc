@@ -8,6 +8,7 @@ import {
 import { WithContext as ReactTags } from 'react-tag-input';
 import axios from 'axios';
 import cors from 'cors';
+import suggestionsList from './suggestion_categories'
 const Nominatim = require('nominatim-geocoder')
 const geocoder = new Nominatim({
   secure: true
@@ -50,14 +51,7 @@ const delimiters = [KeyCodes.comma, KeyCodes.enter];
         price:'',
         about: '',
         tags: [],
-      suggestions: [
-          { id: 'LGBT', text: 'LGBT' },
-          { id: 'Alternative', text: 'Alternative' },
-          { id: 'Free Event', text: 'Free Event' },
-          { id: 'Experimental', text: 'Experimental' },
-          { id: 'Metal', text: 'Metal' },
-          { id: 'Explicit Content', text: 'Explicit Content' }
-       ]
+      suggestions:[suggestionsList]
       };
     }
 
@@ -108,7 +102,7 @@ const delimiters = [KeyCodes.comma, KeyCodes.enter];
       eventName: this.state.eventName,
       eventCreator: this.props.artist._id,
       venueName: this.state.venueName,
-      medium: this.state.medium, 
+      medium: this.state.medium,
       startTime: this.state.startTime,
       endTime: this.state.endTime,
       datesRange: this.state.datesRange,
@@ -118,7 +112,7 @@ const delimiters = [KeyCodes.comma, KeyCodes.enter];
       country: this.state.country,
       about: this.state.about,
       price: this.state.price,
-      tags: this.state.tags 
+      tags: this.state.tags
   }
     const { description, selectedFile} = this.state;
     e.preventDefault();
@@ -240,6 +234,9 @@ const delimiters = [KeyCodes.comma, KeyCodes.enter];
     render() {
 
       const {tags,suggestions} = this.state
+      console.log(this.state.suggestions[0])
+      console.log(suggestionsList)
+      console.log(suggestionsList[0])
       return (
         <Form>
           <Form.Group style={{display:'flex'}}>
@@ -247,7 +244,7 @@ const delimiters = [KeyCodes.comma, KeyCodes.enter];
           <Form.Field control={Input} label='Venue Name' placeholder='Venue Name' onChange={this.onVenueNameChange}/>
         </Form.Group>
         <Form.Group inline>
-           <label >Medium</label>
+           <label>Medium</label>
            <br />
           <Select label='Medium' style={{width:'100%'}} onChange = {this.onMediumChange} options={options} className = "field" />
         </Form.Group>
