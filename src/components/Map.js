@@ -91,12 +91,8 @@ let customMarker
 
     var clickedWTF = false
 // if <Marker />, use icon={customMarker}
-console.log("find me please, I need help",this.state)
-console.log(wtfID)
-console.log(useId)
-
   if(!wtfID || wtfID !== useId) {
-    return ( <CircleMarker color={null} fillColor={customMarker} fillOpacity={.75} center={[latitude, longitude]} radius={12}>
+    return ( <CircleMarker color={null} fillColor={customMarker} fillOpacity={.75} center={[latitude, longitude]} radius={10}>
        {/* <script>{console.log('user location ---------------->', userLocation)} </script> */}
 
        {/* ////////////////////////////// THIS //////////////////////////////// */}
@@ -114,7 +110,7 @@ console.log(useId)
        </Popup>
      </CircleMarker>)
   } else if (wtfID === useId) {
-    return ( <CircleMarker color='red' fillColor='red' fillOpacity={.75} center={[latitude, longitude]} radius={12}>
+    return ( <CircleMarker color='red' fillColor='red' fillOpacity={.5} center={[latitude, longitude]} radius={12}>
            {/* <script>{console.log('user location ---------------->', userLocation)} </script> */}
 
            {/* ////////////////////////////// THIS //////////////////////////////// */}
@@ -680,7 +676,7 @@ findWTFPoint = (latitude, longitude, clickedWTF) => {
                   <p className="listingVenueName"><b>{this.state.menuVenue}</b>, {this.state.menuAddress}, {this.state.menuState}</p>
                   {/* <p className='artistName'>{this.state.menuArtist}</p> */}
                   {String(this.state.menuDateRange[0])===String(this.state.menuDateRange[1]) ? <p className='listingVenueName'>{this.state.menuDateRange[0]} @{this.state.menuStartTime}</p> : <p className='listingVenueName'>{this.state.menuDateRange[0]} to {this.state.menuDateRange[1]} </p>}
-                  <p className="listingVenueName">Cost: {this.state.menuPrice}</p>
+                  <p className="listingVenueName">Cost: ${this.state.menuPrice}</p>
                   <p className="listingVenueName">About: {this.state.menuAbout}</p>
                 </div>
               </Tab>)
