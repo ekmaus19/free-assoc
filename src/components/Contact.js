@@ -11,7 +11,8 @@ class Contact extends Component {
     render(){
         return(
             <div  > 
-            <h1>Contact Us</h1>
+            <h2>Contact Us</h2>
+            <br />
             <div style={{display:'flex',justifyContent:'center'}}> 
              <Form stlye={{width:'50%'}} >
                 <Form.Group widths='equal'>

@@ -75,7 +75,6 @@ class Scout extends React.Component {
         artist: artist
       })
     })
-  })
     .then(res => res.json())
     .then(json => {
       console.log('JSON ----->', json)

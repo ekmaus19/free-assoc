@@ -271,11 +271,11 @@ const delimiters = [KeyCodes.comma, KeyCodes.enter];
              <Form.Field control={Input} label='State' placeholder='State'  onChange={this.onStateChange}/>
              <Form.Field  control={Input} label='Country' placeholder='Country' onChange={this.onCountryChange}/>
 
-             <div style={{position:'relative', width:'100%', background:'light-grey'}}>
+             <div style={{position:'relative', width:'150%', background:'light-grey',  display:'flex', justifyContent:'center'}}>
                 <ReactTags
 
                     tags={tags}
-                    suggestions={suggestions}
+                    suggestions={suggestions[0]}
                     handleDelete={this.handleDelete}
                     handleAddition={this.handleAddition}
                     handleDrag={this.handleDrag}
@@ -283,7 +283,7 @@ const delimiters = [KeyCodes.comma, KeyCodes.enter];
             </div>
             <br />
             <div style={{display:'flex'}} >
-            <Input style={{marginRight:'auto', width:'70%'}} type='file' onChange={this.fileSelectedHandler} />
+            <Input style={{marginRight:'auto', width:'100%'}} type='file' onChange={this.fileSelectedHandler} />
             </div>
             <br />
             <Button style={{margin:'20px',marginLeft:'auto',marginRight:'auto', alignItems:'center'}} color = 'pink' className = "logout-button"  animated onClick = {this.onCreate}>
