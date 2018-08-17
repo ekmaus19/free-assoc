@@ -274,7 +274,7 @@ const delimiters = [KeyCodes.comma, KeyCodes.enter];
                 <ReactTags
 
                     tags={tags}
-                    suggestions={suggestions[0]}
+                    suggestions={suggestions}
                     handleDelete={this.handleDelete}
                     handleAddition={this.handleAddition}
                     handleDrag={this.handleDrag}

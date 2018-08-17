@@ -11,7 +11,6 @@ const path = require('path');
 var fs = require('fs');
 
 // configure storage
-
 const upload =multer({dest:'uploads/'})
 
 router.use(bodyParser.json());
@@ -19,32 +18,30 @@ router.use(bodyParser.urlencoded({ extended: true }));
 
 router.use(validator());
 
-
-
 router.post('/fileUpload', upload.single('selectedFile'),function(req,res,next){
   console.log('file****', req.file,req.body)
   console.log(req.user);
   var readFile = fs.readFileSync(req.file.path)
   const info = JSON.parse(req.body.info)
   new Event({
-      eventName: info.eventName,
-      eventCreator: info.eventCreator,
-      venueName: info.venueName,
-      medium:info.medium,
-      date: info.date,
-      datesRange: info.datesRange,
-      startTime: info.startTime,
-      endTime: info.endTime,
-      streetAddress: info.streetAddress,
-      city: info.city,
-      state: info.state,
-      country:info.country,
-      price: info.price,
-      about: info.about,
-      tags:info.tags.map((tag)=> tag.text),
-      img: {data:readFile,contentType:'image/png'},
-      latitude: req.body.latitude,
-      longitude: req.body.longitude
+    eventName: info.eventName,
+    eventCreator: info.eventCreator,
+    venueName: info.venueName,
+    medium:info.medium,
+    date: info.date,
+    datesRange: info.datesRange,
+    startTime: info.startTime,
+    endTime: info.endTime,
+    streetAddress: info.streetAddress,
+    city: info.city,
+    state: info.state,
+    country:info.country,
+    price: info.price,
+    about: info.about,
+    tags:info.tags.map((tag)=> tag.text),
+    img: {data:readFile,contentType:'image/png'},
+    latitude: req.body.latitude,
+    longitude: req.body.longitude
   }).save((err,event)=> {
     if (err){
       console.log(err)
@@ -71,7 +68,7 @@ router.get('/artist/:id/profileimg',(req,res)=>{
 })
 
 router.get('/contacts/:id/profileimg',(req,res)=>{
-  Artist.connections.findById(req.params.id, (err,event)=>{
+  Artist.findById(req.params.id, (err,event)=>{
     res.contentType(event.img.contentType)
     res.end(event.img.data, "binary")
   })
@@ -179,33 +176,40 @@ router.get('/pending/received/:userId', (req, res) => {
 
 // send connection invite
 router.post('/connect/:userId', (req, res) => {
-  console.log('username', req.body.username)
-  Artist.findOne({username: req.body.username}, (err, artist) => {
+  console.log('****', req.body)
+  Artist.findById(req.params.userId, (err, artist) => {
     if (err) {
       res.send(err)
-    } else {
-      if (!artist) {
-        console.log('Artist does not exist')
+    } else if (!artist) {
+      console.log('Artist does not exist')
+      res.send({error: 'Artist does not exist'})
+      return
+    }
+    Artist.findById(req.body.artist._id, (err, artist) => {
+      if (err) {
+        res.send(err)
+      } else if (!artist) {
         res.send({error: 'Artist does not exist'})
         return
+      } else {
+        const connection = new Connection({
+          requester: req.params.userId,
+          invitee: artist._id,
+        })
+        connection.save((err, connection) => {
+          if (err) {
+            console.log('error', err);
+            res.send(error)
+          } else {
+            console.log('connection invite sent', connection);
+            res.json({
+              success: true,
+              connection: connection
+            })
+          }
+        })
       }
-      const connection = new Connection({
-        requester: req.params.userId,
-        invitee: artist._id,
-      })
-      connection.save((err, connection) => {
-        if (err) {
-          console.log('error', err);
-          res.send(error)
-        } else {
-          console.log('connection invite sent', connection);
-          res.json({
-            success: true,
-            connection: connection
-          })
-        }
-      })
-    }
+    })
   })
 });
 
@@ -248,23 +252,39 @@ router.post('/decline/:userId', (req, res) => {
 });
 
 //delete contact
-router.post('/delete/:id', (req, res) => {
-  console.log(req.params.id,"OMGGGG")
-
-  Artist.findById
-  Connection.findByIdAndRemove({_id: req.params.id}, (err, connection) => {
+router.post('/delete/:userId', (req, res) => {
+  console.log('BODY', req.body)
+  Artist.findById(req.params.userId, (err, artist1) => {
     if (err) {
       res.send(err)
-    } else if (connection) {
-      res.json({
-        success: true,
-        connection: connection
-      })
-    } else {
-      res.json({
-        success:false
-      })
+    } else if (!artist1) {
+      console.log('Artist does not exist')
+      res.send({error: 'Artist does not exist'})
+      return
     }
+    Artist.findById(req.body.artist, (err, artist2) => {
+      if (err) {
+        res.send(err)
+      } else if (!artist2) {
+        res.send({error: 'Artist does not exist'})
+        return
+      } else {
+        //remove artist's id from user's connections array
+        const i = artist1.connections.indexOf(artist2._id);
+        artist1.connections.splice(i, 1);
+        artist1.save((err, artist1) => {
+         //remove user's id from artist's connections array
+         const j = artist2.connections.indexOf(artist1._id);
+         artist2.connections.splice(j, 1);
+         artist2.save((err, artist2) => {
+           res.json({
+             success: true,
+             contacts: artist1.connections
+           })
+         })
+       })
+      }
+    })
   })
 });
 
