@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Input, Button, Card, Image, Modal } from 'semantic-ui-react'
+import { Input,Container, Button, Card, Image, Modal, Grid } from 'semantic-ui-react'
 
 
 const url = 'http://localhost:1337'
@@ -83,7 +83,7 @@ class Contact extends React.Component {
 
    deleteContactModal = (contactid) => {
     console.log(this.state.contacts)
-     fetch(url + `/delete/${contactid}`,{
+     fetch(url + `/delete/${this.props.artist._id}/${contactid}`,{
        method: 'POST',
      }).then(res => res.json())
      .then(json => {
@@ -224,8 +224,7 @@ class Contact extends React.Component {
         return this.props.contacts.map(contacts => {
           console.log(contacts)
           return (
-            <div>
-            <Card.Group itemsPerRow={4}>
+            <Grid.Column> 
             <Card  >
               <Card.Content>
                 <Image floated='right' size='mini' src={'http://localhost:1337/contacts/'+ contacts._id +'/profileimg'} />
@@ -236,7 +235,7 @@ class Contact extends React.Component {
                 </Card.Description>
               </Card.Content>
               <Card.Content extra>
-                <div style={{display:'flex'}}>
+                <div style={{display:'flex', justifyContent:'center'}}>
                   <Button basic color='orange' onClick={() => this.openViewContactModal()}>
                     View Contact
                   </Button>
@@ -265,8 +264,8 @@ class Contact extends React.Component {
                 </div>
               </Card.Content>
             </Card>
-          </Card.Group>
-          </div>
+            </Grid.Column> 
+
           )
         })
       }
@@ -347,9 +346,9 @@ class Contact extends React.Component {
           </Modal>
         </div>
         </div>
-        <div style={{marginBottom:'30px'}}>
+        <Grid columns={4} style={{marginBottom:'30px'}}>
           {renderContacts()}
-        </div>
+        </Grid>
       </div>
     )
   }

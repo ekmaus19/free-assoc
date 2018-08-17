@@ -1,7 +1,18 @@
 import React from 'react';
-import { Card, Input, Icon, Header,Image, Container, Segment, Sidebar, Menu , Grid, Button} from 'semantic-ui-react'
+import { Card, Input, Modal, Icon, Header,Image, Container, Segment, Sidebar, Menu , Grid, Button} from 'semantic-ui-react'
 
 const url = 'http://localhost:1337'
+
+const customStyles = {
+  content : {
+    top                   : '50%',
+    left                  : '50%',
+    right                 : 'auto',
+    bottom                : 'auto',
+    marginRight           : '-50%',
+    transform             : 'translate(-50%, -50%)'
+  }
+};
 
 class Scout extends React.Component {
   constructor(props) {
@@ -9,7 +20,9 @@ class Scout extends React.Component {
     this.state = {
       medium: '',
       artist: [],
+      event:[], 
       connection:[],
+      modalViewCardIsOpen: false,
     }
   }
 
@@ -38,6 +51,12 @@ class Scout extends React.Component {
     })
   }
 
+  // findEvent=() => {
+
+  // }
+
+
+
   onMediumChange = (e) => {
     this.setState ({
       medium: e.target.value
@@ -45,13 +64,17 @@ class Scout extends React.Component {
   }
 
 
-  sendConnection = () => {
+  sendConnection = (artist) => {
+    console.log(artist)
     fetch(url + `/connect/${this.props.artist._id}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
+      body:JSON.stringify({
+        artist:artist
     })
+  })
     .then(res => res.json())
     .then(json => {
       console.log('JSON ----->', json)
@@ -67,9 +90,21 @@ class Scout extends React.Component {
     })
   }
 
+  openViewCardModal() {
+    this.setState({
+      modalViewCardIsOpen: true,
+    });
+  }
+
+  closeViewCardModal() {
+    this.setState({
+      modalViewCardIsOpen: false,
+    });
+  }
 
 
   render () {
+
     return (
       <div style={{marginBotton:'20px'}} >
           <br />
@@ -79,7 +114,7 @@ class Scout extends React.Component {
         type='text' 
         placeholder='Search by Medium or Artist' 
         onChange={(e) => (this.setState({medium:e.target.value}))}></Input>
-        <Button basic color='violet' onClick={() => this.findArtist()}>Go!</Button> 
+        <Button basic color='violet' onClick={()=> {this.findArtist()}}> Go!</Button> 
         </div> 
 
         <Container style={{marginBottom:'20px'}} >
@@ -107,9 +142,32 @@ class Scout extends React.Component {
             </Card.Content>
             <Card.Content extra>
               <a>
-                <Icon name='user' />
                 {/* {this.props.contacts.length} Friends */}
-                <Button style={{display:'inline', justifyContent:'center',padding:'3px',height:'150%',width:'100px', textAlign:'center', margin:'10px'}} color = 'orange' onClick={() => this.sendConnection()}>Connect</Button>
+                <Button basic color="violet" style={{display:'inline', justifyContent:'center',padding:'3px',height:'150%',width:'100px', textAlign:'center', margin:'10px'}} color = 'orange' onClick={() => this.openViewCardModal()}>View Profile</Button>
+                
+                <Modal
+                  onClose={this.closeViewCardModal}
+                  dimmer={'inverted'}
+                 size={'small'}
+                  open={this.state.modalViewCardIsOpen}
+                  style={customStyles}>
+                  Past Events: 
+                  {artist.events}
+                  <div style={{display:'flex', justifyContent:'center'}}>
+          
+                  <Button
+                  style={{display:'inline', justifyContent:'flex-end',padding:'3px',height:'150%',width:'100px', textAlign:'center', margin:'10px'}}
+                  basic color = 'red'
+                  onClick={() => this.closeViewCardModal()}>Close</Button>
+            </div>
+
+          </Modal>
+                
+                
+                
+                
+                <br /> 
+                <Button style={{display:'inline', justifyContent:'center',padding:'3px',height:'150%',width:'100px', textAlign:'center', margin:'10px'}} color = 'orange' onClick={() => this.sendConnection(artist)}>Connect</Button>
               </a>
             </Card.Content>
           </Card>

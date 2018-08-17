@@ -179,16 +179,22 @@ router.get('/pending/received/:userId', (req, res) => {
 
 // send connection invite
 router.post('/connect/:userId', (req, res) => {
-  console.log('****', req.params.userId)
+  console.log('this is the body', req.body)
   Artist.findById(req.params.userId, (err, artist) => {
     if (err) {
       res.send(err)
-    } else {
-      if (!artist) {
+    } else if (!artist) {
         console.log('Artist does not exist')
         res.send({error: 'Artist does not exist'})
         return
       }
+      Artist.findById(req.body.artist._id, (err, artist) => {
+        if (err) {
+          res.send(err)
+        } else if (!artist) {
+          res.send({error: 'Artist does not exist'})
+          return
+        } else {
       const connection = new Connection({
         requester: req.params.userId,
         invitee: artist._id,
@@ -207,6 +213,7 @@ router.post('/connect/:userId', (req, res) => {
       })
     }
   })
+})
 });
 
 //accept connection invite
@@ -248,26 +255,31 @@ router.post('/decline/:userId', (req, res) => {
 });
 
 //delete contact
-router.post('/delete/:id', (req, res) => {
+router.post('/delete/:id/:contactid', (req, res) => {
   console.log(req.params.id,"OMGGGG")
 
-  Artist.findById
-  Connection.findByIdAndRemove({_id: req.params.id}, (err, connection) => {
-    if (err) {
+  Artist.findById(req.params.id, (err,artist) =>{
+    console.log('#####', artist)
+    console.log(req.params.contactid)
+    if(err){
       res.send(err)
-    } else if (connection) {
-      res.json({
-        success: true,
-        connection: connection
+    } else if (artist){
+      artist.connections.findByIdAndRemove(req.params.contactid, (err,connection)=>{
+        if (err){
+          res.send(err)
+        } else  if (connection) {
+          res.json({
+            success: true,
+            connection: connection
+          })
+        }
       })
-    } else {
-      res.json({
-        success:false
-      })
+
     }
   })
-});
+})
 
+  
 //scout artists
 router.post('/scout', (req, res) => {
   Artist.find({medium: req.body.medium}, (err, artist) => {

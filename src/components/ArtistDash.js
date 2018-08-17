@@ -5,7 +5,7 @@ import MainMap from './Map';
 import ContactList from './ContactList';
 import EventHistory from './EventHistory';
 import Scout from './Scout';
-import {CreateEventDone} from './CreateEventDone';
+
 
 const url = 'http://localhost:1337'
 
@@ -149,6 +149,18 @@ class ArtistDash extends Component {
 
   render(){
     console.log(this.props.artist)
+
+    let src; 
+     if (this.props.artist.medium === 'music' && this.props.artist.img === null){
+       src = '/img/1.png'
+     } else if (this.props.artist.medium === 'art'&& this.props.artist.img === null){
+      src = '/img/2.png'
+     } else if (this.props.artist.medium === 'performance' && this.props.artist.img === null){
+       src = '/img/3.png'
+     } else {
+       src = 'http://localhost:1337/artist/'+ this.props.artist._id +'/profileimg'
+     }
+
     return(
       <div>
         <Container style={{width:'100%', padding:'100px'}}>
@@ -160,7 +172,7 @@ class ArtistDash extends Component {
                 <Container >
                   <Card style={{justifyContent:'center', alignItems:'center'}}>
                     <Container >
-                    <Image style={{marginLeft:'auto',marginRight:'auto',width:'75%', height:'75%',padding:'10px'}} src={'http://localhost:1337/artist/'+ this.props.artist._id +'/profileimg'} />
+                    <Image style={{marginLeft:'auto',marginRight:'auto',width:'75%', height:'75%',padding:'10px'}} src={src} />
                     </Container>
                     <Card.Content>
                       <Card.Header>{this.props.artist.firstName} {this.props.artist.lastName}</Card.Header>
