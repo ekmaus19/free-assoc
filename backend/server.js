@@ -79,9 +79,9 @@ io.on('connection', (socket) => {
     .find({eventCreator: data.userId})
     .select('-img')
     .exec(function(err, events) {
-  
+
       // events.forEach((i)=> {
-      //  i.img.data = null 
+      //  i.img.data = null
       // })
       console.log(events[0],'****')
       socket.emit('getEvents',{events})
@@ -190,10 +190,15 @@ app.use('/', routes);
 
 app.get('/events', function (req, res) {
   console.log("are we there yet")
-  Event.find({}, (err, results) => {
+  Event.find({}).lean().populate("eventCreator", ["username"]).exec((err, results) => {
     if(err) console.log("a terrible horrible error")
     else {
-      return res.json(results)
+      results = results.map((result) => {
+        delete result.img;
+        return result;
+      })
+      res.json(results)
+      // return res.json(results)
     }
   })
 });
@@ -207,6 +212,13 @@ app.post('/filtered-data', function(req, res) {
     }
   })
 })
+
+// app.post('/artist', function(req,res) {
+//   Artist.find({_id: req.body.sentId}, (err, results) => {
+//     if(err) console.log("couldn't locate the artist by id")
+//     else { return res.json(results) }
+//   })
+// })
 
 module.exports = app;
 
