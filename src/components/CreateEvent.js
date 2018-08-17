@@ -14,7 +14,6 @@ const geocoder = new Nominatim({
   secure: true
 })
 
-
 //tags
 const KeyCodes = {
   comma: 188,
@@ -27,9 +26,7 @@ const options = [
   { key: 'performance', text: 'Performance', value: 'performance' },
 ]
 
-
 const delimiters = [KeyCodes.comma, KeyCodes.enter];
-
 
   export class CreateEvent extends React.Component {
     constructor(props) {
@@ -274,7 +271,7 @@ const delimiters = [KeyCodes.comma, KeyCodes.enter];
                 <ReactTags
 
                     tags={tags}
-                    suggestions={suggestions}
+                    suggestions={suggestions[0]}
                     handleDelete={this.handleDelete}
                     handleAddition={this.handleAddition}
                     handleDrag={this.handleDrag}

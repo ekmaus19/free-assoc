@@ -66,9 +66,9 @@ const green_button = "http://purepng.com/public/uploads/large/purepng.com-greent
 let splitUserLoc
 /////// 8.8.2018 WPS
 
-const TestPopupMarker = ({ eventName, eventCreator, venueName, streetAddress, city, state, latitude, longitude, medium, latlng, userLocation, tags, about, price, startTime, endTime, datesRange, menuClickPopup }) => {
+const TestPopupMarker = ({ useId, eventName, eventCreator, venueName, streetAddress, city, state, latitude, longitude, medium, latlng, userLocation, tags, about, price, startTime, endTime, datesRange, menuClickPopup, wtfID }) => {
 let customMarker
-console.log(medium, latitude, longitude)
+// console.log(medium, latitude, longitude)
   // if(medium === "art"){
   //      customMarker = L.icon({ iconUrl: blue_button, iconSize: [25, 25] })
   //   } else if (medium === 'performance') {
@@ -89,29 +89,55 @@ console.log(medium, latitude, longitude)
       customMarker =  "#d6a74a"
     }
 
+    var clickedWTF = false
 // if <Marker />, use icon={customMarker}
-  return ( <CircleMarker color={null} fillColor={customMarker} fillOpacity={.75} center={[latitude, longitude]} radius={12}>
-     {/* <script>{console.log('user location ---------------->', userLocation)} </script> */}
+console.log("find me please, I need help",this.state)
+console.log(wtfID)
+console.log(useId)
 
-     {/* ////////////////////////////// THIS //////////////////////////////// */}
-     {/* <script>{ splitUserLoc = userLocation.split(' ').join('+') } </script> */}
+  if(!wtfID || wtfID !== useId) {
+    return ( <CircleMarker color={null} fillColor={customMarker} fillOpacity={.75} center={[latitude, longitude]} radius={12}>
+       {/* <script>{console.log('user location ---------------->', userLocation)} </script> */}
 
-     <Popup>
-       <b className="eventName">{eventName}</b><br/>
-       <b>{venueName}</b><br/>
-       Address: {streetAddress + ', '+ city}
-       <br/>
-{/* https://www.google.com/maps/dir/SFO,+San+Francisco,+CA/AMC+Van+Ness+14,+Van+Ness+Avenue,+San+Francisco,+CA/@37.6957396,-122.4952311,12z/ */}
-{/* <Form action={window.open("https://www.google.com/maps/dir/"+ latitude + "," + longitude + "/" + splitUserLoc +"/@" + latlng.lat + "," + latlng.lng  + ",15z", "_blank")}><Button size='mini'>Take Me There</Button><Button size='mini'>More</Button></Form> */}
+       {/* ////////////////////////////// THIS //////////////////////////////// */}
+       {/* <script>{ splitUserLoc = userLocation.split(' ').join('+') } </script> */}
 
-      <Button onClick={"https://www.google.com/maps/@" + userLocation + '/'+ latitude + ',' + longitude + ',15z'} size='mini'>Take Me There</Button><Button size='mini' onClick ={() => menuClickPopup(eventName, medium, eventCreator.username, venueName, streetAddress, city, state, latitude, longitude, tags, about, price, startTime, endTime, datesRange)}>More</Button>
-     </Popup>
-   </CircleMarker>)
+       <Popup>
+         <b className="eventName">{eventName}</b><br/>
+         <b>{venueName}</b><br/>
+         Address: {streetAddress + ', '+ city}
+         <br/>
+    {/* https://www.google.com/maps/dir/SFO,+San+Francisco,+CA/AMC+Van+Ness+14,+Van+Ness+Avenue,+San+Francisco,+CA/@37.6957396,-122.4952311,12z/ */}
+    {/* <Form action={window.open("https://www.google.com/maps/dir/"+ latitude + "," + longitude + "/" + splitUserLoc +"/@" + latlng.lat + "," + latlng.lng  + ",15z", "_blank")}><Button size='mini'>Take Me There</Button><Button size='mini'>More</Button></Form> */}
+
+        <Button onClick={"https://www.google.com/maps/@" + userLocation + '/'+ latitude + ',' + longitude + ',15z'} size='mini'>Take Me There</Button><Button size='mini' onClick ={() => menuClickPopup(eventName, medium, eventCreator.username, venueName, streetAddress, city, state, latitude, longitude, tags, about, price, startTime, endTime, datesRange,clickedWTF)}>More</Button>
+       </Popup>
+     </CircleMarker>)
+  } else if (wtfID === useId) {
+    return ( <CircleMarker color='red' fillColor='red' fillOpacity={.75} center={[latitude, longitude]} radius={12}>
+           {/* <script>{console.log('user location ---------------->', userLocation)} </script> */}
+
+           {/* ////////////////////////////// THIS //////////////////////////////// */}
+           {/* <script>{ splitUserLoc = userLocation.split(' ').join('+') } </script> */}
+
+           <Popup>
+             <b className="eventName">{eventName}</b><br/>
+             <b>{venueName}</b><br/>
+             Address: {streetAddress + ', '+ city}
+             <br/>
+      {/* https://www.google.com/maps/dir/SFO,+San+Francisco,+CA/AMC+Van+Ness+14,+Van+Ness+Avenue,+San+Francisco,+CA/@37.6957396,-122.4952311,12z/ */}
+      {/* <Form action={window.open("https://www.google.com/maps/dir/"+ latitude + "," + longitude + "/" + splitUserLoc +"/@" + latlng.lat + "," + latlng.lng  + ",15z", "_blank")}><Button size='mini'>Take Me There</Button><Button size='mini'>More</Button></Form> */}
+
+            <Button onClick={"https://www.google.com/maps/@" + userLocation + '/'+ latitude + ',' + longitude + ',15z'} size='mini'>Take Me There</Button><Button size='mini' onClick ={() => menuClickPopup(eventName, medium, eventCreator, venueName, streetAddress, city, state, latitude, longitude, tags, about, price, startTime, endTime, datesRange,clickedWTF)}>More</Button>
+           </Popup>
+         </CircleMarker>)
+  }
+
 }
 
-const TestMarkerList = ({ data, latlng, userLocation, menuClickPopup }) => {
+const TestMarkerList = ({ data, latlng, userLocation, wtfID, menuClickPopup }) => {
   const items = data.map(({ _id, ...props}) => (
-    <TestPopupMarker userLocation={userLocation} latlng={latlng} key={_id} {...props} menuClickPopup= {(event, medium, artist, venue, address, city, state, lat, long, tags, about, price, startTime, endTime, datesRange ) => menuClickPopup(event, medium, artist, venue, address, city, state, lat, long, tags, about, price, startTime, endTime, datesRange)}></TestPopupMarker>
+    <TestPopupMarker userLocation={userLocation} wtfID = {wtfID} latlng={latlng} key={_id} {...props} useId={_id} menuClickPopup= {(event, medium, artist, venue, address, city, state, lat, long, tags, about, price, startTime, endTime, datesRange,clickedWTF ) => menuClickPopup(event, medium, artist, venue, address, city, state, lat, long, tags, about, price, startTime, endTime, datesRange,clickedWTF)}></TestPopupMarker>
   ))
   return <div style={{ display: 'none' }}>{items}</div>
 }
@@ -133,6 +159,10 @@ export default class MainMap extends Component {
       menuState: null,
       menuTags: null,
       menuAbout: null,
+      menuPrice: null,
+      menuStartTime: null,
+      menuEndTime: null,
+      menuDateRange: null,
 
       // for event sorting on the map ////////////////////
       searchingPlace: null,
@@ -167,7 +197,7 @@ export default class MainMap extends Component {
       },
       userAddress: null,
 
-      // sidebar to be used on the map ////////////////////
+      // sidebar to be used on thez map ////////////////////
       collapsed: true,
       selected: null,
 
@@ -177,6 +207,8 @@ export default class MainMap extends Component {
       /// stuff for tag searches
       findTags: [],
       suggestions: [suggestionsList],
+
+      wtfID: null,
     }
   }
 
@@ -357,7 +389,6 @@ export default class MainMap extends Component {
     //     console.log('did the thing, ', response)
     //   }
     // })
-
  // different try
 
     // var config = {
@@ -365,6 +396,7 @@ export default class MainMap extends Component {
     //     'longitude': parseFloat(e.latlng.lng)
     // };
     //     if(err){
+
     //           console.log('threw an error, ', err)
     //     }else{
     //         console.log(data);
@@ -374,12 +406,17 @@ export default class MainMap extends Component {
 
   // geocoding.location(config, function (err, data){
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+findWTFPoint = (latitude, longitude, clickedWTF) => {
+  console.log('found function Find WTF Point')
+  if(clickedWTF) {
+    return <CircleMarker color='red' radius={12} fillOpacity={.9} center={[latitude, longitude]}></CircleMarker>
+  }
+}
 
 
-
- menuClickPopup = (event, medium, artist, venue, address, city, state, lat, long, tags, about) => {
+ menuClickPopup = (event, medium, artist, venue, address, city, state, lat, long, tags, about, price, startTime, endTime, datesRange, clickedWTF) => {
   console.log('hit me baby one more time')
-  console.log("params -----------> ", event, medium, artist, venue, address, city, state)
+  console.log("params -----------> ", event, medium, artist, venue, address, city, state, clickedWTF)
     this.setState({
 
       moreClicked: true,
@@ -393,6 +430,11 @@ export default class MainMap extends Component {
       menuTags: tags,
       menuAbout: about,
 
+      menuPrice: price,
+      menuStartTime: startTime,
+      menuEndTime: endTime,
+      menuDateRange: datesRange,
+
       viewport: {
         zoom: 14,
         center: [lat-.005, long-.025],
@@ -401,10 +443,15 @@ export default class MainMap extends Component {
       collapsed: false,
       selected: 'event',
   })
+
+  this.findWTFPoint(lat-.005, long-.025, clickedWTF)
+
+  // <CircleMarker  Color={red} radius={12} center={[lat-.005, long-.025]}></CircleMarker>
 }
 
+
+
   handleClickWTF = (items) => {
-    console.log("WHAT THE ACTUAL ", item)
     var usable = []
     for(var i=0; i<items.length; i++) {
       if(Math.abs(items[i].latitude-this.state.userLocation.lat) < 0.04347826086 && Math.abs(items[i].longitude-this.state.userLocation.lng) < 0.04347826086) {
@@ -413,22 +460,17 @@ export default class MainMap extends Component {
     }
     if(usable.length >=1) {
       var item = usable[Math.floor(Math.random()*usable.length)];
-      this.menuClickPopup(item.eventName, item.medium, item.artist, item.venueName, item.streetAddress, item.city, item.state, item.latitude, item.longitude, item.tags, item.about)
+      var artist = item.eventCreator.username
+      console.log( "inside WTF,",item)
+      this.setState({
+        wtfID: item._id,
+      })
+      var clickedWTF = true
+      this.menuClickPopup(item.eventName, item.medium, artist, item.venueName, item.streetAddress, item.city, item.state, item.latitude, item.longitude, item.tags, item.about, item.price, item.startTime, item.endTime, item.datesRange, clickedWTF)
     } else {
       console.log("no events going on near you")
       // this.menuClickPopup("No events near you!", "", "", "", , item.city, item.state, item.latitude, item.longitude, item.tags, item.about)
     }
-
-
-    return <CircleMarker fillColor={"red"} center={[item.latitude, item.longitude]} radius={.5}>
-      <Popup>
-        <b className="eventName">{item.eventName}</b><br/>
-        <b>{item.venueName}</b><br/>
-        Address: {item.streetAddress + ', '+ item.city}
-        <br/>
-       {/* <Button onClick={"https://www.google.com/maps/@" + item.latitude + ',' + item.longitude + ',15z'} size='mini'>Take Me There</Button><Button size='mini' onClick ={() => menuClickPopup(eventName, medium, eventOrganizer, venueName, streetAddress, city, state, latitude, longitude, tags, about)}>More</Button> */}
-      </Popup>
-    </CircleMarker>
   }
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -573,7 +615,6 @@ export default class MainMap extends Component {
           if(this.state.nowTime >=filterData[i].datesRange[0] && this.state.nowTime <= filterData[i].datesRange[1]) {
             if(this.state.nowHourTime < filterData[i].endTime) {
               dud.push(filterData[i])
-              console.log('today and still to happen')
             } else {
               console.log("today but already happened")
             }
@@ -594,7 +635,6 @@ export default class MainMap extends Component {
 
         filterData=filterData.filter(item => {
           for(var j=0; j< item.tags.length; j++){
-            console.log("filter getting there")
             for(var q=0; q<this.state.findTags.length; q++) {
               if(this.state.findTags[q].id ===item.tags[j]){
                 console.log('FOUND THE TAG!!!')
@@ -629,20 +669,23 @@ export default class MainMap extends Component {
 /// side menu tab template
 
     const menuSingleEvent =() => {
-      console.log('I fired')
 
-    if(this.state.moreClicked) {
+    if(this.state.moreClicked && this.state.menuDateRange) {
+      // (String(this.state.menuDateRange[0])!==String(this.state.menuDateRange[1])) ? console.log('it doesn"t equal, les rolllll') : console.log(' lol nothing is real')
+      console.log("Menu date range:", this.state.menuDateRange[0], this.state.menuDateRange[1])
       return ( <Tab id="event" header={this.state.menuEvent} icon="fa fa-info-circle">
                 <div className="menuSingleEvent">
                   <br/>
-                  <p className="listingL2"><b>Artist:</b> {this.state.menuArtist}</p>
+                  <p className="listingL2"><b>Artist Username:</b> {this.state.menuArtist}</p>
+                  <p className="listingVenueName"><b>{this.state.menuVenue}</b>, {this.state.menuAddress}, {this.state.menuState}</p>
                   {/* <p className='artistName'>{this.state.menuArtist}</p> */}
-                  <p className="listingVenueName"><b>{this.state.menuVenue}</b> {this.state.menuAddress}, {this.state.menuState}</p>
-                  <p className="aboutEvent">About: {this.state.menuAbout}</p>
+                  {String(this.state.menuDateRange[0])===String(this.state.menuDateRange[1]) ? <p className='listingVenueName'>{this.state.menuDateRange[0]} @{this.state.menuStartTime}</p> : <p className='listingVenueName'>{this.state.menuDateRange[0]} to {this.state.menuDateRange[1]} </p>}
+                  <p className="listingVenueName">Cost: {this.state.menuPrice}</p>
+                  <p className="listingVenueName">About: {this.state.menuAbout}</p>
                 </div>
               </Tab>)
     } else {
-      return ( <Tab id="event" header="More Info" icon="fa fa-info-circle"><p className="timeLabels">No Event Selected</p></Tab>)
+      return ( <Tab id="event" header="More Info" icon="fa fa-info-circle"><p classN ame="timeLabels">No Event Selected</p></Tab>)
     }
   }
 
@@ -662,7 +705,7 @@ export default class MainMap extends Component {
                       url="https://stamen-tiles-{s}.a.ssl.fastly.net/toner/{z}/{x}/{y}{r}.png"
                     />
                     <ZoomControl position="bottomright"/>
-                    <TestMarkerList data={filterData} latlng={this.state.latlng} userLocation={this.state.userAddress} menuClickPopup={(event, medium, artist, venue, address, city, state, lat, long, tags, about, price, startTime, endTime, datesRange)=>this.menuClickPopup(event, medium, artist, venue, address, city, state, lat, long, tags, about, price, startTime, endTime, datesRange)}/>
+                    <TestMarkerList data={filterData} latlng={this.state.latlng} wtfID = {this.state.wtfID} userLocation={this.state.userAddress} menuClickPopup={(event, medium, artist, venue, address, city, state, lat, long, tags, about, price, startTime, endTime, datesRange, clickedWTF)=>this.menuClickPopup(event, medium, artist, venue, address, city, state, lat, long, tags, about, price, startTime, endTime, datesRange,clickedWTF)}/>
 
                     {/* past map tile of interest -- kept for reference */}
                     {/* L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
@@ -692,7 +735,6 @@ export default class MainMap extends Component {
           <Grid.Row><Button massive basic inverted color="red" className="buttonWTF buttonSmaller" onClick={() => this.handleClickWTF(filterData ? filterData : this.state.data)}>WTF</Button></Grid.Row>
 
           <Grid.Row>
-            {this.state.loading ? mapLoading : null }
 
             <div className='buttonMain'>
               <button className={this.state.filterArt ? "buttonArt" : "buttonOff" } onClick={(e) => { this.setState({filterArt: !this.state.filterArt}); }}>A</button>
@@ -734,7 +776,7 @@ export default class MainMap extends Component {
 
               </Tab>
               {/* <Tab id="music" placeholder="M" icon="fa fa-meh-o"></Tab> */}
-              <Tab header="What do you care about?" icon="fa fa-meh-o">
+              <Tab header="What do you care about?" icon="fa fa-tags">
                 {/* <Input action="Search" className="placeSearhBar" placeholder="Search a tag..." onChange={this.onTagsAdd}/> */}
                   <br/>
                 <ReactTags
@@ -748,6 +790,8 @@ export default class MainMap extends Component {
                   />
               </Tab>
             </Sidebar>
+            {this.state.loading ? mapLoading : null }
+            {this.findWTFPoint()}
               {mapComponent}
             </Grid.Row>
         </Grid.Column>
