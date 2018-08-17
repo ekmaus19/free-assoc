@@ -8,7 +8,12 @@ class Ethos extends Component {
             <div >
             <h1>Ethos</h1>
             <p>Company Ethos</p>
-            <div style={{display:'flex',justifyContent:'center',textAlign:'left' }} >
+            
+            <div style={{display:'flex'}}> 
+            <div style={{display:'inline-block',width:'300px',backgroundColor:'white', height:'300px'}} > 
+            <h1> WE BELIVE IN </h1> 
+            </div> 
+            <div style={{display:'inline-block',justifyContent:'center',textAlign:'left'}} >
             To make art accessible and affordable for as many people as possible 
             <br /> 
             Connecting the artist community 
@@ -34,6 +39,10 @@ class Ethos extends Component {
             Fun !!!!
             <br />  
             </div>
+
+         
+            </div> 
+
             </div>
         )
 

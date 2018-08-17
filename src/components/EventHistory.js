@@ -97,12 +97,16 @@ render() {
               description={event.about}
               extra={
                 <a>
-                  {event.price}
+                  <label style={{fontWeight:'bold'}} > Event Price: </label> 
+                  $ {event.price}  
                   <br />
+                  <label style={{fontWeight:'bold'}}> Venue Name:  </label> 
                   {event.venueName}
                   <br />
+                  <label style={{fontWeight:'bold'}}> Date:  </label> 
                   {event.datesRange}
                   <br />
+                  <label style={{fontWeight:'bold'}}> Time:  </label> 
                   {event.startTime} - {event.endTime}
                   <br />
                   {event.streetAddress}
@@ -124,5 +128,3 @@ render() {
     )
   }
 }
-
-// raised image={this.state.images[i]}

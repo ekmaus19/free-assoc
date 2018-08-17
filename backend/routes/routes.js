@@ -176,11 +176,18 @@ router.get('/pending/received/:userId', (req, res) => {
 
 // send connection invite
 router.post('/connect/:userId', (req, res) => {
+<<<<<<< HEAD
+  console.log('this is the body', req.body)
+=======
   console.log('****', req.body)
+>>>>>>> master
   Artist.findById(req.params.userId, (err, artist) => {
     if (err) {
       res.send(err)
     } else if (!artist) {
+<<<<<<< HEAD
+        console.log('Artist does not exist')
+=======
       console.log('Artist does not exist')
       res.send({error: 'Artist does not exist'})
       return
@@ -189,6 +196,7 @@ router.post('/connect/:userId', (req, res) => {
       if (err) {
         res.send(err)
       } else if (!artist) {
+>>>>>>> master
         res.send({error: 'Artist does not exist'})
         return
       } else {
@@ -209,8 +217,36 @@ router.post('/connect/:userId', (req, res) => {
           }
         })
       }
+<<<<<<< HEAD
+      Artist.findById(req.body.artist._id, (err, artist) => {
+        if (err) {
+          res.send(err)
+        } else if (!artist) {
+          res.send({error: 'Artist does not exist'})
+          return
+        } else {
+      const connection = new Connection({
+        requester: req.params.userId,
+        invitee: artist._id,
+      })
+      connection.save((err, connection) => {
+        if (err) {
+          console.log('error', err);
+          res.send(error)
+        } else {
+          console.log('connection invite sent', connection);
+          res.json({
+            success: true,
+            connection: connection
+          })
+        }
+      })
+    }
+=======
     })
+>>>>>>> master
   })
+})
 });
 
 //accept connection invite
@@ -252,6 +288,28 @@ router.post('/decline/:userId', (req, res) => {
 });
 
 //delete contact
+<<<<<<< HEAD
+router.post('/delete/:id/:contactid', (req, res) => {
+  console.log(req.params.id,"OMGGGG")
+
+  Artist.findById(req.params.id, (err,artist) =>{
+    console.log('#####', artist)
+    console.log(req.params.contactid)
+    if(err){
+      res.send(err)
+    } else if (artist){
+      artist.connections.findByIdAndRemove(req.params.contactid, (err,connection)=>{
+        if (err){
+          res.send(err)
+        } else  if (connection) {
+          res.json({
+            success: true,
+            connection: connection
+          })
+        }
+      })
+
+=======
 router.post('/delete/:userId', (req, res) => {
   console.log('BODY', req.body)
   Artist.findById(req.params.userId, (err, artist1) => {
@@ -261,6 +319,7 @@ router.post('/delete/:userId', (req, res) => {
       console.log('Artist does not exist')
       res.send({error: 'Artist does not exist'})
       return
+>>>>>>> master
     }
     Artist.findById(req.body.artist, (err, artist2) => {
       if (err) {
@@ -286,8 +345,9 @@ router.post('/delete/:userId', (req, res) => {
       }
     })
   })
-});
+})
 
+  
 //scout artists
 router.post('/scout', (req, res) => {
   Artist.find({medium: req.body.medium}, (err, artist) => {
