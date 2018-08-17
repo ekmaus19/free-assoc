@@ -245,7 +245,7 @@ const delimiters = [KeyCodes.comma, KeyCodes.enter];
            <br />
           <Select label='Medium' style={{width:'100%'}} onChange = {this.onMediumChange} options={options} className = "field" />
         </Form.Group>
-          From - To
+          <label style={{fontWeight:'bold'}}> Date Range </label> 
           <DatesRangeInput
             inline
             name="datesRange"
@@ -254,9 +254,10 @@ const delimiters = [KeyCodes.comma, KeyCodes.enter];
             iconPosition="left"
             onChange={this.handleDateChange} />
             <br />
-          Event Time
-
-          <TimeRangePicker hourmarkers hourlines timeupdate={this.pickerupdate}/>
+          <label style={{fontWeight:'bold'}}> Event Time </label> 
+          <div style={{width:'100%', marginBottom:'30px', display:'flex', justifyContent:'center'}} > 
+          <TimeRangePicker  hourmarkers hourlines markercolor='black' markerfont='15px Arial' snapto={1} timeupdate={this.pickerupdate} />
+          </div> 
              <br />
             <Form.Field control={TextArea} label='About' placeholder='Tell us a little more about the event...' onChange={this.onAboutChange} />
 

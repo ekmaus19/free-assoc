@@ -68,7 +68,14 @@ router.post('/register/artist', upload.single('selectedFile'),(req, res) => {
   req.checkBody("existingWork", "Enter valid link").isURL();
   req.checkBody("passwordRepeat", "Passwords do not match").equals(req.body.password);
 
-  var readFile = fs.readFileSync(req.file.path)
+
+  let readFile;
+  if (req.file){ 
+    readFile = fs.readFileSync(req.file.path)
+  } else {
+    readFile = null;
+  }
+
   var info = JSON.parse(req.body.info)
   console.log("INFO ", info)
   const artist = new models.Artist({
