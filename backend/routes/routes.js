@@ -212,7 +212,6 @@ router.post('/connect/:userId', (req, res) => {
     })
   })
 })
-});
 
 //accept connection invite
 router.post('/accept/:userId', (req, res) => {
