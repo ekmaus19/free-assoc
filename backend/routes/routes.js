@@ -206,8 +206,8 @@ router.post('/connect/:userId', (req, res) => {
             console.log('connection invite sent', connection);
             res.json({
               success: true,
-              connection: connection
             })
+              connection: connection
           }
         })
       }
@@ -239,7 +239,6 @@ router.post('/connect/:userId', (req, res) => {
     })
   })
 })
-});
 
 //accept connection invite
 router.post('/accept/:userId', (req, res) => {
