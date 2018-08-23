@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Input,Container, Button, Card, Image, Modal, Grid } from 'semantic-ui-react'
+import { Input, Button, Card, Container,Image, Modal } from 'semantic-ui-react'
 
 
 const url = 'http://localhost:1337'
@@ -24,6 +24,8 @@ class Contact extends React.Component {
       received: [],
       username: '',
       connection: [],
+      requester: '',
+      invitee: '',
       modalSearchIsOpen: false,
       modalPendingIsOpen: false,
       modalViewContactIsOpen: false,
@@ -77,19 +79,15 @@ class Contact extends React.Component {
         modalViewContactIsOpen: false,
       });
     }
+   //////
 
-   deleteContactModal = (artist2) => {
-     fetch(url + `/delete/${this.props.artist._id}`,{
+   deleteContactModal = (contactid) => {
+    console.log(this.state.contacts)
+     fetch(url + `/delete/${contactid}`,{
        method: 'POST',
-       headers: {
-         'Content-Type': 'application/json'
-       },
-       body: JSON.stringify({
-         artist: artist2
-       })
      }).then(res => res.json())
      .then(json => {
-       if (json.success) {
+       if (json.success){
       this.setState({
         contacts: json.contacts,
       })
@@ -218,13 +216,16 @@ class Contact extends React.Component {
     })
   }
 
+
+
   render() {
     const renderContacts = () => {
       if (this.props.contacts) {
         return this.props.contacts.map(contacts => {
           console.log(contacts)
           return (
-            <Grid.Column> 
+            <div>
+            <Card.Group itemsPerRow={4}>
             <Card  >
               <Card.Content>
                 <Image floated='right' size='mini' src={'http://localhost:1337/contacts/'+ contacts._id +'/profileimg'} />
@@ -235,7 +236,7 @@ class Contact extends React.Component {
                 </Card.Description>
               </Card.Content>
               <Card.Content extra>
-                <div style={{display:'flex', justifyContent:'center'}}>
+                <div style={{display:'flex'}}>
                   <Button basic color='orange' onClick={() => this.openViewContactModal()}>
                     View Contact
                   </Button>
@@ -251,7 +252,6 @@ class Contact extends React.Component {
                   {contacts.email}
                   <br />
                   Phone #:
-                  {contacts.phone}
                   </div>
                   <div className='ui two buttons'>
                   <Button basic color='violet' onClick={()=> this.deleteContactModal(contacts._id)} >
@@ -265,8 +265,8 @@ class Contact extends React.Component {
                 </div>
               </Card.Content>
             </Card>
-            </Grid.Column> 
-
+          </Card.Group>
+          </div>
           )
         })
       }
@@ -288,8 +288,8 @@ class Contact extends React.Component {
           return (
             <div key = {i}>
               {received.requester.username}
-              <br />
-              <div style={{display:'inline', justifyContenet:'center', marginTop:'20px'}}>
+              <br /> 
+              <div style={{display:'inline', justifyContenet:'center', marginTop:'20px'}}> 
                <Button
               color='orange'
               style={{display:'inline', justifyContent:'center',padding:'3px',height:'150%',width:'100px', textAlign:'center', margin:'10px'}}
@@ -298,7 +298,7 @@ class Contact extends React.Component {
               color='violet'
               style={{display:'inline', justifyContent:'center',padding:'3px',height:'150%',width:'100px', textAlign:'center', margin:'10px'}}
               onClick={() => this.declineConnection(received.requester._id)}>Decline</Button>
-            </div>
+            </div> 
             </div>
           )
         })
@@ -317,6 +317,7 @@ class Contact extends React.Component {
           style={customStyles}>
             <Input stlye={{display:'block', margin:'10px', justifyContent:'center'}} type='text' placeholder='Artist Username ...' onChange={(e) => (this.setState({username:e.target.value}))}></Input>
             <div style={{display:'flex', justifyContent:'center'}}>
+            <Button style={{display:'inline', justifyContent:'center',padding:'3px',height:'150%',width:'100px', textAlign:'center', margin:'10px'}} color = 'orange' onClick={() => this.sendConnection()}>Connect</Button>
             <Button style={{display:'inline', justifyContent:'center',padding:'3px',height:'150%',width:'100px', textAlign:'center', margin:'10px'}} basic color = 'red' onClick={() => this.closeSearchModal()}>Cancel</Button>
             </div>
           </Modal>
@@ -329,14 +330,14 @@ class Contact extends React.Component {
           size={'small'}
           open={this.state.modalPendingIsOpen}
           style={customStyles}>
-            Sent Invites:
+            <label> Sent Invites: </label> 
             {renderSent()}
-            <br />
-            <br />
-            Received invites:
+            <br /> 
+            <br /> 
+            <label> Received invites: </label>
             {renderReceived()}
             <div style={{display:'flex', justifyContent:'center'}}>
-
+          
              <Button
             style={{display:'inline', justifyContent:'flex-end',padding:'3px',height:'150%',width:'100px', textAlign:'center', margin:'10px'}}
             basic color = 'red'
@@ -346,9 +347,9 @@ class Contact extends React.Component {
           </Modal>
         </div>
         </div>
-        <Grid columns={4} style={{marginBottom:'30px'}}>
+        <div style={{marginBottom:'30px'}}>
           {renderContacts()}
-        </Grid>
+        </div>
       </div>
     )
   }

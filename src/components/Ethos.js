@@ -6,41 +6,45 @@ class Ethos extends Component {
     render(){
         return(
             <div >
-            <h1>Ethos</h1>
-            <p>Company Ethos</p>
-            
-            <div style={{display:'flex'}}> 
-            <div style={{display:'inline-block',width:'300px',backgroundColor:'white', height:'300px'}} > 
-            <h1> WE BELIVE IN </h1> 
+            <div style={{display:'inline-block',width:'100%', height:'300px', justifyContent:'center', alignItems:'center'}}> 
+                <div className='Ethos' style={{margin:'50px',display:'inline-block',width:'800px', justifyContent:'center',textAlign:'center'}} > 
+                
+                     A platform for Artists to grow
+                </div> 
+                <br /> 
+                <div className='Ethos2' style={{margin:'50px',display:'inline-block',width:'800px', justifyContent:'center',textAlign:'center'}} > 
+                
+                    And for others to find them...
+                </div> 
             </div> 
-            <div style={{display:'inline-block',justifyContent:'center',textAlign:'left'}} >
-            To make art accessible and affordable for as many people as possible 
-            <br /> 
-            Connecting the artist community 
-            <br /> 
-            Providing support for people just starting out as artists
-            <br />  
-            Create a collaborative and supportive and unbiased network of people 
-            <br /> 
-            Showing the resources that already exist in a given community 
-            <br /> 
-            Giving artists the opportunity to grow 
-            <br /> 
-            Providing immediate access
-            <br />   
-            Breaking down traditional biases and hierarchies that exist in the art world
-            <br />  
-            Stigma with who gets to enjoy art
-            <br />  
-            Inclusive and indiscriminate
-            <br />   
-            Safety of users and artists
-            <br />  
-            Fun !!!!
-            <br />  
-            </div>
 
-         
+            <div className='Ethosbox' style={{display:'flex',justifyContent:'center',width:'100%',backgroundColor:'white', height:'170px'}}> 
+                <div  style={{display:'block',width:'400px',height:'100px', justifyContent:'center',textAlign:'left', margin:'50px'}} > 
+                 We want to foster a collaborative and supportive and unbiased network of people  
+                </div> 
+                <div style={{display:'block',width:'400px',height:'100px',justifyContent:'center',textAlign:'left', margin:'50px'}} > 
+                     We want to break down traditional biases and hierarchies that exist in the art world 
+                </div> 
+                <div style={{display:'block',width:'400px',height:'100px',justifyContent:'center',textAlign:'left', margin:'50px'}} > 
+                 We want to ensure the safety of Users and Artists 
+                </div> 
+            </div> 
+
+            <div className='Ethosbox' style={{display:'flex',justifyContent:'center',width:'100%',backgroundColor:'white', height:'200px'}}> 
+                <div style={{display:'block',width:'400px',height:'100px',justifyContent:'center',textAlign:'left', margin:'50px'}} > 
+                 We want to connect the Artist Community 
+                </div> 
+                <div style={{display:'block',width:'400px',height:'100px', justifyContent:'center',textAlign:'left', margin:'50px'}} > 
+                 We want to show the resources that already exist in a given community 
+                </div> 
+                <div style={{display:'block',width:'400px',height:'100px', justifyContent:'center',textAlign:'left', margin:'50px'}} > 
+                 We want to provide immediate access 
+                </div> 
+            
+            </div> 
+
+            <div className='Ethos2' style={{display:'inline-block',justifyContent:'center',width:'1000px', height:'250px', alignItems:'center',marginTop:'50px'}}> 
+                <h1> To make art accessible and affordable for as many people as possible </h1>
             </div> 
 
             </div>

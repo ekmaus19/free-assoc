@@ -3,6 +3,33 @@
   background-color:#7586ff;
 }
 
+.Ethos {
+  font-size: 45px;
+  font-family: 'Roboto', sans-serif;
+  font-weight:bold;
+
+}
+.Ethos2 {
+  font-size: 30px;
+  font-family: 'Roboto', sans-serif;
+  font-weight:bold;
+
+}
+
+.Ethosbox{
+    background-color: white; 
+    padding: 20px;
+    font-family: 'Montserrat', sans-serif;
+    line-height: 1.6em;
+    font-style: italic;
+    font-weight: medium; 
+    font-size: 20px;
+}
+.Ethosbox :hover {
+  background-color: yellow ;
+  color: red; 
+}
+
 .App-logo{
   animation-name:shimmy;
   animation-duration: 4s; 
@@ -18,7 +45,7 @@
   }
  
 }
-
+ 
 .menu{
   background-color:#7586ff;
 }
