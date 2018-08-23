@@ -13,28 +13,20 @@ const Nominatim = require('nominatim-geocoder')
 const geocoder = new Nominatim({
   secure: true
 })
-
-
 //tags
 const KeyCodes = {
   comma: 188,
   enter: 13,
 };
-
 const options = [
   { key: 'art', text: 'Art', value: 'art' },
   { key: 'music', text: 'Music', value: 'music' },
   { key: 'performance', text: 'Performance', value: 'performance' },
 ]
-
-
 const delimiters = [KeyCodes.comma, KeyCodes.enter];
-
-
   export class CreateEvent extends React.Component {
     constructor(props) {
       super(props);
-
       this.state = {
         selectedFile:null,
         eventName: '',
@@ -54,20 +46,15 @@ const delimiters = [KeyCodes.comma, KeyCodes.enter];
       suggestions:[suggestionsList]
       };
     }
-
     handleDelete=(i)=> {
       const {tags} = this.state
       this.setState({
         tags: tags.filter((tag,index)=> index !==i)
       })
     }
-
     handleAddition=(tag)=>{
       this.setState(state=> ({tags:[...state.tags,tag]}))
     }
-
-
-
     handleDateChange = (event, {name, value}) => {
       if (this.state.hasOwnProperty(name)) {
         this.setState({ [name]: value });
@@ -78,24 +65,18 @@ const delimiters = [KeyCodes.comma, KeyCodes.enter];
     //     this.setState({ [name]: value });
     //   }
     // }
-
     pickerupdate = (start_time, end_time) => {
       // start and end time in 24hour time
       this.setState({startTime: start_time, endTime: end_time})
     }
-
     handleDrag=(tag, currPos, newPos)=>{
       const tags = [...this.state.tags];
       const newTags = tags.slice();
-
       newTags.splice(currPos, 1);
       newTags.splice(newPos, 0, tag);
-
       // re-render
       this.setState({ tags: newTags });
   }
-
-
   onCreate = (e) => {
      let query = this.state.streetAddress + ', ' + this.state.city + ', ' + this.state.state + ', ' + this.state.country
     const createEvent = {
@@ -121,13 +102,10 @@ const delimiters = [KeyCodes.comma, KeyCodes.enter];
     formData.append('info', JSON.stringify(createEvent))
     formData.append('selectedFile', selectedFile);
     console.log(query)
-
     geocoder.search({q:query})
     .then((response)=> {
-
       formData.append('latitude', response[0].lat)
       formData.append('longitude', response[0].lon)
-
       return axios.post('http://localhost:1337/fileUpload', formData);
     }).then((result)=> {
       console.log('redirect****')
@@ -135,104 +113,83 @@ const delimiters = [KeyCodes.comma, KeyCodes.enter];
     }).catch((err)=> {
       console.log(err)
     })
-
     }
-
-
     onEventNameChange = (event) => {
       this.setState({
         eventName: event.target.value
       })
     }
-
     onAddressChange = (event) => {
       this.setState({
         streetAddress: event.target.value
       })
     }
-
     onCityChange = (event) => {
       this.setState({
         city: event.target.value
       })
     }
-
     onStateChange = (event) => {
       this.setState({
         state: event.target.value
       })
     }
-
     onCountryChange = (event) => {
       this.setState({
         country: event.target.value
       })
     }
-
   onEventNameChange = (event) => {
     this.setState({
       eventName: event.target.value
     })
   }
-
   onAddressChange = (event) => {
     this.setState({
       streetAddress: event.target.value
     })
   }
-
   onCityChange = (event) => {
     this.setState({
       city: event.target.value
     })
   }
-
   onStateChange = (event) => {
     this.setState({
       state: event.target.value
     })
   }
-
   onCountryChange = (event) => {
     this.setState({
       country: event.target.value
     })
   }
-
   onVenueNameChange = (event) => {
     this.setState({
       venueName: event.target.value
     })
   }
-
   onAboutChange = (event) => {
     this.setState({
       about: event.target.value
     })
   }
-
   onMediumChange = (event,{value}) => {
     this.setState({
         medium: value
     })
 }
-
   onPriceChange = (event) => {
   this.setState({
     price: event.target.value
   })
  }
-
   fileSelectedHandler=(event)=>{
     this.setState({
       selectedFile: event.target.files[0]
     })
   }
-
-
-
     render() {
-
       const {tags,suggestions} = this.state
       console.log(this.state.suggestions[0])
       console.log(suggestionsList)
@@ -248,7 +205,7 @@ const delimiters = [KeyCodes.comma, KeyCodes.enter];
            <br />
           <Select label='Medium' style={{width:'100%'}} onChange = {this.onMediumChange} options={options} className = "field" />
         </Form.Group>
-          <label style={{fontWeight:'bold'}}> Date Range </label> 
+          From - To
           <DatesRangeInput
             inline
             name="datesRange"
@@ -257,25 +214,20 @@ const delimiters = [KeyCodes.comma, KeyCodes.enter];
             iconPosition="left"
             onChange={this.handleDateChange} />
             <br />
-          <label style={{fontWeight:'bold'}}> Event Time </label> 
-          <div style={{width:'100%', marginBottom:'30px', display:'flex', justifyContent:'center'}} > 
-          <TimeRangePicker  hourmarkers hourlines markercolor='black' markerfont='15px Arial' snapto={1} timeupdate={this.pickerupdate} />
-          </div> 
+          Event Time
+          <TimeRangePicker hourmarkers hourlines timeupdate={this.pickerupdate}/>
              <br />
             <Form.Field control={TextArea} label='About' placeholder='Tell us a little more about the event...' onChange={this.onAboutChange} />
-
           <br />
              <Form.Field control={Input} label='$' placeholder='Price' onChange={this.onPriceChange} />
              <Form.Field control={Input} label='Street Address' placeholder='Street Address' onChange={this.onAddressChange} />
              <Form.Field control={Input} label='City' placeholder='City' onChange={this.onCityChange}/>
              <Form.Field control={Input} label='State' placeholder='State'  onChange={this.onStateChange}/>
              <Form.Field  control={Input} label='Country' placeholder='Country' onChange={this.onCountryChange}/>
-
              <div style={{position:'relative', width:'100%', background:'light-grey'}}>
                 <ReactTags
-
                     tags={tags}
-                    suggestions={suggestions}
+                    suggestions={suggestions[0]}
                     handleDelete={this.handleDelete}
                     handleAddition={this.handleAddition}
                     handleDrag={this.handleDrag}
@@ -295,5 +247,4 @@ const delimiters = [KeyCodes.comma, KeyCodes.enter];
         </Form>
       );
     }
-
   }

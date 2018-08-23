@@ -20,7 +20,7 @@ class Scout extends React.Component {
     this.state = {
       medium: '',
       artist: [],
-      event:[], 
+      event:[],
       connection:[],
       modalViewCardIsOpen: false,
       requester: '',
@@ -75,7 +75,6 @@ class Scout extends React.Component {
         artist: artist
       })
     })
-  })
     .then(res => res.json())
     .then(json => {
       console.log('JSON ----->', json)
@@ -115,8 +114,8 @@ class Scout extends React.Component {
         type='text'
         placeholder='Search by Medium'
         onChange={(e) => (this.setState({medium:e.target.value}))}></Input>
-        <Button basic color='violet' onClick={()=> {this.findArtist()}}> Go!</Button> 
-        </div> 
+        <Button basic color='violet' onClick={()=> {this.findArtist()}}> Go!</Button>
+        </div>
 
         <Container style={{marginBottom:'20px'}} >
           <Card.Group itemsPerRow={4}>
@@ -145,17 +144,17 @@ class Scout extends React.Component {
               <a>
                 {/* {this.props.contacts.length} Friends */}
                 <Button basic color="violet" style={{display:'inline', justifyContent:'center',padding:'3px',height:'150%',width:'100px', textAlign:'center', margin:'10px'}} color = 'orange' onClick={() => this.openViewCardModal()}>View Profile</Button>
-                
+
                 <Modal
                   onClose={this.closeViewCardModal}
                   dimmer={'inverted'}
                  size={'small'}
                   open={this.state.modalViewCardIsOpen}
                   style={customStyles}>
-                  Past Events: 
+                  Past Events:
                   {artist.events}
                   <div style={{display:'flex', justifyContent:'center'}}>
-          
+
                   <Button
                   style={{display:'inline', justifyContent:'flex-end',padding:'3px',height:'150%',width:'100px', textAlign:'center', margin:'10px'}}
                   basic color = 'red'
@@ -163,11 +162,11 @@ class Scout extends React.Component {
             </div>
 
           </Modal>
-                
-                
-                
-                
-                <br /> 
+
+
+
+
+                <br />
                 <Button style={{display:'inline', justifyContent:'center',padding:'3px',height:'150%',width:'100px', textAlign:'center', margin:'10px'}} color = 'orange' onClick={() => this.sendConnection(artist)}>Connect</Button>
               </a>
             </Card.Content>
