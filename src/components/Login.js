@@ -40,12 +40,18 @@ class LoginScreen extends Component {
     })
   }
 
+  
+
+
   onLoginArtist = () => {
     console.log(url)
 
     this.setState({
       isArtist: true,
     })
+
+    // var artistLogin = JSON.parse(sessionStorage.getItem("loginArtist"))
+    // console.log(artistLogin)
 
     fetch(url+'/login/artist', {
       method: 'POST',
@@ -62,16 +68,24 @@ class LoginScreen extends Component {
     .then((responseJson) => {
       if (responseJson.success){
         console.log(responseJson.artist)
+        // sessionStorage.setItem("loginArtist", JSON.stringify(responseJson.artist))
         this.props.artistInfo(responseJson.artist)
         this.props.redirect('ArtistDash')
 
       } else{ alert('Invalid Login') }
-    })
+    }) 
     .catch((error) => {
       console.log('****',error)
       alert('Invalid Login')
     })
   }
+   
+  
+
+  // artistInfo = (responseJson.artist,key)=> {
+  //   sessionStorage.setItem(key, JSON.stringify(responseJson.artist))
+  //   this.setState({username:responseJson.artist.username})
+  // }
 
   onUsernameChange = (event) =>{
     this.setState({
