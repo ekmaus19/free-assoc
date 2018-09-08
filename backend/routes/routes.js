@@ -211,7 +211,7 @@ router.post('/connect/:userId', (req, res) => {
       }
     })
   })
-})
+});
 
 //accept connection invite
 router.post('/accept/:userId', (req, res) => {
@@ -288,7 +288,7 @@ router.post('/delete/:userId', (req, res) => {
   })
 })
 
-  
+
 //scout artists
 router.post('/scout', (req, res) => {
   Artist.find({medium: req.body.medium}, (err, artist) => {
