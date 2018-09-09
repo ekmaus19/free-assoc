@@ -70,7 +70,7 @@ router.post('/register/artist', upload.single('selectedFile'),(req, res) => {
 
 
   let readFile;
-  if (req.file){ 
+  if (req.file){
     readFile = fs.readFileSync(req.file.path)
   } else {
     readFile = null;
@@ -92,11 +92,10 @@ router.post('/register/artist', upload.single('selectedFile'),(req, res) => {
       img: {data:readFile, contentType:'image/png'}
   })
   console.log("ARTIST IS ", artist)
-  artist.save(((err, event)=>{
-      if(err === req.validationErrors()){
-        console.log(err)
-      } else{
-        console.log('event', event)
+  artist.save(((err)=>{
+      if(err){
+        res.json({success: false, errors: err.errors})
+      } else {
         res.json({success:true, artist:artist})
       }
     }))
