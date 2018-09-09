@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Button, Icon, Input, Image} from 'semantic-ui-react';
+import {Button, Icon, Input, Image, Message} from 'semantic-ui-react';
 import validator from 'validator';
 
 const url = 'http://localhost:1337'
@@ -23,7 +23,8 @@ class RegisterScreen extends Component {
       username: '',
       password: '',
       email:'',
-      passwordRepeat:''
+      passwordRepeat:'',
+      errors: [],
     }
   }
 
@@ -66,9 +67,18 @@ class RegisterScreen extends Component {
     })
     .then((response) => response.json())
     .then((responseJson) => {
+
       if (responseJson.success) {
         console.log('user registered!!!!! ')
         this.props.redirect('Login')
+      } else {
+
+        // Getting list of Registeration Errors from Backend
+        let errors = [];
+        for (var error in responseJson) {
+          errors.push(responseJson[error].msg);
+        }
+        this.setState({errors});
       }
     })
     .catch((error) => {
@@ -76,10 +86,26 @@ class RegisterScreen extends Component {
     })
   }
 
+  dismissErrors(){ this.setState({ errors: [] }) }
+
   render(){
+    const errors = () => {
+      if (this.state.errors.length > 0) {
+        console.log(this.state.errors)
+      return (
+        <Message
+          negative
+          onDismiss={() => this.dismissErrors()}
+          header='Registeration Errors'
+          list={this.state.errors}
+        />
+        )
+      }
+    }
+
     return (
       <div>
-
+        {errors()}
         <div>
         <Input onChange = {this.onNameChange} className = "field" placeholder = "Username" validations={[required]}/>
         <br />

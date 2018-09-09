@@ -39,7 +39,7 @@ module.exports = (passport) => {
   } else {
     user.save((err, user) => {
       if (err) {
-        console.log(err);
+        res.json({success: false, errors: err.errors})
       }
       console.log('saved!!', user);
       res.json({
@@ -93,12 +93,12 @@ router.post('/register/artist', upload.single('selectedFile'),(req, res) => {
   })
   console.log("ARTIST IS ", artist)
   artist.save(((err)=>{
-      if(err){
-        res.json({success: false, errors: err.errors})
-      } else {
-        res.json({success:true, artist:artist})
-      }
-    }))
+    if(err){
+      res.json({success: false, errors: err.errors})
+    } else {
+      res.json({success:true, artist:artist})
+    }
+  }))
   // artist.save()
   //   .then((saved) => {
   //     console.log("successfully saved: ", saved)
