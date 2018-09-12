@@ -18,6 +18,16 @@ router.use(bodyParser.urlencoded({ extended: true }));
 
 router.use(validator());
 
+router.get('/', (req,res) => {
+  console.log('home', req.session)
+  if (req.session.user) {
+    console.log('user', req.session.user)
+    res.json({})
+  } else {
+    res.json({ success: false })
+  }
+});
+
 router.post('/fileUpload', upload.single('selectedFile'),function(req,res,next){
   console.log('file****', req.file,req.body)
   console.log(req.user);

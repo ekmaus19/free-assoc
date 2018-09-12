@@ -51,11 +51,29 @@ class App extends Component {
       placeSearch: null,
     })
   }
+
+  componentDidMount(){
+    // console.log('mount')
+
+  }
 ///test
   redirect(page){
     this.setState({
       currentPage: page,
     })
+}
+
+loginRedirect = () => {
+  fetch(url+'/')
+  .then(res => res.json())
+  .then(response => {
+    console.log('checked for session')
+    if (response.user && response.user.medium) { //need a way to check if user is artist
+      this.props.redirect('ArtistDash');
+    } else if (response.user) {
+
+    }
+  }).catch(err => console.log(err))
 }
 
 nearMeRedirect = () => {
@@ -108,7 +126,7 @@ searchPlaceHome = () => {
                 </Menu.Item>
                 <Menu.Item onClick = {() => this.redirect('Home')} as='a' active>Home</Menu.Item>
                 <Menu.Item onClick = {() => this.redirect('Ethos')} as='a'>Ethos</Menu.Item>
-                <Menu.Item onClick= {()=>this.redirect('About')}as='a'>About</Menu.Item>
+                <Menu.Item onClick= {()=>this.redirect('About')} as='a'>About</Menu.Item>
                 <Menu.Item onClick= {()=>this.redirect('Contact')} as='a'>Contact</Menu.Item>
                 </Container>
                 <Container style={{display:'flex',justifyContent:'flex-end'}}>

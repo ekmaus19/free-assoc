@@ -184,6 +184,9 @@ passport.use('artist', new LocalStrategy (
 
 app.use(passport.initialize());
 app.use(passport.session());
+// Use the session middleware
+app.use(session({ secret: 'qwerty', cookie: { maxAge: 60000 }}))
+
 
 app.use('/', auth(passport));
 app.use('/', routes);

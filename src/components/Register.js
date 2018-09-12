@@ -75,8 +75,8 @@ class RegisterScreen extends Component {
 
         // Getting list of Registeration Errors from Backend
         let errors = [];
-        for (var error in responseJson) {
-          errors.push(responseJson[error].msg);
+        for (var error in responseJson.errors) {
+          errors.push(responseJson.errors[error].msg);
         }
         this.setState({errors});
       }
