@@ -17,22 +17,22 @@
 }
 
 .Ethosbox{
-    background-color: white; 
+    background-color: white;
     padding: 20px;
     font-family: 'Montserrat', sans-serif;
     line-height: 1.6em;
     font-style: italic;
-    font-weight: medium; 
+    font-weight: medium;
     font-size: 20px;
 }
 .Ethosbox :hover {
   background-color: yellow ;
-  color: red; 
+  color: red;
 }
 
 .App-logo{
   animation-name:shimmy;
-  animation-duration: 4s; 
+  animation-duration: 4s;
 }
 
  @keyframes shimmy {
@@ -43,9 +43,9 @@
     transform: translate(30px, 30px);
     transition: transform 0.5s ease
   }
- 
+
 }
- 
+
 .menu{
   background-color:#7586ff;
 }
@@ -59,7 +59,7 @@ body{
   font-family: 'Advent Pro';
   color:rgb(255,210,30);
   font-weight:bold;
-  
+
 }
 
 .App-intro {
@@ -93,4 +93,8 @@ h2{
 p{
   color: white;
   font-size: 20px;
+}
+
+.ui.flowing.popup.transition.visible.suir-calendar {
+  z-index: 100000;
 }
