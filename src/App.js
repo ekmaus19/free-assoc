@@ -169,7 +169,7 @@ searchPlaceHome = () => {
           {this.state.currentPage === 'Ethos' ? <div><Ethos/></div>:null}
           {this.state.currentPage === 'About' ? <div><About/></div>:null}
           {this.state.currentPage === 'Contact' ? <div><Contact/></div>:null}
-          {this.state.currentPage === 'Login' ? <div><LoginScreen onLogin={this.onLogin} artistInfo={(obj)=>this.setState({artist:obj})} redirect={(e) => this.redirect(e)}/></div> : null}
+          {this.state.currentPage === 'Login' ? <div><LoginScreen onLogin={this.onLogin} artistInfo={(obj, redirect=null) => this.setState({artist:obj}, redirect)} redirect={(e) => this.redirect(e)}/></div> : null}
           {this.state.currentPage === 'Registerpicker' ? <div><RegisterScreenPicker redirect={(e) => this.redirect(e)}/></div> : null}
           {this.state.currentPage === 'RegisterUser' ? <div><RegisterScreen redirect={(e) => this.redirect(e)}/></div> : null}
           {this.state.currentPage === 'RegisterArtist' ? <div><RegisterArtist redirect={(e) => this.redirect(e)}/></div> : null}

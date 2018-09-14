@@ -95,6 +95,6 @@ p{
   font-size: 20px;
 }
 
-.ui.flowing.popup.transition.visible.suir-calendar {
+.ui.flowing.popup.transition.visible {
   z-index: 100000;
 }
