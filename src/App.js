@@ -51,11 +51,29 @@ class App extends Component {
       placeSearch: null,
     })
   }
+
+  componentDidMount(){
+    // console.log('mount')
+
+  }
 ///test
   redirect(page){
     this.setState({
       currentPage: page,
     })
+}
+
+loginRedirect = () => {
+  fetch(url+'/')
+  .then(res => res.json())
+  .then(response => {
+    console.log('checked for session')
+    if (response.user && response.user.medium) { //need a way to check if user is artist
+      this.props.redirect('ArtistDash');
+    } else if (response.user) {
+
+    }
+  }).catch(err => console.log(err))
 }
 
 nearMeRedirect = () => {
@@ -108,7 +126,7 @@ searchPlaceHome = () => {
                 </Menu.Item>
                 <Menu.Item onClick = {() => this.redirect('Home')} as='a' active>Home</Menu.Item>
                 <Menu.Item onClick = {() => this.redirect('Ethos')} as='a'>Ethos</Menu.Item>
-                <Menu.Item onClick= {()=>this.redirect('About')}as='a'>About</Menu.Item>
+                <Menu.Item onClick= {()=>this.redirect('About')} as='a'>About</Menu.Item>
                 <Menu.Item onClick= {()=>this.redirect('Contact')} as='a'>Contact</Menu.Item>
                 </Container>
                 <Container style={{display:'flex',justifyContent:'flex-end'}}>
@@ -151,7 +169,7 @@ searchPlaceHome = () => {
           {this.state.currentPage === 'Ethos' ? <div><Ethos/></div>:null}
           {this.state.currentPage === 'About' ? <div><About/></div>:null}
           {this.state.currentPage === 'Contact' ? <div><Contact/></div>:null}
-          {this.state.currentPage === 'Login' ? <div><LoginScreen onLogin={this.onLogin} artistInfo={(obj)=>this.setState({artist:obj})} redirect={(e) => this.redirect(e)}/></div> : null}
+          {this.state.currentPage === 'Login' ? <div><LoginScreen onLogin={this.onLogin} artistInfo={(obj, redirect=null) => this.setState({artist:obj}, redirect)} redirect={(e) => this.redirect(e)}/></div> : null}
           {this.state.currentPage === 'Registerpicker' ? <div><RegisterScreenPicker redirect={(e) => this.redirect(e)}/></div> : null}
           {this.state.currentPage === 'RegisterUser' ? <div><RegisterScreen redirect={(e) => this.redirect(e)}/></div> : null}
           {this.state.currentPage === 'RegisterArtist' ? <div><RegisterArtist redirect={(e) => this.redirect(e)}/></div> : null}

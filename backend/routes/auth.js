@@ -29,16 +29,22 @@ module.exports = (passport) => {
     res.status(400).send(errors)
     return;
   } else {
-    user.save((err, user) => {
+    user.save(err => {
       if (err) {
-        console.log(err);
+        if (err.code) {
+          res.json({success: false, errors: ["This email is already registered. Please log in"]})
+        } else {
+          console.log(err.error)
+          res.json({success: false, errors: err.error});
+        }
+      } else {
+        console.log('saved!!', user);
+        res.json({
+          success: true,
+          user: user
+        });
       }
-      console.log('saved!!', user);
-      res.json({
-        success: true,
-        user: user
-      });
-    })
+    });
   }
 });
 //conflicting usernames?
@@ -58,7 +64,7 @@ router.post('/register/artist', upload.single('selectedFile'),(req, res) => {
   req.checkBody("existingWork", "Enter valid link").isURL();
   req.checkBody("passwordRepeat", "Passwords do not match").equals(req.body.password);
   let readFile;
-  if (req.file){ 
+  if (req.file){
     readFile = fs.readFileSync(req.file.path)
   } else {
     readFile = null;
@@ -79,14 +85,13 @@ router.post('/register/artist', upload.single('selectedFile'),(req, res) => {
       img: {data:readFile, contentType:'image/png'}
   })
   console.log("ARTIST IS ", artist)
-  artist.save(((err, event)=>{
-      if(err === req.validationErrors()){
-        console.log(err)
-      } else{
-        console.log('event', event)
-        res.json({success:true, artist:artist})
-      }
-    }))
+  artist.save(((err)=>{
+    if(err){
+      res.json({success: false, errors: err.errors})
+    } else {
+      res.json({success:true, artist:artist})
+    }
+  }))
   // artist.save()
   //   .then((saved) => {
   //     console.log("successfully saved: ", saved)
@@ -144,6 +149,8 @@ router.post('/register/artist', upload.single('selectedFile'),(req, res) => {
     //   )
     //   })
     router.post('/login/user', passport.authenticate('user'), (req, res) => {
+      req.session.user = req.user; //sets current user
+      console.log("User", req.session)
       res.json({
         success: true,
         user: req.user,
@@ -152,6 +159,8 @@ router.post('/register/artist', upload.single('selectedFile'),(req, res) => {
     });
     router.post('/login/artist', passport.authenticate('artist'), (req, res) => {
       console.log('****', req.user)
+      // req.session.user = req.user; //sets current user
+      // console.log("Artist", req.session)
       res.json({
         success: true,
         artist: req.user,
