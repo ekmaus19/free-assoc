@@ -1,21 +1,17 @@
 import React, {Component} from 'react';
 import {Button, Icon, Input, Image} from 'semantic-ui-react';
 import validator from 'validator';
-
 const url = 'http://localhost:1337'
-
 const required = (value) => {
   if (!value.toString().trim().length) {
     return 'required';
   }
 };
-
 const email = (value) => {
   if (!validator.isEmail(value)) {
     return 'enter a valid email address'
   }
 };
-
 class RegisterScreen extends Component {
   constructor(props){
     super(props);
@@ -26,31 +22,26 @@ class RegisterScreen extends Component {
       passwordRepeat:''
     }
   }
-
   onNameChange = (event) =>{
     this.setState({
       name: event.target.value
     })
   }
-
   onEmailChange = (event) =>{
     this.setState({
       email: event.target.value
     })
   }
-
   onPassChange = (event) =>{
     this.setState({
       password: event.target.value
     })
   }
-
   onConfirmChange = (event) =>{
     this.setState({
       passwordRepeat: event.target.value
     })
   }
-
   onRegister = () => {
     fetch(url + '/register/user', {
       method: 'POST',
@@ -75,11 +66,9 @@ class RegisterScreen extends Component {
       console.log(error);
     })
   }
-
   render(){
     return (
       <div>
-
         <div>
         <Input onChange = {this.onNameChange} className = "field" placeholder = "Username" validations={[required]}/>
         <br />
@@ -97,7 +86,6 @@ class RegisterScreen extends Component {
             </Button.Content>
           </Button>
       </div>
-
     );
   }
 }

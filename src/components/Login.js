@@ -1,9 +1,7 @@
 import React, {Component} from 'react';
 import {Button, Icon, Input, Image} from 'semantic-ui-react';
 import {connect} from 'react-redux';
-
 const url = 'http://localhost:1337'
-
 class LoginScreen extends Component {
   constructor(props){
     super(props);
@@ -11,9 +9,9 @@ class LoginScreen extends Component {
       username: '',
       password: '',
       isArtist: props.isArtist ? true : false,
+      hits:null
     }
   }
-
   onLoginUser = () => {
     fetch(url+ '/login/user', {
       method: 'POST',
@@ -39,16 +37,19 @@ class LoginScreen extends Component {
       alert('Invalid Login')
     })
   }
-
-
-
-
   onLoginArtist = () => {
     console.log(url)
-
     this.setState({
       isArtist: true,
     })
+
+    // get session 
+    // const artistLogin = sessionStorage.getItem("loginArtist")
+    // if (artistLogin) {
+    //   this.setState({hits: JSON.parse(artistLogin) })
+    //   return;
+    // }
+
 
     fetch(url+'/login/artist', {
       method: 'POST',
@@ -65,9 +66,10 @@ class LoginScreen extends Component {
     .then((responseJson) => {
       if (responseJson.success){
         console.log(responseJson.artist)
+        // session Storage
+        sessionStorage.setItem("loginArtist", JSON.stringify(responseJson.artist))
         this.props.artistInfo(responseJson.artist)
         this.props.redirect('ArtistDash')
-
       } else{ alert('Invalid Login') }
     })
     .catch((error) => {
@@ -75,28 +77,22 @@ class LoginScreen extends Component {
       alert('Invalid Login')
     })
   }
-
-
   onUsernameChange = (event) =>{
     this.setState({
       username: event.target.value
     })
   }
-
   onPassChange = (event) =>{
     this.setState({
       password: event.target.value
     })
   }
-
   render() {
-
     return (
       // display: flex;
       // align-items: right;
       // justify-content: flex-start;
       <div>
-
       <div className = "login">
             <div style={{width:'30%', height:'30%',alignItems:'center',justifyContent:'center', marginLeft:'auto',marginRight:'auto', marginTop:'40px'}}>
             <Image src='/img/font2.png' />
@@ -125,13 +121,11 @@ class LoginScreen extends Component {
     );
   }
 }
-
 // const mapStateToProps=(state)=>{
 //     return {
 //         isLoggedin: state.login.isLoggedin
 //     }
 // }
-
 // const mapDispatchToProps = (dispatch) => {
 //     return {
 //         login: ()=> {
@@ -139,11 +133,8 @@ class LoginScreen extends Component {
 //         }
 //     }
 // }
-
 // LoginScreen = connect(
 //     mapStateToProps,
 //     mapDispatchToProps
 //   )(LoginScreen);
-
-
 export default LoginScreen;
