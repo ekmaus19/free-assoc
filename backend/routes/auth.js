@@ -41,6 +41,7 @@ module.exports = (passport) => {
         if (err.code) {
           res.json({success: false, errors: ["This email is already registered. Please log in"]})
         } else {
+          console.log(err.error)
           res.json({success: false, errors: err.error});
         }
       } else {
