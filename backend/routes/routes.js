@@ -18,16 +18,6 @@ router.use(bodyParser.urlencoded({ extended: true }));
 
 router.use(validator());
 
-router.get('/', (req,res) => {
-  console.log('home', req.session)
-  if (req.session.user) {
-    console.log('user', req.session.user)
-    res.json({})
-  } else {
-    res.json({ success: false })
-  }
-});
-
 router.post('/fileUpload', upload.single('selectedFile'),function(req,res,next){
   console.log('file****', req.file,req.body)
   console.log(req.user);
@@ -186,13 +176,11 @@ router.get('/pending/received/:userId', (req, res) => {
 
 // send connection invite
 router.post('/connect/:userId', (req, res) => {
-  console.log('this is the body', req.body)
   console.log('****', req.body)
   Artist.findById(req.params.userId, (err, artist) => {
     if (err) {
       res.send(err)
     } else if (!artist) {
-        console.log('Artist does not exist')
       console.log('Artist does not exist')
       res.send({error: 'Artist does not exist'})
       return
@@ -216,36 +204,11 @@ router.post('/connect/:userId', (req, res) => {
             console.log('connection invite sent', connection);
             res.json({
               success: true,
-            })
               connection: connection
+            })
           }
         })
       }
-
-      Artist.findById(req.body.artist._id, (err, artist) => {
-        if (err) {
-          res.send(err)
-        } else if (!artist) {
-          res.send({error: 'Artist does not exist'})
-          return
-        } else {
-      const connection = new Connection({
-        requester: req.params.userId,
-        invitee: artist._id,
-      })
-      connection.save((err, connection) => {
-        if (err) {
-          console.log('error', err);
-          res.send(error)
-        } else {
-          console.log('connection invite sent', connection);
-          res.json({
-            success: true,
-            connection: connection
-          })
-        }
-      })
-    }
     })
   })
 });
@@ -289,27 +252,6 @@ router.post('/decline/:userId', (req, res) => {
 });
 
 //delete contact
-router.post('/delete/:id/:contactid', (req, res) => {
-  console.log(req.params.id,"OMGGGG")
-
-  Artist.findById(req.params.id, (err,artist) =>{
-    console.log('#####', artist)
-    console.log(req.params.contactid)
-    if(err){
-      res.send(err)
-    } else if (artist){
-      artist.connections.findByIdAndRemove(req.params.contactid, (err,connection)=>{
-        if (err){
-          res.send(err)
-        } else  if (connection) {
-          res.json({
-            success: true,
-            connection: connection
-          })
-        }
-      })
-    }}}
-
 router.post('/delete/:userId', (req, res) => {
   console.log('BODY', req.body)
   Artist.findById(req.params.userId, (err, artist1) => {
