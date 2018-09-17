@@ -67,7 +67,7 @@
     "redux": "^4.0.0",
     "redux-thunk": "^2.3.0",
     "reverse-geocoding": "^3.0.1",
-    "semantic-ui-calendar-react": "^0.7.1",
+    "semantic-ui-calendar-react": "^0.8.0",
     "semantic-ui-react": "^0.82.1",
     "simple-react-validator": "0.0.8",
     "socket.io": "^2.1.1",

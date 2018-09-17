@@ -719,6 +719,8 @@ findWTFPoint = (latitude, longitude, clickedWTF) => {
         </Dimmer>
     )
 
+    const inline = false;
+
     return (
       <Grid>
         <Grid.Column>
@@ -763,7 +765,8 @@ findWTFPoint = (latitude, longitude, clickedWTF) => {
                             name="date"
                             value={this.state.date}
                             onChange={this.handleSomeChange}
-                          popupPosition="bottom right" />
+                            popupPosition="bottom right"
+                            dimmer={false}/>
                     </Form>
                   </div>
                 </div>
