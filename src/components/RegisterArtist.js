@@ -32,7 +32,7 @@ class RegisterArtist extends Component {
     }
   }
 
-  // Registeration Content Functions ------------------------------------------
+  // Registration Content Functions ------------------------------------------
 
   onFirstnameChange = (event) =>{
     this.setState({
@@ -142,7 +142,7 @@ class RegisterArtist extends Component {
       .then((result)=> {
 
         // Response => { data: {}, ....} because of axios call
-        // Checking if Registeration was valid
+        // Checking if Registration was valid
 
         if (result.data.success) {
           this.props.redirect('Login')
@@ -173,7 +173,7 @@ class RegisterArtist extends Component {
         <Message
           negative
           onDismiss={() => this.dismissErrors()}
-          header='Registeration Errors'
+          header='Registration Errors'
           list={this.state.errors}
         />
         )

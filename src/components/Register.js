@@ -73,7 +73,7 @@ class RegisterScreen extends Component {
         this.props.redirect('Login')
       } else {
 
-        // Getting list of Registeration Errors from Backend
+        // Getting list of Registration Errors from Backend
         let errors = [];
         for (var error in responseJson) {
           errors.push(responseJson[error].msg);
@@ -96,7 +96,7 @@ class RegisterScreen extends Component {
         <Message
           negative
           onDismiss={() => this.dismissErrors()}
-          header='Registeration Errors'
+          header='Registration Errors'
           list={this.state.errors}
         />
         )
