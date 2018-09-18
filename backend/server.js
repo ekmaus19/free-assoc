@@ -225,6 +225,6 @@ app.post('/filtered-data', function(req, res) {
 
 module.exports = app;
 
-server.listen(1337, '127.0.0.1');
+server.listen(process.env.PORT || 1337);
 
 console.log('Server running at https://powerful-bastion-26209.herokuapp.com/')
