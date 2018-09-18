@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {Button, Icon, Input, Image} from 'semantic-ui-react';
 import {connect} from 'react-redux';
-const url = 'https://powerful-bastion-26209.herokuapp.com/'
+const url = 'https://powerful-bastion-26209.herokuapp.com'
 class LoginScreen extends Component {
  constructor(props){
   super(props);

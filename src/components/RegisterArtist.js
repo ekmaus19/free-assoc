@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {Button,Icon, Select,Input, Image, Message} from 'semantic-ui-react';
 import axios from 'axios';
-const url = 'http://localhost:1337'
+const url = 'https://powerful-bastion-26209.herokuapp.com'
 
 const options = [
     { key: 'art', text: 'Art', value: 'art' },

@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {Button, Icon, Input, Image, Message} from 'semantic-ui-react';
 import validator from 'validator';
 
-const url = 'http://localhost:1337'
+const url = 'https://powerful-bastion-26209.herokuapp.com'
 
 const required = (value) => {
   if (!value.toString().trim().length) {
