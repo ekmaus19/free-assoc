@@ -227,4 +227,4 @@ module.exports = app;
 
 server.listen(process.env.PORT || 1337);
 
-console.log('Server running at https://powerful-bastion-26209.herokuapp.com/')
+console.log('Server running at http://powerful-bastion-26209.herokuapp.com/')
