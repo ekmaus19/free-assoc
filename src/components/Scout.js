@@ -19,7 +19,8 @@ class Scout extends React.Component {
     super(props);
     this.state = {
       medium: '',
-      artist: [],
+      artists: [],
+      findArtistErr: '',
       event:[],
       connection:[],
       modalViewCardIsOpen: false,
@@ -28,7 +29,7 @@ class Scout extends React.Component {
     }
   }
 
-  findArtist = () => {
+  findArtists = () => {
     fetch(url + '/scout', {
       method: 'POST',
       headers: {
@@ -43,9 +44,12 @@ class Scout extends React.Component {
       console.log('JSON ----->', json)
       if (json.success) {
         this.setState({
-          artist: json.artist
+          artists: json.artists,
+          findArtistErr: '',
         })
-        console.log('artist --->', json.artist)
+        console.log("success")
+      } else {
+        this.setState({ findArtistErr: json.error});
       }
     })
     .catch((err) => {
@@ -114,13 +118,14 @@ class Scout extends React.Component {
         type='text'
         placeholder='Search by Medium'
         onChange={(e) => (this.setState({medium:e.target.value}))}></Input>
-        <Button basic color='violet' onClick={()=> {this.findArtist()}}> Go!</Button>
+        <Button basic color='violet' onClick={()=> {this.findArtists()}}> Go!</Button>
         </div>
-
+        {this.state.findArtistErr !== '' ?
+        <div style={{textAlign: 'center'}}>{this.state.findArtistErr}</div> :
         <Container style={{marginBottom:'20px'}} >
           <Card.Group itemsPerRow={4}>
 
-          {this.state.artist.map((artist,i)=>
+          {this.state.artists.map((artist,i)=>
           <Card style={{justifyContent:'center', alignItems:'center'}}>
             <Container >
               <Image style={{marginLeft:'auto',marginRight:'auto',width:'75%', height:'75%',padding:'10px'}} src={'http://localhost:1337/artist/'+ artist._id +'/profileimg'}/>
@@ -175,6 +180,7 @@ class Scout extends React.Component {
 
           </Card.Group>
         </Container>
+      }
       </div>
     )
   }
