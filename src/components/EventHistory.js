@@ -9,37 +9,18 @@ export default class EventHistory extends React.Component {
     super(props);
     this.state = ({
       selectedevent:[],
-      pastevents:[],
-      futureevents:[],
-      event:[],
+      events:[],
       img:{},
       switched: false
     })
   }
 
-  loadEvents=()=> {
+  loadEvents = () => {
     this.props.socket.on('connect', () => this.setState({connecting: null}))
     this.props.socket.on('disconnect', () => this.setState({connecting: true}))
     this.props.socket.emit('getEvents', {userId: this.props.artist._id});
-    this.props.socket.on('getEvents', ({events})=> {
-      console.log(events)
-
-
-      this.setState({event: events, pastevents:events.filter((event)=>{
-        const date= new Date(event.datesRange.substr(0,9))
-        if(date < Date.now()){
-          return true;
-        } else{
-          return false;
-        }
-      }),futureevents: events.filter((event)=>{
-        const date= new Date(event.datesRange.substr(0,9))
-        if (date > Date.now()){
-          return true;
-        } else {
-          return false;
-        }
-      }) })
+    this.props.socket.on('getEvents', ({events}) => {
+      this.setState({events})
     })
 
   }
@@ -58,19 +39,45 @@ toggleSwitch=()=> {
 
 render() {
 
-  console.log(this.state.event)
-
-  let {event,switched} = this.state
+  let {events,switched} = this.state
 
   if (switched){
-    event = event.filter((event)=>{
-      const date= new Date(event.datesRange.substr(0,9))
-      if(date < Date.now()){
+
+    events = events.filter((event)=>{
+      const date = new Date()
+
+      // ---------- Setting Date to correct date -----------
+      // new Date(event.substring()) returns an Invalid date
+      date.setDate(event.datesRange.substring(0,2))
+      date.setMonth(event.datesRange.substring(3,5) - 1) // january = 0, feb = 1...
+      date.setFullYear(event.datesRange.substring(6,10))
+      // ----------------------------------------------------
+
+      // date.getTime() returns number of milliseconds. Date.now() returns milliseconds
+      if(date.getTime() < Date.now()){
         return true;
       } else{
         return false;
       }
     })
+
+  } else {
+
+    events = events.filter((event)=>{
+      const date = new Date()
+      date.setDate(event.datesRange.substring(0,2))
+      date.setMonth(event.datesRange.substring(3,5) -1) // january = 0, feb = 1...
+      date.setFullYear(event.datesRange.substring(6,10))
+
+      console.log(date, event.datesRange.substring(3,5))
+      // date.getTime() returns number of milliseconds. Date.now() returns milliseconds
+      if (date.getTime() > Date.now()){
+        return true;
+      } else {
+        return false;
+      }
+    })
+
   }
 
 
@@ -88,8 +95,8 @@ render() {
       </Container>
 
       <Card.Group itemsPerRow={5}>
-        {event.map((event,i) =>
-          <div>
+        {events.map((event,i) =>
+          <div key={event._id}>
             <Card
               style={{height:'100%'}}
               header={event.eventName}
@@ -97,16 +104,16 @@ render() {
               description={event.about}
               extra={
                 <a>
-                  <label style={{fontWeight:'bold'}} > Event Price: </label> 
-                  $ {event.price}  
+                  <label style={{fontWeight:'bold'}} > Event Price: </label>
+                  $ {event.price}
                   <br />
-                  <label style={{fontWeight:'bold'}}> Venue Name:  </label> 
+                  <label style={{fontWeight:'bold'}}> Venue Name:  </label>
                   {event.venueName}
                   <br />
-                  <label style={{fontWeight:'bold'}}> Date:  </label> 
+                  <label style={{fontWeight:'bold'}}> Date:  </label>
                   {event.datesRange}
                   <br />
-                  <label style={{fontWeight:'bold'}}> Time:  </label> 
+                  <label style={{fontWeight:'bold'}}> Time:  </label>
                   {event.startTime} - {event.endTime}
                   <br />
                   {event.streetAddress}
