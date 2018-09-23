@@ -65,11 +65,13 @@ render() {
 
     events = events.filter((event)=>{
       const date = new Date()
+
+      // ---------- Setting Date to correct date -----------
+      // new Date(event.substring()) returns an Invalid date
       date.setDate(event.datesRange.substring(0,2))
       date.setMonth(event.datesRange.substring(3,5) -1) // january = 0, feb = 1...
       date.setFullYear(event.datesRange.substring(6,10))
-
-      console.log(date, event.datesRange.substring(3,5))
+      // ----------------------------------------------------
       // date.getTime() returns number of milliseconds. Date.now() returns milliseconds
       if (date.getTime() > Date.now()){
         return true;

@@ -301,14 +301,14 @@ router.post('/delete/:userId', (req, res) => {
 
 //scout artists
 router.post('/scout', (req, res) => {
-  //using lower case to avoid case issues
-  Artist.find({medium: req.body.medium.toLowerCase()}, (err, artists) => {
+  (req.body.firstName) ?  req.body.firstName = new RegExp('^'+req.body.firstName+'$', "i") : null
+  Artist.find(req.body, (err, artists) => {
     if (err) {
       res.send(err)
     } else {
       // artists returns an array
       if (artists.length === 0) {
-        res.send({error: 'There are no Artists using that medium'})
+        (req.body.firstName) ? res.send({error: 'There are no Artists with that name'}) : res.send({error: 'There are no Artists using that medium'})
         return
       } else {
         res.json({
