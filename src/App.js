@@ -44,13 +44,9 @@ class App extends Component {
   }
 
   componentWillUnmount() {
-    this.setState({
-      placeSearchCoords: {
-        lat: null,
-        lon: null,
-      },
-      placeSearch: null,
-    })
+    // this.setState({
+    //
+    // })
   }
 
   componentDidMount(){
@@ -61,6 +57,13 @@ class App extends Component {
   redirect(page){
     this.setState({
       currentPage: page,
+      //----Moved from componentWillUnmount to prevent memore leak
+      placeSearchCoords: {
+        lat: null,
+        lon: null,
+      },
+      placeSearch: null,
+      //--------------------------------------------
     })
 }
 

@@ -134,7 +134,7 @@ router.get('/contacts/:id/profileimg',(req,res)=>{
 router.get('/contacts/:userId', (req, res) => {
   const contacts = []
   Artist.findById(req.params.userId)
-  .populate('connections')
+  .populate({path: 'connections', model: "Artist"}) // speficying model to populate with
   .exec((err, artist) => {
     if (err) {
       res.send('Error')
@@ -147,8 +147,8 @@ router.get('/contacts/:userId', (req, res) => {
 //get sent invites
 router.get('/pending/sent/:userId', (req, res) => {
   Connection.find({requester: req.params.userId})
-  .populate('invitee')
-  .exec( (err, connection) => {
+  populate({ path: 'invitee', model: 'Artist'}) // speficying model to populate with
+  .exec((err, connection) => {
     if (err) {
       console.log(err)
     }
@@ -195,7 +195,7 @@ router.post('/connect/:userId', (req, res) => {
       res.send({error: 'Artist does not exist'})
       return
     }
-    Artist.findById(req.body.artist._id, (err, artist) => {
+    Artist.findById(artist._id, (err, artist) => {
       if (err) {
         res.send(err)
       } else if (!artist) {
