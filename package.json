@@ -2,7 +2,7 @@
   "name": "free-assoc",
   "version": "1.0.0",
   "description": "",
-  "main": "server.js",
+  "main": "index.js",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
@@ -61,7 +61,7 @@
     "react-leaflet-sidebarv2": "^0.6.0",
     "react-modal": "^3.5.1",
     "react-redux": "^5.0.7",
-    "react-scripts": "1.1.4",
+    "react-scripts": "2.0.0-next.3e165448",
     "react-tag-input": "^5.1.2",
     "react-time-range": "^1.0.2",
     "react-time-range-picker": "^1.4.0",
