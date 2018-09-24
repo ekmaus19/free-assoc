@@ -291,18 +291,19 @@ router.post('/delete/:userId', (req, res) => {
 
 //scout artists
 router.post('/scout', (req, res) => {
-  Artist.find({medium: req.body.medium}, (err, artist) => {
+  (req.body.firstName) ?  req.body.firstName = new RegExp('^'+req.body.firstName+'$', "i") : null
+  Artist.find(req.body, (err, artists) => {
     if (err) {
       res.send(err)
     } else {
-      if (!artist) {
-        console.log('Artist does not exist')
-        res.send({error: 'Artist does not exist'})
+      // artists returns an array
+      if (artists.length === 0) {
+        (req.body.firstName) ? res.send({error: 'There are no Artists with that name'}) : res.send({error: 'There are no Artists using that medium'})
         return
       } else {
         res.json({
           success: true,
-          artist: artist
+          artists
         })
       }
     }

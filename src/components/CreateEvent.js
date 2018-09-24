@@ -105,8 +105,10 @@ const delimiters = [KeyCodes.comma, KeyCodes.enter];
     console.log(query)
     geocoder.search({q:query})
     .then((response)=> {
-      formData.append('latitude', response[0].lat)
-      formData.append('longitude', response[0].lon)
+      if (response[0]) {
+        formData.append('latitude', response[0].lat)
+        formData.append('longitude', response[0].lon)
+      }
       return axios.post('http://localhost:1337/fileUpload', formData);
     }).then((result)=> {
       console.log('redirect****')

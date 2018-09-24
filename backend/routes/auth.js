@@ -41,6 +41,7 @@ module.exports = (passport) => {
         if (err.code) {
           res.json({success: false, errors: ["This email is already registered. Please log in"]})
         } else {
+          console.log(err.error)
           res.json({success: false, errors: err.error});
         }
       } else {
@@ -180,8 +181,8 @@ router.post('/register/artist', upload.single('selectedFile'),(req, res) => {
 
     router.post('/login/artist', passport.authenticate('artist'), (req, res) => {
       console.log('****', req.user)
-      req.session.user = req.user; //sets current user
-      console.log("Artist", req.session)
+      // req.session.user = req.user; //sets current user
+      // console.log("Artist", req.session)
       res.json({
         success: true,
         artist: req.user,
