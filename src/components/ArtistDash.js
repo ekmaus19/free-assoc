@@ -158,7 +158,7 @@ class ArtistDash extends Component {
      } else if (this.props.artist.medium === 'performance' && this.props.artist.img === null){
        src = '/img/3.png'
      } else {
-       src = 'http://localhost:1337/artist/'+ this.props.artist._id +'/profileimg'
+       src = 'http://powerful-bastion-26209.herokuapp.com/artist/'+ this.props.artist._id +'/profileimg'
      }
 
     return(

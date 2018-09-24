@@ -123,7 +123,7 @@ class Scout extends React.Component {
           {this.state.artist.map((artist,i)=>
           <Card style={{justifyContent:'center', alignItems:'center'}}>
             <Container >
-              <Image style={{marginLeft:'auto',marginRight:'auto',width:'75%', height:'75%',padding:'10px'}} src={'http://localhost:1337/artist/'+ artist._id +'/profileimg'}/>
+              <Image style={{marginLeft:'auto',marginRight:'auto',width:'75%', height:'75%',padding:'10px'}} src={'http://powerful-bastion-26209.herokuapp.com/artist/'+ artist._id +'/profileimg'}/>
             </Container>
             <Card.Content>
               <Card.Header>{artist.firstName} {artist.lastName}</Card.Header>
