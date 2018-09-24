@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {Button, Icon, Input, Image} from 'semantic-ui-react';
-const url = 'http://localhost:1337'
+const url = 'http://powerful-bastion-26209.herokuapp.com'
 
 class RegisterScreenPicker extends Component {
   constructor(props){

@@ -7,7 +7,7 @@ import EventHistory from './EventHistory';
 import Scout from './Scout';
 
 
-const url = 'http://localhost:1337'
+const url = 'http://powerful-bastion-26209.herokuapp.com'
 
 // toMap = () => this.props.redirect('Map')
 
@@ -150,7 +150,7 @@ class ArtistDash extends Component {
   render(){
     console.log(this.props.artist)
 
-    let src; 
+    let src;
      if (this.props.artist.medium === 'music' && this.props.artist.img === null){
        src = '/img/1.png'
      } else if (this.props.artist.medium === 'art'&& this.props.artist.img === null){

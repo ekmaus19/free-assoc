@@ -97,16 +97,16 @@ render() {
               description={event.about}
               extra={
                 <a>
-                  <label style={{fontWeight:'bold'}} > Event Price: </label> 
-                  $ {event.price}  
+                  <label style={{fontWeight:'bold'}} > Event Price: </label>
+                  $ {event.price}
                   <br />
-                  <label style={{fontWeight:'bold'}}> Venue Name:  </label> 
+                  <label style={{fontWeight:'bold'}}> Venue Name:  </label>
                   {event.venueName}
                   <br />
-                  <label style={{fontWeight:'bold'}}> Date:  </label> 
+                  <label style={{fontWeight:'bold'}}> Date:  </label>
                   {event.datesRange}
                   <br />
-                  <label style={{fontWeight:'bold'}}> Time:  </label> 
+                  <label style={{fontWeight:'bold'}}> Time:  </label>
                   {event.startTime} - {event.endTime}
                   <br />
                   {event.streetAddress}
@@ -118,7 +118,7 @@ render() {
                   {event.tags}
                 </a>
               }
-              raised image={'http://localhost:1337/event/'+ event._id +'/profileimg'} />
+              raised image={'http://powerful-bastion-26209.herokuapp.com/event/'+ event._id +'/profileimg'} />
 
             </div>
 

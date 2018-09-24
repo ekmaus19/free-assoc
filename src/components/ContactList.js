@@ -3,7 +3,7 @@ import React from 'react';
 import { Input, Button, Card, Container,Image, Modal } from 'semantic-ui-react'
 
 
-const url = 'http://localhost:1337'
+const url = 'http://powerful-bastion-26209.herokuapp.com'
 
 const customStyles = {
   content : {
@@ -228,7 +228,7 @@ class Contact extends React.Component {
             <Card.Group itemsPerRow={4}>
             <Card  >
               <Card.Content>
-                <Image floated='right' size='mini' src={'http://localhost:1337/contacts/'+ contacts._id +'/profileimg'} />
+                <Image floated='right' size='mini' src={'http://powerful-bastion-26209.herokuapp.com/contacts/'+ contacts._id +'/profileimg'} />
                 <Card.Header>{contacts.username}</Card.Header>
                 <Card.Meta>{contacts.medium}</Card.Meta>
                 <Card.Description textAlign='left'>
@@ -288,8 +288,8 @@ class Contact extends React.Component {
           return (
             <div key = {i}>
               {received.requester.username}
-              <br /> 
-              <div style={{display:'inline', justifyContenet:'center', marginTop:'20px'}}> 
+              <br />
+              <div style={{display:'inline', justifyContenet:'center', marginTop:'20px'}}>
                <Button
               color='orange'
               style={{display:'inline', justifyContent:'center',padding:'3px',height:'150%',width:'100px', textAlign:'center', margin:'10px'}}
@@ -298,7 +298,7 @@ class Contact extends React.Component {
               color='violet'
               style={{display:'inline', justifyContent:'center',padding:'3px',height:'150%',width:'100px', textAlign:'center', margin:'10px'}}
               onClick={() => this.declineConnection(received.requester._id)}>Decline</Button>
-            </div> 
+            </div>
             </div>
           )
         })
@@ -330,14 +330,14 @@ class Contact extends React.Component {
           size={'small'}
           open={this.state.modalPendingIsOpen}
           style={customStyles}>
-            <label> Sent Invites: </label> 
+            <label> Sent Invites: </label>
             {renderSent()}
-            <br /> 
-            <br /> 
+            <br />
+            <br />
             <label> Received invites: </label>
             {renderReceived()}
             <div style={{display:'flex', justifyContent:'center'}}>
-          
+
              <Button
             style={{display:'inline', justifyContent:'flex-end',padding:'3px',height:'150%',width:'100px', textAlign:'center', margin:'10px'}}
             basic color = 'red'

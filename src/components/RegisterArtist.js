@@ -138,7 +138,7 @@ class RegisterArtist extends Component {
       formData.append('info', JSON.stringify(registerArtist))
       formData.append('selectedFile', selectedFile)
 
-      axios.post('http://localhost:1337/register/artist', formData)
+      axios.post('http://powerful-bastion-26209.herokuapp.com/register/artist', formData)
       .then((result)=> {
 
         // Response => { data: {}, ....} because of axios call
