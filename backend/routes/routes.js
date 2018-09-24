@@ -185,41 +185,34 @@ router.get('/pending/received/:userId', (req, res) => {
 });
 
 // send connection invite
-router.post('/connect/:userId', (req, res) => {
+router.post('/connect', (req, res) => {
   console.log('****', req.body)
-  Artist.findById(req.params.userId, (err, artist) => {
+  Artist.findOne({ username: req.body.username }, (err, artist) => {
     if (err) {
       res.send(err)
     } else if (!artist) {
       console.log('Artist does not exist')
       res.send({error: 'Artist does not exist'})
       return
+    } else {
+      const connection = new Connection({
+        requester: req.body.requester,
+        invitee: artist._id,
+      })
+      connection.save((err, connection) => {
+        if (err) {
+          console.log('error', err);
+          res.send(error)
+        } else {
+          console.log('connection invite sent', connection);
+          res.json({
+            success: true,
+            connection: connection
+          })
+        }
+      })
     }
-    Artist.findById(artist._id, (err, artist) => {
-      if (err) {
-        res.send(err)
-      } else if (!artist) {
-        res.send({error: 'Artist does not exist'})
-        return
-      } else {
-        const connection = new Connection({
-          requester: req.params.userId,
-          invitee: artist._id,
-        })
-        connection.save((err, connection) => {
-          if (err) {
-            console.log('error', err);
-            res.send(error)
-          } else {
-            console.log('connection invite sent', connection);
-            res.json({
-              success: true,
-              connection: connection
-            })
-          }
-        })
-      }
-    })
+
   })
 });
 

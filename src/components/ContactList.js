@@ -137,13 +137,14 @@ class Contact extends React.Component {
   }
 
   sendConnection = () => {
-    fetch(url + `/connect/${this.props.artist._id}`, {
+    fetch(url + `/connect`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        username: this.state.username
+        username: this.state.username,
+        requester: this.props.artist._id,
       })
     })
     .then(res => res.json())
