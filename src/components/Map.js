@@ -19,10 +19,8 @@ moment().format();
 // import { Sidebar, Tab } from './Sidebar';
 
 // ultimately, geocoder will be in the backend. In front for testing purposes
-const Nominatim = require('nominatim-geocoder')
-const geocoder = new Nominatim()
 
-var geocoderReverse = require('geocoder'); /// boooooooooooooo
+var geocoder = require('geocoder'); /// boooooooooooooo
 
 
 /////
@@ -259,6 +257,7 @@ export default class MainMap extends Component {
       //   if(data_use[i].datesRange[0] === "Invalid date"){
       //     data_use[i].datesRange[0] = data_use[i].datesRange[1]
       //   }
+      data: data_use,
       //
       //   if(data_use[i].datesRange[1] === "Invalid date"){
       //     data_use[i].datesRange[1] = data_use[i].datesRange[0]
@@ -268,7 +267,6 @@ export default class MainMap extends Component {
       if(this.state.artist) {
         await this.mapRef.current.leafletElement.locate()
         this.setState({
-          data: data_use,
           loading:false,
           nowTime: currDate,
           nowHourTime: currTime,
@@ -329,6 +327,7 @@ export default class MainMap extends Component {
   //////////////////////////////////////////////////////////////////////////////
 
   findPlace = () => {
+
     geocoder.search( { q: this.state.searchingPlace } )
         .then((response) => {
             console.log(response)
@@ -342,6 +341,18 @@ export default class MainMap extends Component {
         .catch((error) => {
             console.log(error)
       })
+
+// google maps try, just in case
+    // geocoder.geocode( { 'address': this.state.searchingPlace}, function(results, status) {
+    //    if (status == google.maps.GeocoderStatus.OK) {
+    //      this.setState({
+    //          latlng:{
+    //            lat: results[0].geometry.location.lat(),
+    //            lon: results[0].geometry.location.lng(),
+    //          }
+    //      })
+    //    }
+    //   });
   }
 
   mapRef = createRef()
