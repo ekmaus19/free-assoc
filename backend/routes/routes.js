@@ -147,12 +147,11 @@ router.get('/contacts/:userId', (req, res) => {
 //get sent invites
 router.get('/pending/sent/:userId', (req, res) => {
   Connection.find({requester: req.params.userId})
-  populate({ path: 'invitee', model: 'Artist'}) // speficying model to populate with
+  .populate({ path: 'invitee' })
   .exec((err, connection) => {
     if (err) {
       console.log(err)
     }
-    console.log(connection)
     const sent = connection.filter((item) => {
       if (item.status === 'pending') {
         return true
@@ -167,12 +166,11 @@ router.get('/pending/sent/:userId', (req, res) => {
 //get received invites
 router.get('/pending/received/:userId', (req, res) => {
   Connection.find({invitee: req.params.userId})
-  .populate('requester')
+  .populate({ path: 'requester', model: 'Artist' })
   .exec( (err, connection) => {
     if (err) {
       console.log(err)
     }
-    console.log(connection)
     const received = connection.filter((item) => {
       if (item.status === 'pending') {
         return true
@@ -186,7 +184,7 @@ router.get('/pending/received/:userId', (req, res) => {
 
 // send connection invite
 router.post('/connect', (req, res) => {
-  console.log('****', req.body)
+  
   Artist.findOne({ username: req.body.username }, (err, artist) => {
     if (err) {
       res.send(err)

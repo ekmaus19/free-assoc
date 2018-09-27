@@ -47,7 +47,7 @@ const renderContent=(mode, socket, artist, setMode, contacts, contactList) => { 
     return (
       <div>
         <Header as='h2'>My Connections</Header>
-        <ContactList artist={artist} contacts={contacts} contactList={contactList}/>
+        <ContactList artist={artist} contacts={contacts} contactList={contactList} socket={socket}/>
       </div>
     )
 
@@ -149,7 +149,7 @@ class ArtistDash extends Component {
   }
 
   render(){
-    console.log(this.props.artist)
+    // console.log(this.props.artist)
 
     let src;
      if (this.props.artist.medium === 'music' && this.props.artist.img === null){

@@ -73,7 +73,7 @@ loginRedirect = () => {
   .then(response => {
     console.log('checked for session')
     if (response.user && response.user.medium) { //need a way to check if user is artist
-      this.props.redirect('ArtistDash');
+      this.setStatethis.props.redirect('ArtistDash');
     } else if (response.user) {
 
     }
@@ -140,7 +140,7 @@ searchPlaceHome = () => {
                 <Menu.Item onClick= {()=>this.redirect('Contact')} as='a'>Contact</Menu.Item>
                 </Container>
                 <Container style={{display:'flex',justifyContent:'flex-end'}}>
-                {(this.state.userLoggedIn || this.state.artist) ? null : <Button style={{padding:'3px',height:'75%',width:'100px', textAlign:'center', margin:'10px'}} basic color = 'violet' className = "register-button"  animated onClick = {() => this.redirect('Registerpicker')}>Register</Button>}
+                {(this.state.userLoggedIn || this.state.currentPage === 'ArtistDash') ? null : <Button style={{padding:'3px',height:'75%',width:'100px', textAlign:'center', margin:'10px'}} basic color = 'violet' className = "register-button"  animated onClick = {() => this.redirect('Registerpicker')}>Register</Button>}
                 {
                   (this.state.currentPage === 'ArtistDash') ? null : //if Artists is logged in
                   (this.state.userLoggedIn) ? (<Button style={{padding:'3px',width:'100px',height:'75%', textAlign:'center', margin:'10px'}} color = 'violet' className = "login-button"  animated onClick = {() => this.logout()}>Logout</Button>)
