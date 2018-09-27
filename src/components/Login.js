@@ -21,6 +21,7 @@ class LoginScreen extends Component {
     // this.setState({hits: JSON.parse(loginArtist) })
     this.props.artistInfo(JSON.parse(loginArtist), () => this.props.redirect('ArtistDash'))
   } else if (loginUser) {
+    this.props.userLoginToggle();
     this.props.redirect('MainMap')
   }
 
@@ -44,6 +45,7 @@ class LoginScreen extends Component {
      console.log(responseJson.user)
      // session Storage
      sessionStorage.setItem("loginUser", JSON.stringify(responseJson.user))
+     this.props.userLoginToggle();
      this.props.redirect('MainMap')
    } else{
     alert('Invalid Login')

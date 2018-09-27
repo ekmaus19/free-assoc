@@ -19,23 +19,26 @@ class Scout extends React.Component {
     super(props);
     this.state = {
       medium: '',
-      artist: [],
+      artists: [],
+      findArtistErr: '',
       event:[],
       connection:[],
       modalViewCardIsOpen: false,
       requester: '',
       invitee: '',
+      name: '',
     }
   }
 
-  findArtist = () => {
+  // Find Functions
+  findByMedium = () => {
     fetch(url + '/scout', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        medium: this.state.medium
+        medium: this.state.medium.toLowerCase()
       })
     })
     .then(res => res.json())
@@ -43,9 +46,40 @@ class Scout extends React.Component {
       console.log('JSON ----->', json)
       if (json.success) {
         this.setState({
-          artist: json.artist
+          artists: json.artists,
+          findArtistErr: '',
         })
-        console.log('artist --->', json.artist)
+        console.log("success")
+      } else {
+        this.setState({ findArtistErr: json.error});
+      }
+    })
+    .catch((err) => {
+      throw err
+    })
+  }
+
+  findByName = () => {
+    fetch(url + '/scout', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        //using lower case to avoid case issues
+        firstName: this.state.name
+      })
+    })
+    .then(res => res.json())
+    .then(json => {
+      if (json.success) {
+        this.setState({
+          artists: json.artists,
+          findArtistErr: '',
+        })
+        console.log("success")
+      } else {
+        this.setState({ findArtistErr: json.error});
       }
     })
     .catch((err) => {
@@ -109,18 +143,34 @@ class Scout extends React.Component {
       <div style={{marginBotton:'20px'}} >
           <br />
           <br />
+
+        {/* Search By Name */}
         <div style={{display:'inline', marginBotton:'20px'}}>
         <Input style={{height:'200%', marginRight:'10px', marginBottom:'30px'}}
         type='text'
-        placeholder='Search by Medium'
-        onChange={(e) => (this.setState({medium:e.target.value}))}></Input>
-        <Button basic color='violet' onClick={()=> {this.findArtist()}}> Go!</Button>
+        placeholder='Search by Name'
+        onChange={(e) => (this.setState({name : e.target.value}))}></Input>
+        <Button basic color='violet' onClick={()=> {this.findByName()}}> Go!</Button>
         </div>
 
+        {/* Search By Medium*/}
+        <div style={{display:'inline', marginBotton:'20px'}}>
+        <select
+          className="ui dropdown"
+          onChange={(e) => this.setState({medium: e.target.value})}
+          placeholder="Search By Medium">
+          <option value="music">Music</option>
+          <option value="art">Art</option>
+          <option value="performance">Performance</option>
+        </select>
+        <Button basic color='violet' onClick={()=> {this.findByMedium()}}> Go!</Button>
+        </div>
+        {this.state.findArtistErr !== '' ?
+        <div style={{textAlign: 'center'}}>{this.state.findArtistErr}</div> :
         <Container style={{marginBottom:'20px'}} >
           <Card.Group itemsPerRow={4}>
 
-          {this.state.artist.map((artist,i)=>
+          {this.state.artists.map((artist,i)=>
           <Card style={{justifyContent:'center', alignItems:'center'}}>
             <Container >
               <Image style={{marginLeft:'auto',marginRight:'auto',width:'75%', height:'75%',padding:'10px'}} src={'http://powerful-bastion-26209.herokuapp.com/artist/'+ artist._id +'/profileimg'}/>
@@ -175,6 +225,7 @@ class Scout extends React.Component {
 
           </Card.Group>
         </Container>
+      }
       </div>
     )
   }

@@ -105,9 +105,11 @@ const delimiters = [KeyCodes.comma, KeyCodes.enter];
     console.log(query)
     geocoder.search({q:query})
     .then((response)=> {
-      formData.append('latitude', response[0].lat)
-      formData.append('longitude', response[0].lon)
-      return axios.post('http://powerful-bastion-26209.herokuapp.com/fileUpload', formData);
+      if (response[0]) {
+        formData.append('latitude', response[0].lat)
+        formData.append('longitude', response[0].lon)
+      }
+      return axios.post('https://powerful-bastion-26209.herokuapp.com/fileUpload', formData);
     }).then((result)=> {
       console.log('redirect****')
       this.props.setMode('T1')
