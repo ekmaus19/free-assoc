@@ -147,7 +147,12 @@ class RegisterArtist extends Component {
         if (result.data.success === true) {
           this.props.redirect('Login')
         } else if (result.data.errmsg) { //incase of a single error
-          errors.push(result.data.errmsg);
+
+          // Check what kind of error
+          if (result.data.errmsg.indexOf("phone") !== -1) errors.push("This Phone Number has already been registered. Try logging in instead?");
+          if (result.data.errmsg.indexOf("email") !== -1) errors.push("This Email address has already been registered. Try logging in instead?");
+          if (result.data.errmsg.indexOf("username") !== -1) errors.push("This username is already in use. Try logging in instead?");
+          
           this.setState({errors});
         } else if (result.data.errors) {
           for (var error in result.data.errors) {
