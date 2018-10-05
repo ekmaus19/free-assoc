@@ -144,9 +144,12 @@ class RegisterArtist extends Component {
         // Response => { data: {}, ....} because of axios call
         // Checking if Registeration was valid
 
-        if (result.data.success) {
+        if (result.data.success === true) {
           this.props.redirect('Login')
-        } else {
+        } else if (result.data.errmsg) { //incase of a single error
+          errors.push(result.data.errmsg);
+          this.setState({errors});
+        } else if (result.data.errors) {
           for (var error in result.data.errors) {
             errors.push(result.data.errors[error].message);
           }
