@@ -9,10 +9,14 @@ import { WithContext as ReactTags } from 'react-tag-input';
 import axios from 'axios';
 import cors from 'cors';
 import suggestionsList from './suggestion_categories'
-const Nominatim = require('nominatim-geocoder')
-const geocoder = new Nominatim({
-  secure: true
-})
+var NodeGeocoder = require('node-geocoder');
+var optionsSetup = {
+  provider: 'google',
+  httpAdapter: 'https',
+  apiKey: GOOGLE_API_KEY,
+  formatter: null
+};
+var geocoder = NodeGeocoder(optionsSetup);
 //tags
 const KeyCodes = {
   comma: 188,
@@ -103,11 +107,11 @@ const delimiters = [KeyCodes.comma, KeyCodes.enter];
     formData.append('info', JSON.stringify(createEvent))
     formData.append('selectedFile', selectedFile);
     console.log(query)
-    geocoder.search({q:query})
+    geocoder.geocode({query})
     .then((response)=> {
       if (response[0]) {
-        formData.append('latitude', response[0].lat)
-        formData.append('longitude', response[0].lon)
+        formData.append('latitude', response[0].latitude)
+        formData.append('longitude', response[0].longitude)
       }
       return axios.post('http://localhost:1337/fileUpload', formData);
     }).then((result)=> {

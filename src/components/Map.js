@@ -20,15 +20,16 @@ moment().format();
 
 // ultimately, geocoder will be in the backend. In front for testing purposes
 
-var geocoder = require('geocoder'); /// boooooooooooooo
+// test on the updated geocoder
+var NodeGeocoder = require('node-geocoder');
+var optionsSetup = {
+  provider: 'google',
+  httpAdapter: 'https',
+  apiKey: 'AIzaSyAs7riE2xT80wzGfYJq8SpjisLjDvSNeZA',
+  formatter: null
+};
 
-
-/////
-// const GeoCoder = require('reverse-geocoding')
-// const betterReverse = new GeoCoder();
-
-// var geocoding = new require('reverse-geocoding');
-
+var geocoder = NodeGeocoder(optionsSetup);
 /////
 const KeyCodes = {
   comma: 188,
@@ -69,6 +70,7 @@ let customMarker
 // console.log(medium, latitude, longitude)
   // if(medium === "art"){
   //      customMarker = L.icon({ iconUrl: blue_button, iconSize: [25, 25] })
+  customMarker =  "#fc00b4"
   //   } else if (medium === 'performance') {
   //       customMarker =  L.icon({ iconUrl: pink_button, iconSize: [25, 25] })
   //   } else if (medium === 'music') {
@@ -80,7 +82,6 @@ let customMarker
   if(medium === "art"){
        customMarker = "#0060fc"
     } else if (medium === 'performance') {
-        customMarker =  "#fc00b4"
     } else if (medium === 'music') {
        customMarker =  "#00fc2e"
     } else {
@@ -328,13 +329,13 @@ export default class MainMap extends Component {
 
   findPlace = () => {
 
-    geocoder.search( { q: this.state.searchingPlace } )
+    geocoder.geocode( { this.state.searchingPlace } )
         .then((response) => {
             console.log(response)
             this.setState({
               latlng:{
-                lat: response[0].lat,
-                lon: response[0].lon
+                lat: response[0].latitude,
+                lon: response[0].longitude
               }
             })
         })
