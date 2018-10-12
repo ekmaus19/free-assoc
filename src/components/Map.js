@@ -14,6 +14,7 @@ import {
 import moment from 'moment';
 import suggestionsList from './suggestion_categories'
 import '../index.css'
+// import GOOGLE_API_KEY from '../../env.sh'
 
 moment().format();
 // import { Sidebar, Tab } from './Sidebar';
@@ -258,7 +259,7 @@ export default class MainMap extends Component {
       //   if(data_use[i].datesRange[0] === "Invalid date"){
       //     data_use[i].datesRange[0] = data_use[i].datesRange[1]
       //   }
-      data: data_use,
+      // data: data_use,
       //
       //   if(data_use[i].datesRange[1] === "Invalid date"){
       //     data_use[i].datesRange[1] = data_use[i].datesRange[0]
@@ -303,7 +304,7 @@ export default class MainMap extends Component {
     console.log("Map view:", this.state)
     // this.mapRef.current.leafletElement.locate()
   }
-  data: data_use
+  // data: data_use
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -329,7 +330,7 @@ export default class MainMap extends Component {
 
   findPlace = () => {
 
-    geocoder.geocode( { this.state.searchingPlace } )
+    geocoder.geocode(this.state.searchingPlace)
         .then((response) => {
             console.log(response)
             this.setState({

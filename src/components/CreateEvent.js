@@ -9,11 +9,14 @@ import { WithContext as ReactTags } from 'react-tag-input';
 import axios from 'axios';
 import cors from 'cors';
 import suggestionsList from './suggestion_categories'
+// import GOOGLE_API_KEY from '../../env.sh'
+
+
 var NodeGeocoder = require('node-geocoder');
 var optionsSetup = {
   provider: 'google',
   httpAdapter: 'https',
-  apiKey: GOOGLE_API_KEY,
+  apiKey: "AIzaSyAs7riE2xT80wzGfYJq8SpjisLjDvSNeZA",
   formatter: null
 };
 var geocoder = NodeGeocoder(optionsSetup);
@@ -107,14 +110,14 @@ const delimiters = [KeyCodes.comma, KeyCodes.enter];
     formData.append('info', JSON.stringify(createEvent))
     formData.append('selectedFile', selectedFile);
     console.log(query)
-    geocoder.geocode({query})
-    .then((response)=> {
+    geocoder.geocode(query, function(response) {
       if (response[0]) {
         formData.append('latitude', response[0].latitude)
         formData.append('longitude', response[0].longitude)
       }
       return axios.post('http://localhost:1337/fileUpload', formData);
-    }).then((result)=> {
+    })
+    .then((result)=> {
       console.log('redirect****')
       this.props.setMode('T1')
     }).catch((err)=> {
