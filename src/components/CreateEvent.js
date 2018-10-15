@@ -11,15 +11,16 @@ import cors from 'cors';
 import suggestionsList from './suggestion_categories'
 // import GOOGLE_API_KEY from '../../env.sh'
 
+var geocoder = require('google-geocoder');
+var geo = geocoder({
+  key: 'AIzaSyAs7riE2xT80wzGfYJq8SpjisLjDvSNeZA'
+});
 
-var NodeGeocoder = require('node-geocoder');
-var optionsSetup = {
-  provider: 'google',
-  httpAdapter: 'https',
-  apiKey: "AIzaSyAs7riE2xT80wzGfYJq8SpjisLjDvSNeZA",
-  formatter: null
-};
-var geocoder = NodeGeocoder(optionsSetup);
+// const Nominatim = require('nominatim-geocoder')
+// const geocoder = new Nominatim({
+//   secure: true
+// })
+
 //tags
 const KeyCodes = {
   comma: 188,
@@ -108,19 +109,34 @@ const delimiters = [KeyCodes.comma, KeyCodes.enter];
     console.log(selectedFile)
     let formData = new FormData();
     formData.append('info', JSON.stringify(createEvent))
-    formData.append('selectedFile', selectedFile);
     console.log(query)
-    geocoder.geocode(query, function(response) {
-      if (response[0]) {
-        formData.append('latitude', response[0].latitude)
-        formData.append('longitude', response[0].longitude)
+    console.log("BEFORE FUNC FORM, ", formData)
+
+    geo.find(query, function(err, result) {
+      console.log(result)
+      console.log(result[0])
+      if (result[0]) {
+        formData.append('latitude', result[0].location.lat)
+        formData.append('longitude', result[0].location.lng)
       }
-      return axios.post('http://localhost:1337/fileUpload', formData);
+      console.log("THE FORM IS ===>", formData)
+      let getIt = async () => {
+        await  axios.post('http://localhost:1337/fileUpload', formData);
+      }
+      console.log("Got it,", getIt)
+      return getIt
     })
+   //  geocoder.search({q:query})
+   // .then((response)=> {
+   // formData.append('selectedFile', selectedFile);
+   //   formData.append('latitude', response[0].lat)
+   //   formData.append('longitude', response[0].lon)
+   //   return axios.post('http://localhost:1337/fileUpload', formData);
+   // })
     .then((result)=> {
       console.log('redirect****')
-      this.props.setMode('T1')
     }).catch((err)=> {
+      this.props.setMode('T1')
       console.log(err)
     })
     }

@@ -21,16 +21,11 @@ moment().format();
 
 // ultimately, geocoder will be in the backend. In front for testing purposes
 
-// test on the updated geocoder
-var NodeGeocoder = require('node-geocoder');
-var optionsSetup = {
-  provider: 'google',
-  httpAdapter: 'https',
-  apiKey: 'AIzaSyAs7riE2xT80wzGfYJq8SpjisLjDvSNeZA',
-  formatter: null
-};
+var geocoder = require('google-geocoder');
 
-var geocoder = NodeGeocoder(optionsSetup);
+var geo = geocoder({
+  key: 'AIzaSyAs7riE2xT80wzGfYJq8SpjisLjDvSNeZA'
+});
 /////
 const KeyCodes = {
   comma: 188,
@@ -330,13 +325,13 @@ export default class MainMap extends Component {
 
   findPlace = () => {
 
-    geocoder.geocode(this.state.searchingPlace)
+    geo.find(this.state.searchingPlace)
         .then((response) => {
             console.log(response)
             this.setState({
               latlng:{
-                lat: response[0].latitude,
-                lon: response[0].longitude
+                lat: response[0].location.lat,
+                lon: response[0].location.lng
               }
             })
         })
