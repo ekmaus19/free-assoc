@@ -11,7 +11,7 @@ const path = require('path');
 var fs = require('fs');
 
 // configure storage
-const upload =multer({dest:'uploads/'})
+const upload = multer({dest:'uploads/'})
 
 router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({ extended: true }));

@@ -16,6 +16,7 @@ var geo = geocoder({
   key: 'AIzaSyAs7riE2xT80wzGfYJq8SpjisLjDvSNeZA'
 });
 
+// console.log(geo.find)
 // const Nominatim = require('nominatim-geocoder')
 // const geocoder = new Nominatim({
 //   secure: true
@@ -87,7 +88,8 @@ const delimiters = [KeyCodes.comma, KeyCodes.enter];
       this.setState({ tags: newTags });
   }
   onCreate = (e) => {
-     let query = this.state.streetAddress + ', ' + this.state.city + ', ' + this.state.state + ', ' + this.state.country
+    const self = this;
+    let query = this.state.streetAddress + ', ' + this.state.city + ', ' + this.state.state + ', ' + this.state.country
     const createEvent = {
       eventName: this.state.eventName,
       eventCreator: this.props.artist._id,
@@ -106,9 +108,10 @@ const delimiters = [KeyCodes.comma, KeyCodes.enter];
   }
     const { description, selectedFile} = this.state;
     e.preventDefault();
-    console.log(selectedFile)
+
     let formData = new FormData();
     formData.append('info', JSON.stringify(createEvent))
+    formData.append('selectedFile',selectedFile);
     console.log(query)
     console.log("BEFORE FUNC FORM, ", formData)
 
@@ -120,12 +123,14 @@ const delimiters = [KeyCodes.comma, KeyCodes.enter];
         formData.append('longitude', result[0].location.lng)
       }
       console.log("THE FORM IS ===>", formData)
-      let getIt = async () => {
-        await  axios.post('http://localhost:1337/fileUpload', formData);
-      }
-      console.log("Got it,", getIt)
-      return getIt
-    })
+      axios.post('http://localhost:1337/fileUpload', formData)
+      .then(function (result) {
+        if (result.success) self.props.setMode('T1');
+      })
+      .catch(err => {
+        console.log(err)
+      })
+    // })
    //  geocoder.search({q:query})
    // .then((response)=> {
    // formData.append('selectedFile', selectedFile);
@@ -133,11 +138,11 @@ const delimiters = [KeyCodes.comma, KeyCodes.enter];
    //   formData.append('longitude', response[0].lon)
    //   return axios.post('http://localhost:1337/fileUpload', formData);
    // })
-    .then((result)=> {
-      console.log('redirect****')
-    }).catch((err)=> {
-      this.props.setMode('T1')
-      console.log(err)
+    // .then((result)=> {
+    //   console.log('redirect****')
+    // // }).catch((err)=> {
+    //   this.props.setMode('T1')
+    //   console.log(err)
     })
     }
     onEventNameChange = (event) => {
@@ -213,7 +218,7 @@ const delimiters = [KeyCodes.comma, KeyCodes.enter];
   fileSelectedHandler=(event)=>{
     this.setState({
       selectedFile: event.target.files[0]
-    })
+    }, () => console.log(this.state.selectedFile))
   }
     render() {
       const {tags,suggestions} = this.state
@@ -262,7 +267,7 @@ const delimiters = [KeyCodes.comma, KeyCodes.enter];
             </div>
             <br />
             <div style={{display:'flex'}} >
-            <Input style={{marginRight:'auto', width:'100%'}} type='file' onChange={this.fileSelectedHandler} />
+            <Input style={{marginRight:'auto', width:'100%'}} type='file' onChange={this.fileSelectedHandler} name='selectedFile' />
             </div>
             <br />
             <Button style={{margin:'20px',marginLeft:'auto',marginRight:'auto', alignItems:'center'}} color = 'pink' className = "logout-button"  animated onClick = {this.onCreate}>
