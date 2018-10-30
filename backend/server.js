@@ -191,6 +191,10 @@ app.use(session({ secret: 'qwerty', cookie: { maxAge: 60000 }}))
 app.use('/', auth(passport));
 app.use('/', routes);
 
+app.get('/*', function(req, res) {
+  res.sendFile(path.join(__dirname, 'build', 'index.html'));
+});
+
 app.get('/events', function (req, res) {
   console.log("are we there yet")
   Event.find({}).lean().populate("eventCreator", ["username"]).exec((err, results) => {
