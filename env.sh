@@ -1,5 +1,0 @@
-export MONGODB_URI="mongodb://amp:horizons1@ds117495.mlab.com:17495/free-assoc"
-export SECRET="qwerty"
-export GOOGLE_API_KEY="AIzaSyAs7riE2xT80wzGfYJq8SpjisLjDvSNeZA"
-export AWS_ACCESS_KEY_ID="AKIAIE42NZBS2VOF7I3A"
-export AWS_SECRET_ACCESS_KEY="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"
