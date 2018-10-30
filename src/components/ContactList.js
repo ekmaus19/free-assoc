@@ -3,7 +3,7 @@ import React from 'react';
 import { Input, Button, Card, Container,Image, Modal } from 'semantic-ui-react'
 
 
-const url = 'http://powerful-bastion-26209.herokuapp.com'
+const url = 'https://powerful-bastion-26209.herokuapp.com'
 
 const customStyles = {
   content : {
@@ -235,15 +235,9 @@ class Contact extends React.Component {
             <Card.Group itemsPerRow={4}>
             <Card  >
               <Card.Content>
-<<<<<<< HEAD
-                <Image floated='right' size='mini' src={'http://powerful-bastion-26209.herokuapp.com/contacts/'+ contacts._id +'/profileimg'} />
-                <Card.Header>{contacts.username}</Card.Header>
-                <Card.Meta>{contacts.medium}</Card.Meta>
-=======
-                <Image floated='right' size='mini' src={'http://localhost:1337/contacts/'+ contact._id +'/profileimg'} />
+                <Image floated='right' size='mini' src={'https://powerful-bastion-26209.herokuapp.com/contacts/'+ contact._id +'/profileimg'} />
                 <Card.Header>{contact.username}</Card.Header>
                 <Card.Meta>{contact.medium}</Card.Meta>
->>>>>>> tundun
                 <Card.Description textAlign='left'>
                   {contact.bio}
                 </Card.Description>
@@ -307,7 +301,7 @@ class Contact extends React.Component {
 
           return (
             <div style={{ 'margin' : "1em 0 0 1em"}}>
-              <Image size='mini' src={'http://localhost:1337/artist/'+ sent.invitee._id +'/profileimg'} />
+              <Image size='mini' src={'https://powerful-bastion-26209.herokuapp.com/artist/'+ sent.invitee._id +'/profileimg'} />
               Name: {sent.invitee.firstName} {sent.invitee.lastName} <br />
               Username: {sent.invitee.username}
             </div>
@@ -321,7 +315,7 @@ class Contact extends React.Component {
         return this.state.received.map((received, i) => {
           return (
             <div key = {i} style={{ 'margin' : "1em 0 0 1em"}}>
-              <Image size='mini' src={'http://localhost:1337/artist/'+ received.requester._id +'/profileimg'} />
+              <Image size='mini' src={'https://powerful-bastion-26209.herokuapp.com/artist/'+ received.requester._id +'/profileimg'} />
               Name: {received.requester.firstName} {received.requester.lastName} <br />
               Username: {received.requester.username}
               <br />
@@ -365,11 +359,7 @@ class Contact extends React.Component {
           dimmer={'inverted'}
           size={'small'}
           open={this.state.modalPendingIsOpen}
-<<<<<<< HEAD
-          style={customStyles}>
-=======
           style={customStyles, { padding : "1em 0 0 1em"}}>
->>>>>>> tundun
             <label> Sent Invites: </label>
             {renderSent()}
             <br />
