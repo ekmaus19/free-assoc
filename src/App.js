@@ -13,10 +13,11 @@ import MainMap from './components/Map';
 import {Button, Icon, Input, Menu, Image,Container} from 'semantic-ui-react';
 import io from 'socket.io-client';
 import url from './components/backend'
-const Nominatim = require('nominatim-geocoder')
-const geocoder = new Nominatim({
-  secure: true
-})
+
+const geocoder = require('google-geocoder');
+const geo = geocoder({
+  key: 'AIzaSyAs7riE2xT80wzGfYJq8SpjisLjDvSNeZA'
+});
 
 console.log(url)
 

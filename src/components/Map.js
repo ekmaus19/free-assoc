@@ -20,10 +20,8 @@ moment().format();
 // import { Sidebar, Tab } from './Sidebar';
 
 // ultimately, geocoder will be in the backend. In front for testing purposes
-
-var geocoder = require('google-geocoder');
-
-var geo = geocoder({
+const geocoder = require('google-geocoder');
+const geo = geocoder({
   key: 'AIzaSyAs7riE2xT80wzGfYJq8SpjisLjDvSNeZA'
 });
 /////
