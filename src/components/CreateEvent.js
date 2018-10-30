@@ -122,11 +122,11 @@ const delimiters = [KeyCodes.comma, KeyCodes.enter];
         formData.append('latitude', result[0].location.lat)
         formData.append('longitude', result[0].location.lng)
       }
-
       console.log("THE FORM IS ===>", formData)
-      axios.post('https://powerful-bastion-26209.herokuapp.com/fileUpload', formData)
+      axios.post('http://powerful-bastion-26209.herokuapp.com/fileUpload', formData)
       .then(function (result) {
         if (result.success) self.props.setMode('T1');
+        console.log('SUCCESS!!')
       })
       .catch(err => {
         console.log(err)
