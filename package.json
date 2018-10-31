@@ -6,6 +6,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "deploy": "aws s3 sync build/ s3://amp-freeassociations",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "backend-dev": "nodemon backend/server.js --exec babel-node --presets es2015,stage-2",
