@@ -25,7 +25,7 @@
   "bugs": {
     "url": "https://github.com/ekmaus19/free-assoc/issues"
   },
-  "homepage": "http://amp-freeassociations.s3-website-us-east-1.amazonaws.com",
+  "homepage": ".",
   "dependencies": {
     "axios": "^0.18.0",
     "body-parser": "^1.18.3",
