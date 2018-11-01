@@ -46,6 +46,8 @@ bower_components
 .env.development.local
 .env.test.local
 .env.production.local
+.env.sh
+.env
 
 npm-debug.log*
 yarn-debug.log*
@@ -54,6 +56,8 @@ yarn-error.log*
 package-lock.json
 env.sh
 ngrok
+Procfile
+rootkey.csv
 test_event_data.json
 /mongodb-osx-x86_64-4.0.0
 mongodb-osx-x86_64-4.0.0
