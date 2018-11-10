@@ -27,11 +27,13 @@ class Scout extends React.Component {
       requester: '',
       invitee: '',
       name: '',
+      searching: 'none'
     }
   }
 
   // Find Functions
   findByMedium = () => {
+    this.setState({ searching: 'block' })
     fetch(url + '/scout', {
       method: 'POST',
       headers: {
@@ -48,10 +50,11 @@ class Scout extends React.Component {
         this.setState({
           artists: json.artists,
           findArtistErr: '',
+          searching: 'none'
         })
         console.log("success")
       } else {
-        this.setState({ findArtistErr: json.error});
+        this.setState({ findArtistErr: json.error, searching: 'none'});
       }
     })
     .catch((err) => {
@@ -60,6 +63,7 @@ class Scout extends React.Component {
   }
 
   findByName = () => {
+    this.setState({ searching: 'block'})
     fetch(url + '/scout', {
       method: 'POST',
       headers: {
@@ -76,10 +80,11 @@ class Scout extends React.Component {
         this.setState({
           artists: json.artists,
           findArtistErr: '',
+          searching: 'none'
         })
         console.log("success")
       } else {
-        this.setState({ findArtistErr: json.error});
+        this.setState({ findArtistErr: json.error, searching: 'none'});
       }
     })
     .catch((err) => {
@@ -157,13 +162,26 @@ class Scout extends React.Component {
         <div style={{display:'inline', marginBotton:'20px'}}>
         <select
           className="ui dropdown"
-          onChange={(e) => this.setState({medium: e.target.value})}
-          placeholder="Search By Medium">
+          onChange={(e) => this.setState({medium: e.target.value})}>
+          <option value="" disabled selected style={{ color: '#c0c0c0' }}>Search By Medium</option>
           <option value="music">Music</option>
           <option value="art">Art</option>
           <option value="performance">Performance</option>
         </select>
         <Button basic color='violet' onClick={()=> {this.findByMedium()}}> Go!</Button>
+        </div>
+        {/* Loading Icon */}
+        <div style={{ display: this.state.searching, width: '100px', height: '100px', margin: 'auto' }}>
+          <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid" class="lds-disk">
+            <g transform="translate(50,50)">
+              <g ng-attr-transform="scale({{config.scale}})" transform="scale(0.7)">
+                <circle cx="0" cy="0" r="50" ng-attr-fill="{{config.c1}}" fill="#7586ff"></circle>
+                <circle cx="0" ng-attr-cy="{{config.cy}}" ng-attr-r="{{config.r}}" ng-attr-fill="{{config.c2}}" cy="-28" r="15" fill="#4f20b5" transform="rotate(173.316)">
+                  <animateTransform attributeName="transform" type="rotate" calcMode="linear" values="0 0 0;360 0 0" keyTimes="0;1" dur="1s" begin="0s" repeatCount="indefinite"></animateTransform>
+                </circle>
+              </g>
+            </g>
+          </svg>
         </div>
         {this.state.findArtistErr !== '' ?
         <div style={{textAlign: 'center'}}>{this.state.findArtistErr}</div> :
