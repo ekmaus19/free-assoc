@@ -75,9 +75,10 @@ class RegisterScreen extends Component {
 
         // Getting list of Registeration Errors from Backend
         let errors = [];
-        for (var error in responseJson.errors) {
-          errors.push(responseJson.errors[error].msg);
+        for (var error in responseJson) {
+          errors.push(responseJson[error].msg);
         }
+
         this.setState({errors});
       }
     })
@@ -91,7 +92,6 @@ class RegisterScreen extends Component {
   render(){
     const errors = () => {
       if (this.state.errors.length > 0) {
-        console.log(this.state.errors)
       return (
         <Message
           negative
