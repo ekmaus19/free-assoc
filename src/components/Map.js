@@ -14,7 +14,7 @@ import {
 import moment from 'moment';
 import suggestionsList from './suggestion_categories'
 import '../index.css'
-import GOOGLE_API_KEY from '../../env.sh'
+// import GOOGLE_API_KEY from '../../env.sh'
 
 moment().format();
 // import { Sidebar, Tab } from './Sidebar';
@@ -24,7 +24,7 @@ moment().format();
 var geocoder = require('google-geocoder');
 
 var geo = geocoder({
-  key: GOOGLE_API_KEY
+  key: 'AIzaSyAs7riE2xT80wzGfYJq8SpjisLjDvSNeZA'
 });
 /////
 const KeyCodes = {
