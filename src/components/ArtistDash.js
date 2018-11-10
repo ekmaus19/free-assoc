@@ -47,7 +47,7 @@ const renderContent=(mode, socket, artist, setMode, contacts, contactList) => { 
     return (
       <div>
         <Header as='h2'>My Connections</Header>
-        <ContactList artist={artist} contacts={contacts} contactList={contactList}/>
+        <ContactList artist={artist} contacts={contacts} contactList={contactList} socket={socket}/>
       </div>
     )
 
@@ -118,13 +118,14 @@ class ArtistDash extends Component {
   }
 
   onLogout = () => {
-    console.log('loggingout !!!')
+    // console.log('loggingout !!!')
     fetch(url+'/logout', {
       method: 'GET',
     })
     .then((response) => response.json())
     .then((responseJson) => {
-      console.log('redirect!!!!')
+      // console.log('redirect!!!!')
+      sessionStorage.removeItem("loginArtist")
       this.props.redirect('Home')
     })
     .catch((error) => {
@@ -148,9 +149,9 @@ class ArtistDash extends Component {
   }
 
   render(){
-    console.log(this.props.artist)
+    // console.log(this.props.artist)
 
-    let src; 
+    let src;
      if (this.props.artist.medium === 'music' && this.props.artist.img === null){
        src = '/img/1.png'
      } else if (this.props.artist.medium === 'art'&& this.props.artist.img === null){
@@ -192,7 +193,7 @@ class ArtistDash extends Component {
                         {this.state.contacts.length} Friends
                       </a>
                     </Card.Content>
-                    <Button style={{textAlign:'center'}} color = 'violet' className = "logout-button"  animated onClick = {this.onLogout}>Logout</Button>
+                    <Button style={{textAlign:'center'}} color = 'violet' className = "logout-button"  animated onClick = {() => this.onLogout()}>Logout</Button>
                   </Card>
 
 

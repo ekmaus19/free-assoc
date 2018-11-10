@@ -134,7 +134,7 @@ router.get('/contacts/:id/profileimg',(req,res)=>{
 router.get('/contacts/:userId', (req, res) => {
   const contacts = []
   Artist.findById(req.params.userId)
-  .populate('connections')
+  .populate({path: 'connections', model: "Artist"}) // speficying model to populate with
   .exec((err, artist) => {
     if (err) {
       res.send('Error')
@@ -147,12 +147,11 @@ router.get('/contacts/:userId', (req, res) => {
 //get sent invites
 router.get('/pending/sent/:userId', (req, res) => {
   Connection.find({requester: req.params.userId})
-  .populate('invitee')
-  .exec( (err, connection) => {
+  .populate({ path: 'invitee' })
+  .exec((err, connection) => {
     if (err) {
       console.log(err)
     }
-    console.log(connection)
     const sent = connection.filter((item) => {
       if (item.status === 'pending') {
         return true
@@ -167,12 +166,11 @@ router.get('/pending/sent/:userId', (req, res) => {
 //get received invites
 router.get('/pending/received/:userId', (req, res) => {
   Connection.find({invitee: req.params.userId})
-  .populate('requester')
+  .populate({ path: 'requester', model: 'Artist' })
   .exec( (err, connection) => {
     if (err) {
       console.log(err)
     }
-    console.log(connection)
     const received = connection.filter((item) => {
       if (item.status === 'pending') {
         return true
@@ -185,41 +183,34 @@ router.get('/pending/received/:userId', (req, res) => {
 });
 
 // send connection invite
-router.post('/connect/:userId', (req, res) => {
-  console.log('****', req.body)
-  Artist.findById(req.params.userId, (err, artist) => {
+router.post('/connect', (req, res) => {
+  
+  Artist.findOne({ username: req.body.username }, (err, artist) => {
     if (err) {
       res.send(err)
     } else if (!artist) {
       console.log('Artist does not exist')
       res.send({error: 'Artist does not exist'})
       return
+    } else {
+      const connection = new Connection({
+        requester: req.body.requester,
+        invitee: artist._id,
+      })
+      connection.save((err, connection) => {
+        if (err) {
+          console.log('error', err);
+          res.send(error)
+        } else {
+          console.log('connection invite sent', connection);
+          res.json({
+            success: true,
+            connection: connection
+          })
+        }
+      })
     }
-    Artist.findById(req.body.artist._id, (err, artist) => {
-      if (err) {
-        res.send(err)
-      } else if (!artist) {
-        res.send({error: 'Artist does not exist'})
-        return
-      } else {
-        const connection = new Connection({
-          requester: req.params.userId,
-          invitee: artist._id,
-        })
-        connection.save((err, connection) => {
-          if (err) {
-            console.log('error', err);
-            res.send(error)
-          } else {
-            console.log('connection invite sent', connection);
-            res.json({
-              success: true,
-              connection: connection
-            })
-          }
-        })
-      }
-    })
+
   })
 });
 
@@ -301,18 +292,19 @@ router.post('/delete/:userId', (req, res) => {
 
 //scout artists
 router.post('/scout', (req, res) => {
-  Artist.find({medium: req.body.medium}, (err, artist) => {
+  (req.body.firstName) ?  req.body.firstName = new RegExp('^'+req.body.firstName+'$', "i") : null
+  Artist.find(req.body, (err, artists) => {
     if (err) {
       res.send(err)
     } else {
-      if (!artist) {
-        console.log('Artist does not exist')
-        res.send({error: 'Artist does not exist'})
+      // artists returns an array
+      if (artists.length === 0) {
+        (req.body.firstName) ? res.send({error: 'There are no Artists with that name'}) : res.send({error: 'There are no Artists using that medium'})
         return
       } else {
         res.json({
           success: true,
-          artist: artist
+          artists
         })
       }
     }

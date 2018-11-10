@@ -32,6 +32,7 @@ class App extends Component {
         lon: null,
       },
       userId: '',
+      userLoggedIn : false, //For changing login button to logout when user is logged in
       isArtist: false,
       event:{},
       placeSearch: null,
@@ -43,13 +44,9 @@ class App extends Component {
   }
 
   componentWillUnmount() {
-    this.setState({
-      placeSearchCoords: {
-        lat: null,
-        lon: null,
-      },
-      placeSearch: null,
-    })
+    // this.setState({
+    //
+    // })
   }
 
   componentDidMount(){
@@ -60,6 +57,13 @@ class App extends Component {
   redirect(page){
     this.setState({
       currentPage: page,
+      //----Moved from componentWillUnmount to prevent memore leak
+      placeSearchCoords: {
+        lat: null,
+        lon: null,
+      },
+      placeSearch: null,
+      //--------------------------------------------
     })
 }
 
@@ -69,11 +73,17 @@ loginRedirect = () => {
   .then(response => {
     console.log('checked for session')
     if (response.user && response.user.medium) { //need a way to check if user is artist
-      this.props.redirect('ArtistDash');
+      this.setStatethis.props.redirect('ArtistDash');
     } else if (response.user) {
 
     }
   }).catch(err => console.log(err))
+}
+
+logout = () => {
+  sessionStorage.removeItem("loginUser");
+  this.setState({userLoggedIn : !this.state.userLoggedIn });
+  this.redirect('Login');
 }
 
 nearMeRedirect = () => {
@@ -130,8 +140,12 @@ searchPlaceHome = () => {
                 <Menu.Item onClick= {()=>this.redirect('Contact')} as='a'>Contact</Menu.Item>
                 </Container>
                 <Container style={{display:'flex',justifyContent:'flex-end'}}>
-                <Button style={{padding:'3px',height:'75%',width:'100px', textAlign:'center', margin:'10px'}} basic color = 'violet' className = "register-button"  animated onClick = {() => this.redirect('Registerpicker')}>Register</Button>
-                <Button style={{padding:'3px',width:'100px',height:'75%', textAlign:'center', margin:'10px'}} color = 'violet' className = "login-button"  animated onClick = {() => this.redirect('Login')}>Login</Button>
+                {(this.state.userLoggedIn || this.state.currentPage === 'ArtistDash') ? null : <Button style={{padding:'3px',height:'75%',width:'100px', textAlign:'center', margin:'10px'}} basic color = 'violet' className = "register-button"  animated onClick = {() => this.redirect('Registerpicker')}>Register</Button>}
+                {
+                  (this.state.currentPage === 'ArtistDash') ? null : //if Artists is logged in
+                  (this.state.userLoggedIn) ? (<Button style={{padding:'3px',width:'100px',height:'75%', textAlign:'center', margin:'10px'}} color = 'violet' className = "login-button"  animated onClick = {() => this.logout()}>Logout</Button>)
+                  : (<Button style={{padding:'3px',width:'100px',height:'75%', textAlign:'center', margin:'10px'}} color = 'violet' className = "login-button"  animated onClick = {() => this.redirect('Login')}>Login</Button>)
+                }
                 </Container>
             </Menu>
 
@@ -169,7 +183,7 @@ searchPlaceHome = () => {
           {this.state.currentPage === 'Ethos' ? <div><Ethos/></div>:null}
           {this.state.currentPage === 'About' ? <div><About/></div>:null}
           {this.state.currentPage === 'Contact' ? <div><Contact/></div>:null}
-          {this.state.currentPage === 'Login' ? <div><LoginScreen onLogin={this.onLogin} artistInfo={(obj, redirect=null) => this.setState({artist:obj}, redirect)} redirect={(e) => this.redirect(e)}/></div> : null}
+          {this.state.currentPage === 'Login' ? <div><LoginScreen userLoginToggle={() => this.setState({userLoggedIn : !this.state.userLoggedIn })} artistInfo={(obj, redirect=null) => this.setState({artist:obj}, redirect)} redirect={(e) => this.redirect(e)}/></div> : null}
           {this.state.currentPage === 'Registerpicker' ? <div><RegisterScreenPicker redirect={(e) => this.redirect(e)}/></div> : null}
           {this.state.currentPage === 'RegisterUser' ? <div><RegisterScreen redirect={(e) => this.redirect(e)}/></div> : null}
           {this.state.currentPage === 'RegisterArtist' ? <div><RegisterArtist redirect={(e) => this.redirect(e)}/></div> : null}

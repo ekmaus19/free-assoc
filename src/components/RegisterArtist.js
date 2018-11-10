@@ -144,9 +144,17 @@ class RegisterArtist extends Component {
         // Response => { data: {}, ....} because of axios call
         // Checking if Registeration was valid
 
-        if (result.data.success) {
+        if (result.data.success === true) {
           this.props.redirect('Login')
-        } else {
+        } else if (result.data.errmsg) { //incase of a single error
+
+          // Check what kind of error
+          if (result.data.errmsg.indexOf("phone") !== -1) errors.push("This Phone Number has already been registered. Try logging in instead?");
+          if (result.data.errmsg.indexOf("email") !== -1) errors.push("This Email address has already been registered. Try logging in instead?");
+          if (result.data.errmsg.indexOf("username") !== -1) errors.push("This username is already in use. Try logging in instead?");
+
+          this.setState({errors});
+        } else if (result.data.errors) {
           for (var error in result.data.errors) {
             errors.push(result.data.errors[error].message);
           }
@@ -168,7 +176,6 @@ class RegisterArtist extends Component {
   render(){
     const errors = () => {
       if (this.state.errors.length > 0) {
-        console.log(this.state.errors)
       return (
         <Message
           negative

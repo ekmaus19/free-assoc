@@ -210,6 +210,9 @@ export default class MainMap extends Component {
 
 
   componentDidMount() {
+
+    let loggedIn = sessionStorage.getItem("loginUser");
+    if (loggedIn) this.setState({ loggedIn: true});
     fetch(url+'/events', {
       method: 'GET',
     }).then(res => res.json())

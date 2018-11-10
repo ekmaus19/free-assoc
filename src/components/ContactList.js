@@ -26,6 +26,7 @@ class Contact extends React.Component {
       connection: [],
       requester: '',
       invitee: '',
+      events: [],
       modalSearchIsOpen: false,
       modalPendingIsOpen: false,
       modalViewContactIsOpen: false,
@@ -68,10 +69,11 @@ class Contact extends React.Component {
   }
 
     ///// View Contact Modal
-    openViewContactModal() {
-      this.setState({
-        modalViewContactIsOpen: true,
-      });
+    openViewContactModal(contact) {
+      this.props.socket.emit('getEvents', {userId: contact});
+      this.props.socket.on('getEvents', ({events}) => {
+        this.setState({events, modalViewContactIsOpen: true }, () => console.log(this.state.events))
+      })
     }
 
     closeViewContactModal() {
@@ -82,7 +84,7 @@ class Contact extends React.Component {
    //////
 
    deleteContactModal = (contactid) => {
-    console.log(this.state.contacts)
+
      fetch(url + `/delete/${contactid}`,{
        method: 'POST',
      }).then(res => res.json())
@@ -105,7 +107,7 @@ class Contact extends React.Component {
       method: 'GET',
     }).then(res => res.json())
     .then(json => {
-      console.log('JSON ---->', json)
+
       this.setState({
         sent: json.sent
       })
@@ -120,7 +122,7 @@ class Contact extends React.Component {
       method: 'GET',
     }).then(res => res.json())
     .then(json => {
-      console.log('JSON ---->', json)
+
       this.setState({
         received: json.received
       })
@@ -137,23 +139,25 @@ class Contact extends React.Component {
   }
 
   sendConnection = () => {
-    fetch(url + `/connect/${this.props.artist._id}`, {
+    fetch(url + `/connect`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        username: this.state.username
+        username: this.state.username,
+        requester: this.props.artist._id,
       })
     })
     .then(res => res.json())
     .then(json => {
-      console.log('JSON ----->', json)
+
       if (json.success) {
         this.setState({
           connection: json.connection,
           modalSearchIsOpen:false
         })
+        this.sentInvites();
         alert('Invite sent!')
       }
     })
@@ -175,12 +179,14 @@ class Contact extends React.Component {
     })
     .then(res => res.json())
     .then(json => {
-      console.log('JSON ----->', json)
+
       if (json.success) {
         this.setState({
           connection: json.connection,
           modalPendingIsOpen: false
         })
+
+        this.receivedInvites();
         alert('Invite accepted!')
       }
     })
@@ -202,12 +208,13 @@ class Contact extends React.Component {
     })
     .then(res => res.json())
     .then(json => {
-      console.log('JSON ----->', json)
+
       if (json.success) {
         this.setState({
           connection: json.connection,
           modalPendingIsOpen: false
         })
+        this.receivedInvites();
         alert('Invite declined')
       }
     })
@@ -221,46 +228,63 @@ class Contact extends React.Component {
   render() {
     const renderContacts = () => {
       if (this.props.contacts) {
-        return this.props.contacts.map(contacts => {
-          console.log(contacts)
+        return this.props.contacts.map(contact => {
+
           return (
             <div>
             <Card.Group itemsPerRow={4}>
             <Card  >
               <Card.Content>
-                <Image floated='right' size='mini' src={'http://localhost:1337/contacts/'+ contacts._id +'/profileimg'} />
-                <Card.Header>{contacts.username}</Card.Header>
-                <Card.Meta>{contacts.medium}</Card.Meta>
+                <Image floated='right' size='mini' src={'http://localhost:1337/contacts/'+ contact._id +'/profileimg'} />
+                <Card.Header>{contact.username}</Card.Header>
+                <Card.Meta>{contact.medium}</Card.Meta>
                 <Card.Description textAlign='left'>
-                  {contacts.bio}
+                  {contact.bio}
                 </Card.Description>
               </Card.Content>
               <Card.Content extra>
                 <div style={{display:'flex'}}>
-                  <Button basic color='orange' onClick={() => this.openViewContactModal()}>
+                  <Button basic color='orange' onClick={() => this.openViewContactModal(contact._id)}>
                     View Contact
                   </Button>
                   <Modal
                   open={this.state.modalViewContactIsOpen}
                   size={'tiny'}
-                  style={customStyles}
+                  style={customStyles, { padding : "1em"}}
                   dimmer={'inverted'}
                   onClose={this.closeViewContactModal}
                   >
-                  <div>
-                  Email:
-                  {contacts.email}
-                  <br />
-                  Phone #:
-                  </div>
-                  <div className='ui two buttons'>
-                  <Button basic color='violet' onClick={()=> this.deleteContactModal(contacts._id)} >
-                   Delete Contact
-                  </Button>
-                  <Button basic color='red' onClick={() => this.closeViewContactModal()}>
-                    Close
-                  </Button>
-                  </div>
+                    <div>
+                      Name: {contact.firstName} {contact.lastName}
+                      <br /><br />
+                      Email:
+                      {contact.email}
+                      <br /><br />
+                      Phone #:
+                      </div>
+                      <br /><br />
+                      Events:
+                      <div style={{display: 'flex', color: 'black'}}>
+                      {this.state.events.map(event => {
+                        return (
+                          <div>
+                            <p>{event.eventName} - {event.price}</p>
+                            <p>{event.datesRange}</p>
+                            <p>{event.startTime} - {event.endTime}</p>
+                            <p>{event.venueName}</p>
+                            <p>{event.streetAddress}, {event.city}, {event.state}</p>
+                          </div>
+                        )
+                      })}
+                      </div>
+                      <div className='ui two buttons'>
+                      <Button basic color='violet' onClick={()=> this.deleteContactModal(contact._id)} >
+                       Delete Contact
+                      </Button>
+                      <Button basic color='red' onClick={() => this.closeViewContactModal()}>
+                        Close
+                      </Button>
+                    </div>
                   </Modal>
                 </div>
               </Card.Content>
@@ -274,9 +298,12 @@ class Contact extends React.Component {
     const renderSent = () => {
       if (this.state.sent) {
         return this.state.sent.map(sent => {
+
           return (
-            <div>
-              {sent.invitee.username}
+            <div style={{ 'margin' : "1em 0 0 1em"}}>
+              <Image size='mini' src={'http://localhost:1337/artist/'+ sent.invitee._id +'/profileimg'} />
+              Name: {sent.invitee.firstName} {sent.invitee.lastName} <br />
+              Username: {sent.invitee.username}
             </div>
           )
         })
@@ -284,12 +311,15 @@ class Contact extends React.Component {
     }
     const renderReceived = () => {
       if (this.state.received) {
+
         return this.state.received.map((received, i) => {
           return (
-            <div key = {i}>
-              {received.requester.username}
-              <br /> 
-              <div style={{display:'inline', justifyContenet:'center', marginTop:'20px'}}> 
+            <div key = {i} style={{ 'margin' : "1em 0 0 1em"}}>
+              <Image size='mini' src={'http://localhost:1337/artist/'+ received.requester._id +'/profileimg'} />
+              Name: {received.requester.firstName} {received.requester.lastName} <br />
+              Username: {received.requester.username}
+              <br />
+              <div style={{display:'inline', justifyContent:'center', marginTop:'20px'}}>
                <Button
               color='orange'
               style={{display:'inline', justifyContent:'center',padding:'3px',height:'150%',width:'100px', textAlign:'center', margin:'10px'}}
@@ -298,7 +328,7 @@ class Contact extends React.Component {
               color='violet'
               style={{display:'inline', justifyContent:'center',padding:'3px',height:'150%',width:'100px', textAlign:'center', margin:'10px'}}
               onClick={() => this.declineConnection(received.requester._id)}>Decline</Button>
-            </div> 
+            </div>
             </div>
           )
         })
@@ -329,15 +359,15 @@ class Contact extends React.Component {
           dimmer={'inverted'}
           size={'small'}
           open={this.state.modalPendingIsOpen}
-          style={customStyles}>
-            <label> Sent Invites: </label> 
+          style={customStyles, { padding : "1em 0 0 1em"}}>
+            <label> Sent Invites: </label>
             {renderSent()}
-            <br /> 
-            <br /> 
+            <br />
+            <br />
             <label> Received invites: </label>
             {renderReceived()}
             <div style={{display:'flex', justifyContent:'center'}}>
-          
+
              <Button
             style={{display:'inline', justifyContent:'flex-end',padding:'3px',height:'150%',width:'100px', textAlign:'center', margin:'10px'}}
             basic color = 'red'

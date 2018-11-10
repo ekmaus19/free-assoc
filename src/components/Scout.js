@@ -19,23 +19,28 @@ class Scout extends React.Component {
     super(props);
     this.state = {
       medium: '',
-      artist: [],
+      artists: [],
+      findArtistErr: '',
       event:[],
       connection:[],
       modalViewCardIsOpen: false,
       requester: '',
       invitee: '',
+      name: '',
+      searching: 'none'
     }
   }
 
-  findArtist = () => {
+  // Find Functions
+  findByMedium = () => {
+    this.setState({ searching: 'block' })
     fetch(url + '/scout', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        medium: this.state.medium
+        medium: this.state.medium.toLowerCase()
       })
     })
     .then(res => res.json())
@@ -43,9 +48,43 @@ class Scout extends React.Component {
       console.log('JSON ----->', json)
       if (json.success) {
         this.setState({
-          artist: json.artist
+          artists: json.artists,
+          findArtistErr: '',
+          searching: 'none'
         })
-        console.log('artist --->', json.artist)
+        console.log("success")
+      } else {
+        this.setState({ findArtistErr: json.error, searching: 'none'});
+      }
+    })
+    .catch((err) => {
+      throw err
+    })
+  }
+
+  findByName = () => {
+    this.setState({ searching: 'block'})
+    fetch(url + '/scout', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        //using lower case to avoid case issues
+        firstName: this.state.name
+      })
+    })
+    .then(res => res.json())
+    .then(json => {
+      if (json.success) {
+        this.setState({
+          artists: json.artists,
+          findArtistErr: '',
+          searching: 'none'
+        })
+        console.log("success")
+      } else {
+        this.setState({ findArtistErr: json.error, searching: 'none'});
       }
     })
     .catch((err) => {
@@ -109,18 +148,47 @@ class Scout extends React.Component {
       <div style={{marginBotton:'20px'}} >
           <br />
           <br />
+
+        {/* Search By Name */}
         <div style={{display:'inline', marginBotton:'20px'}}>
         <Input style={{height:'200%', marginRight:'10px', marginBottom:'30px'}}
         type='text'
-        placeholder='Search by Medium'
-        onChange={(e) => (this.setState({medium:e.target.value}))}></Input>
-        <Button basic color='violet' onClick={()=> {this.findArtist()}}> Go!</Button>
+        placeholder='Search by Name'
+        onChange={(e) => (this.setState({name : e.target.value}))}></Input>
+        <Button basic color='violet' onClick={()=> {this.findByName()}}> Go!</Button>
         </div>
 
+        {/* Search By Medium*/}
+        <div style={{display:'inline', marginBotton:'20px'}}>
+        <select
+          className="ui dropdown"
+          onChange={(e) => this.setState({medium: e.target.value})}>
+          <option value="" disabled selected style={{ color: '#c0c0c0' }}>Search By Medium</option>
+          <option value="music">Music</option>
+          <option value="art">Art</option>
+          <option value="performance">Performance</option>
+        </select>
+        <Button basic color='violet' onClick={()=> {this.findByMedium()}}> Go!</Button>
+        </div>
+        {/* Loading Icon */}
+        <div style={{ display: this.state.searching, width: '100px', height: '100px', margin: 'auto' }}>
+          <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid" class="lds-disk">
+            <g transform="translate(50,50)">
+              <g ng-attr-transform="scale({{config.scale}})" transform="scale(0.7)">
+                <circle cx="0" cy="0" r="50" ng-attr-fill="{{config.c1}}" fill="#7586ff"></circle>
+                <circle cx="0" ng-attr-cy="{{config.cy}}" ng-attr-r="{{config.r}}" ng-attr-fill="{{config.c2}}" cy="-28" r="15" fill="#4f20b5" transform="rotate(173.316)">
+                  <animateTransform attributeName="transform" type="rotate" calcMode="linear" values="0 0 0;360 0 0" keyTimes="0;1" dur="1s" begin="0s" repeatCount="indefinite"></animateTransform>
+                </circle>
+              </g>
+            </g>
+          </svg>
+        </div>
+        {this.state.findArtistErr !== '' ?
+        <div style={{textAlign: 'center'}}>{this.state.findArtistErr}</div> :
         <Container style={{marginBottom:'20px'}} >
           <Card.Group itemsPerRow={4}>
 
-          {this.state.artist.map((artist,i)=>
+          {this.state.artists.map((artist,i)=>
           <Card style={{justifyContent:'center', alignItems:'center'}}>
             <Container >
               <Image style={{marginLeft:'auto',marginRight:'auto',width:'75%', height:'75%',padding:'10px'}} src={'http://localhost:1337/artist/'+ artist._id +'/profileimg'}/>
@@ -175,6 +243,7 @@ class Scout extends React.Component {
 
           </Card.Group>
         </Container>
+      }
       </div>
     )
   }
