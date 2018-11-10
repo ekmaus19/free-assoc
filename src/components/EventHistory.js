@@ -61,6 +61,27 @@ render() {
       }
     })
 
+    // Sort Past events in descending order
+    events = events.sort((a,b) => {
+      let aDate = new Date()
+
+      // ---------- Setting Date to correct date -----------
+      // new Date(event.substring()) returns an Invalid date
+      aDate.setMonth(a.datesRange.substring(3,5) -1) // january = 0, feb = 1...
+      aDate.setDate(a.datesRange.substring(0,2))
+      aDate.setFullYear(a.datesRange.substring(6,10))
+
+      let bDate = new Date()
+
+      // ---------- Setting Date to correct date -----------
+      // new Date(event.substring()) returns an Invalid date
+      bDate.setMonth(b.datesRange.substring(3,5) -1) // january = 0, feb = 1...
+      bDate.setDate(b.datesRange.substring(0,2))
+      bDate.setFullYear(b.datesRange.substring(6,10))
+
+      return bDate - aDate
+    })
+
   } else {
 
     events = events.filter((event)=>{
@@ -80,27 +101,28 @@ render() {
       }
     })
 
+    // Sort Future Events in Ascending Order
+    events = events.sort((a,b) => {
+      let aDate = new Date()
+
+      // ---------- Setting Date to correct date -----------
+      // new Date(event.substring()) returns an Invalid date
+      aDate.setMonth(a.datesRange.substring(3,5) -1) // january = 0, feb = 1...
+      aDate.setDate(a.datesRange.substring(0,2))
+      aDate.setFullYear(a.datesRange.substring(6,10))
+
+      let bDate = new Date()
+
+      // ---------- Setting Date to correct date -----------
+      // new Date(event.substring()) returns an Invalid date
+      bDate.setMonth(b.datesRange.substring(3,5) -1) // january = 0, feb = 1...
+      bDate.setDate(b.datesRange.substring(0,2))
+      bDate.setFullYear(b.datesRange.substring(6,10))
+
+      return aDate - bDate
+    })
+
   }
-
-  events = events.sort((a,b) => {
-    let aDate = new Date()
-
-    // ---------- Setting Date to correct date -----------
-    // new Date(event.substring()) returns an Invalid date
-    aDate.setMonth(a.datesRange.substring(3,5) -1) // january = 0, feb = 1...
-    aDate.setDate(a.datesRange.substring(0,2))
-    aDate.setFullYear(a.datesRange.substring(6,10))
-
-    let bDate = new Date()
-
-    // ---------- Setting Date to correct date -----------
-    // new Date(event.substring()) returns an Invalid date
-    bDate.setMonth(b.datesRange.substring(3,5) -1) // january = 0, feb = 1...
-    bDate.setDate(b.datesRange.substring(0,2))
-    bDate.setFullYear(b.datesRange.substring(6,10))
-
-    return bDate - aDate
-  })
 
 
   return (
