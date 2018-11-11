@@ -14,23 +14,18 @@ import {
 import moment from 'moment';
 import suggestionsList from './suggestion_categories'
 import '../index.css'
+// import GOOGLE_API_KEY from '../../env.sh'
 
 moment().format();
 // import { Sidebar, Tab } from './Sidebar';
 
 // ultimately, geocoder will be in the backend. In front for testing purposes
-const Nominatim = require('nominatim-geocoder')
-const geocoder = new Nominatim()
 
-var geocoderReverse = require('geocoder'); /// boooooooooooooo
+var geocoder = require('google-geocoder');
 
-
-/////
-// const GeoCoder = require('reverse-geocoding')
-// const betterReverse = new GeoCoder();
-
-// var geocoding = new require('reverse-geocoding');
-
+var geo = geocoder({
+  key: 'AIzaSyAs7riE2xT80wzGfYJq8SpjisLjDvSNeZA'
+});
 /////
 const KeyCodes = {
   comma: 188,
@@ -71,6 +66,7 @@ let customMarker
 // console.log(medium, latitude, longitude)
   // if(medium === "art"){
   //      customMarker = L.icon({ iconUrl: blue_button, iconSize: [25, 25] })
+  customMarker =  "#fc00b4"
   //   } else if (medium === 'performance') {
   //       customMarker =  L.icon({ iconUrl: pink_button, iconSize: [25, 25] })
   //   } else if (medium === 'music') {
@@ -82,7 +78,6 @@ let customMarker
   if(medium === "art"){
        customMarker = "#0060fc"
     } else if (medium === 'performance') {
-        customMarker =  "#fc00b4"
     } else if (medium === 'music') {
        customMarker =  "#00fc2e"
     } else {
@@ -259,6 +254,7 @@ export default class MainMap extends Component {
       //   if(data_use[i].datesRange[0] === "Invalid date"){
       //     data_use[i].datesRange[0] = data_use[i].datesRange[1]
       //   }
+      // data: data_use,
       //
       //   if(data_use[i].datesRange[1] === "Invalid date"){
       //     data_use[i].datesRange[1] = data_use[i].datesRange[0]
@@ -268,7 +264,6 @@ export default class MainMap extends Component {
       if(this.state.artist) {
         await this.mapRef.current.leafletElement.locate()
         this.setState({
-          data: data_use,
           loading:false,
           nowTime: currDate,
           nowHourTime: currTime,
@@ -304,7 +299,7 @@ export default class MainMap extends Component {
     console.log("Map view:", this.state)
     // this.mapRef.current.leafletElement.locate()
   }
-  data: data_use
+  // data: data_use
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -329,19 +324,32 @@ export default class MainMap extends Component {
   //////////////////////////////////////////////////////////////////////////////
 
   findPlace = () => {
-    geocoder.search( { q: this.state.searchingPlace } )
+
+    geo.find(this.state.searchingPlace)
         .then((response) => {
             console.log(response)
             this.setState({
               latlng:{
-                lat: response[0].lat,
-                lon: response[0].lon
+                lat: response[0].location.lat,
+                lon: response[0].location.lng
               }
             })
         })
         .catch((error) => {
             console.log(error)
       })
+
+// google maps try, just in case
+    // geocoder.geocode( { 'address': this.state.searchingPlace}, function(results, status) {
+    //    if (status == google.maps.GeocoderStatus.OK) {
+    //      this.setState({
+    //          latlng:{
+    //            lat: results[0].geometry.location.lat(),
+    //            lon: results[0].geometry.location.lng(),
+    //          }
+    //      })
+    //    }
+    //   });
   }
 
   mapRef = createRef()
