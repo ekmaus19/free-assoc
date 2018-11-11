@@ -108,7 +108,7 @@ const delimiters = [KeyCodes.comma, KeyCodes.enter];
       tags: this.state.tags
   }
     const { description, selectedFile} = this.state;
-    e.preventDefault();
+    // e.preventDefault();
 
     let formData = new FormData();
     formData.append('info', JSON.stringify(createEvent))
@@ -126,7 +126,9 @@ const delimiters = [KeyCodes.comma, KeyCodes.enter];
       console.log("THE FORM IS ===>", formData)
       axios.post('http://localhost:1337/fileUpload', formData)
       .then(function (result) {
-        if (result.success) self.props.setMode('T1');
+        if (result.data.success) {
+          self.props.setMode('T1');
+        }
       })
       .catch(err => {
         console.log(err)
@@ -266,7 +268,6 @@ const delimiters = [KeyCodes.comma, KeyCodes.enter];
              <Form.Field required control={Input} label='City' placeholder='City' onChange={this.onCityChange}/>
              <Form.Field required control={Input} label='State' placeholder='State'  onChange={this.onStateChange}/>
              <Form.Field required control={Input} label='Country' placeholder='Country' onChange={this.onCountryChange}/>
-
              <div style={{position:'relative', width:'150%', background:'light-grey',  display:'flex', justifyContent:'center'}}>
                 <ReactTags
                     tags={tags}
@@ -278,7 +279,7 @@ const delimiters = [KeyCodes.comma, KeyCodes.enter];
             </div>
             <br />
             <div style={{display:'flex'}} >
-            <Input style={{marginRight:'auto', width:'100%'}} type='file' onChange={this.fileSelectedHandler} name='selectedFile' />
+            <Input required style={{marginRight:'auto', width:'100%'}} type='file' onChange={this.fileSelectedHandler} name='selectedFile' />
             </div>
             <br />
             <Button style={{margin:'20px',marginLeft:'auto',marginRight:'auto', alignItems:'center'}} color = 'pink' className = "logout-button"  animated onClick = {this.onCreate}>
