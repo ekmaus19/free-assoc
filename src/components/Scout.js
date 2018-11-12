@@ -219,8 +219,15 @@ class Scout extends React.Component {
                  size={'small'}
                   open={this.state.modalViewCardIsOpen}
                   style={customStyles}>
-                  Past Events:
-                  {artist.events}
+                  <div style={{ margin: '1em'}}>
+                    <Image src={'http://localhost:1337/artist/'+ artist._id +'/profileimg'} style={{ width: '30%'}}/>
+                    <h5>Name: {artist.firstName} {artist.lastName}</h5>
+                    <h5>Medium: {artist.medium} </h5>
+                    <h5>Bio: {artist.bio} </h5>
+                    <h5>Work: {artist.existingWork}</h5>
+                    Past Events:
+                    {artist.events}
+                  </div>
                   <div style={{display:'flex', justifyContent:'center'}}>
 
                   <Button

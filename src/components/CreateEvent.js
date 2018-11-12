@@ -113,8 +113,6 @@ const delimiters = [KeyCodes.comma, KeyCodes.enter];
     let formData = new FormData();
     formData.append('info', JSON.stringify(createEvent))
     formData.append('selectedFile',selectedFile);
-    console.log(query)
-    console.log("BEFORE FUNC FORM, ", formData)
 
     geo.find(query, function(err, result) {
       console.log(result)
@@ -123,7 +121,7 @@ const delimiters = [KeyCodes.comma, KeyCodes.enter];
         formData.append('latitude', result[0].location.lat)
         formData.append('longitude', result[0].location.lng)
       }
-      console.log("THE FORM IS ===>", formData)
+
       axios.post('http://localhost:1337/fileUpload', formData)
       .then(function (result) {
         if (result.data.success) {
