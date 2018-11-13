@@ -3,7 +3,7 @@ Deploying backend to Heroku through Heroku CLI:
 1. heroku login
 2. git push heroku deploy:master
 
-Deploying frontend static files through s3cmd CLI:
+Deploying frontend static files to AWS through s3cmd CLI:
 
 (Install Homebrew if you haven't already)
 1. brew install s3cmd
