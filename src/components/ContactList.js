@@ -235,7 +235,7 @@ class Contact extends React.Component {
             <Card.Group itemsPerRow={4}>
             <Card  >
               <Card.Content>
-                <Image floated='right' size='mini' src={'http://localhost:1337/contacts/'+ contact._id +'/profileimg'} />
+                <Image floated='right' size='mini' src={'http://powerful-bastion-26209.herokuapp.com/contacts/'+ contact._id +'/profileimg'} />
                 <Card.Header>{contact.username}</Card.Header>
                 <Card.Meta>{contact.medium}</Card.Meta>
                 <Card.Description textAlign='left'>
@@ -301,7 +301,7 @@ class Contact extends React.Component {
 
           return (
             <div style={{ 'margin' : "1em 0 0 1em"}}>
-              <Image size='mini' src={'http://localhost:1337/artist/'+ sent.invitee._id +'/profileimg'} />
+              <Image size='mini' src={'http://powerful-bastion-26209.herokuapp.com/artist/'+ sent.invitee._id +'/profileimg'} />
               Name: {sent.invitee.firstName} {sent.invitee.lastName} <br />
               Username: {sent.invitee.username}
             </div>
@@ -315,7 +315,7 @@ class Contact extends React.Component {
         return this.state.received.map((received, i) => {
           return (
             <div key = {i} style={{ 'margin' : "1em 0 0 1em"}}>
-              <Image size='mini' src={'http://localhost:1337/artist/'+ received.requester._id +'/profileimg'} />
+              <Image size='mini' src={'http://powerful-bastion-26209.herokuapp.com/artist/'+ received.requester._id +'/profileimg'} />
               Name: {received.requester.firstName} {received.requester.lastName} <br />
               Username: {received.requester.username}
               <br />

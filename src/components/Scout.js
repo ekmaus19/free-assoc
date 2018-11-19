@@ -27,7 +27,8 @@ class Scout extends React.Component {
       requester: '',
       invitee: '',
       name: '',
-      searching: 'none'
+      searching: 'none',
+      selectedArtist: [],
     }
   }
 
@@ -48,7 +49,7 @@ class Scout extends React.Component {
       console.log('JSON ----->', json)
       if (json.success) {
         this.setState({
-          artists: json.artists,
+          artists: json.artist,
           findArtistErr: '',
           searching: 'none'
         })
@@ -129,9 +130,10 @@ class Scout extends React.Component {
     })
   }
 
-  openViewCardModal() {
+  openViewCardModal(artist) {
     this.setState({
       modalViewCardIsOpen: true,
+      selectedArtist: artist,
     });
   }
 
@@ -172,7 +174,7 @@ class Scout extends React.Component {
         </div>
         {/* Loading Icon */}
         <div style={{ display: this.state.searching, width: '100px', height: '100px', margin: 'auto' }}>
-          <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid" class="lds-disk">
+          <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid" className="lds-disk">
             <g transform="translate(50,50)">
               <g ng-attr-transform="scale({{config.scale}})" transform="scale(0.7)">
                 <circle cx="0" cy="0" r="50" ng-attr-fill="{{config.c1}}" fill="#7586ff"></circle>
@@ -191,7 +193,7 @@ class Scout extends React.Component {
           {this.state.artists.map((artist,i)=>
           <Card style={{justifyContent:'center', alignItems:'center'}}>
             <Container >
-              <Image style={{marginLeft:'auto',marginRight:'auto',width:'75%', height:'75%',padding:'10px'}} src={'http://localhost:1337/artist/'+ artist._id +'/profileimg'}/>
+              <Image style={{marginLeft:'auto',marginRight:'auto',width:'75%', height:'75%',padding:'10px'}} src={'http://powerful-bastion-26209.herokuapp.com/artist/'+ artist._id +'/profileimg'}/>
             </Container>
             <Card.Content>
               <Card.Header>{artist.firstName} {artist.lastName}</Card.Header>
@@ -211,7 +213,7 @@ class Scout extends React.Component {
             <Card.Content extra>
               <a>
                 {/* {this.props.contacts.length} Friends */}
-                <Button basic color="violet" style={{display:'inline', justifyContent:'center',padding:'3px',height:'150%',width:'100px', textAlign:'center', margin:'10px'}} color = 'orange' onClick={() => this.openViewCardModal()}>View Profile</Button>
+                <Button basic color="violet" style={{display:'inline', justifyContent:'center',padding:'3px',height:'150%',width:'100px', textAlign:'center', margin:'10px'}} color = 'orange' onClick={() => this.openViewCardModal(artist)}>View Profile</Button>
 
                 <Modal
                   onClose={this.closeViewCardModal}
@@ -220,13 +222,13 @@ class Scout extends React.Component {
                   open={this.state.modalViewCardIsOpen}
                   style={customStyles}>
                   <div style={{ margin: '1em'}}>
-                    <Image src={'http://localhost:1337/artist/'+ artist._id +'/profileimg'} style={{ width: '30%'}}/>
-                    <h5>Name: {artist.firstName} {artist.lastName}</h5>
-                    <h5>Medium: {artist.medium} </h5>
-                    <h5>Bio: {artist.bio} </h5>
-                    <h5>Work: {artist.existingWork}</h5>
+                    <Image src={'http://powerful-bastion-26209.herokuapp.com/artist/'+ this.state.selectedArtist._id +'/profileimg'} style={{ width: '30%'}}/>
+                    <h5>Name: {this.state.selectedArtist.firstName} {this.state.selectedArtist.lastName}</h5>
+                    <h5>Medium: {this.state.selectedArtist.medium} </h5>
+                    <h5>Bio: {this.state.selectedArtist.bio} </h5>
+                    <h5>Work: {this.state.selectedArtist.existingWork}</h5>
                     Past Events:
-                    {artist.events}
+                    {this.state.selectedArtist.events}
                   </div>
                   <div style={{display:'flex', justifyContent:'center'}}>
 
