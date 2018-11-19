@@ -218,32 +218,64 @@ class Scout extends React.Component {
                 <Modal
                   onClose={this.closeViewCardModal}
                   dimmer={'inverted'}
-                 size={'small'}
+                 size={'medium'}
                   open={this.state.modalViewCardIsOpen}
                   style={customStyles}>
-                  <div style={{ margin: '1em'}}>
-                    <Image src={'http://powerful-bastion-26209.herokuapp.com/artist/'+ this.state.selectedArtist._id +'/profileimg'} style={{ width: '30%'}}/>
-                    <h5>Name: {this.state.selectedArtist.firstName} {this.state.selectedArtist.lastName}</h5>
-                    <h5>Medium: {this.state.selectedArtist.medium} </h5>
-                    <h5>Bio: {this.state.selectedArtist.bio} </h5>
-                    <h5>Work: {this.state.selectedArtist.existingWork}</h5>
-                    Past Events:
-                    {this.state.selectedArtist.events}
-                  </div>
-                  <div style={{display:'flex', justifyContent:'center'}}>
+                  <Grid columns={2} celled='internally'>
+                    <Grid.Row stretched>
+                      <Grid.Column textAlign="center" style={{textAlign: 'center'}} width={5}>
+                        {/* Left Panel */}
+                        <Container >
+                          <Image style={{marginLeft:'auto',marginRight:'auto',width:'65%', height:'65%',padding:'10px'}} src={'http://powerful-bastion-26209.herokuapp.com/artist/'+ this.state.selectedArtist._id +'/profileimg'}/>
+                        </Container>
+                        <Card.Content>
+                          <Card.Header>{this.state.selectedArtist.firstName} {this.state.selectedArtist.lastName}</Card.Header>
+                          <Card.Meta>
+                            <span className='date'>Joined in 2018</span>
+                          </Card.Meta>
+                          <Card.Description>
+                            <h2> {this.state.selectedArtist.medium}</h2>
+                            <br />
+                            {this.state.selectedArtist.existingWork}
 
-                  <Button
-                  style={{display:'inline', justifyContent:'flex-end',padding:'3px',height:'150%',width:'100px', textAlign:'center', margin:'10px'}}
-                  basic color = 'red'
-                  onClick={() => this.closeViewCardModal()}>Close</Button>
-            </div>
+                          </Card.Description>
+                        </Card.Content>
+                        <Button style={{padding:'3px',height:'150%',width:'100px', textAlign:'center', margin:'10px auto auto auto'}} color = 'orange' onClick={() => this.sendConnection(artist)}>Connect</Button>
+                        <Button
+                        style={{display:'inline', justifyContent:'flex-end',padding:'3px',height:'150%',width:'100px', textAlign:'center', margin:'10px auto'}}
+                        basic color = 'red'
+                        onClick={() => this.closeViewCardModal()}>Close</Button>
+                      </Grid.Column>
+                      <Grid.Column width={11} rows={3}>
+                        <Grid.Row style={{ borderBottom: '1px solid #d4d4d5', height: 'auto'}} textAlign="center" verticalAlign="center">
+                          {/* Top Panel */}
+                          <Card.Content>
+                              <Card.Description>
+                                {this.state.selectedArtist.bio}
+                              </Card.Description>
+                          </Card.Content>
+                        </Grid.Row>
+                        <Grid columns={2} celled='internally'>
+                          <Grid.Column floated="left">
+                            <h4>Events</h4>
+                            <Grid.Row>Placeholder</Grid.Row>
+                            <Grid.Row>Placeholder</Grid.Row>
+                            <Grid.Row>Placeholder</Grid.Row>
+                          </Grid.Column>
+                          <Grid.Column floated="right">
+                            <Grid.Row style={{height: '50%', borderBottom:  '1px solid #d4d4d5'}}>
+                              <h4>Self Tags</h4>
+                            </Grid.Row>
+                            <Grid.Row style={{height: '50%' }}>
+                              <h4>Friends</h4>
+                            </Grid.Row>
+                          </Grid.Column>
+                        </Grid>
+                      </Grid.Column>
+                    </Grid.Row>
+                  </Grid>
+              </Modal>
 
-          </Modal>
-
-
-
-
-                <br />
                 <Button style={{display:'inline', justifyContent:'center',padding:'3px',height:'150%',width:'100px', textAlign:'center', margin:'10px'}} color = 'orange' onClick={() => this.sendConnection(artist)}>Connect</Button>
               </a>
             </Card.Content>

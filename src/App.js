@@ -43,6 +43,15 @@ class App extends Component {
     })
   }
 
+  componentWillMount() {
+    const loginArtist = sessionStorage.getItem("loginArtist")
+    const loginUser = sessionStorage.getItem('loginUser');
+    if (loginArtist || loginUser) {
+     // this.setState({hits: JSON.parse(loginArtist) })
+     this.redirect('Login')
+   }
+  }
+
   componentWillUnmount() {
     // this.setState({
     //
