@@ -3,7 +3,7 @@ import React from 'react';
 import { Input, Button, Card, Container,Image, Modal } from 'semantic-ui-react'
 
 
-const url = 'http://localhost:1337'
+const url = 'https://powerful-bastion-26209.herokuapp.com'
 
 const customStyles = {
   content : {

@@ -169,7 +169,7 @@ render() {
                   {event.tags}
                 </a>
               }
-              raised image={'http://localhost:1337/event/'+ event._id +'/profileimg'} />
+              raised image={'http://powerful-bastion-26209.herokuapp.com/event/'+ event._id +'/profileimg'} />
 
             </div>
 

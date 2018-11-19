@@ -117,7 +117,18 @@ app.use(bodyParser.json());
 app.use(cors());
 app.use(validator());
 
-//multer
+app.use((req, res, next) => {
+  res.header(
+    "Access-Control-Allow-Origin",
+    "https://powerful-bastion-26209.herokuapp.com"
+  );
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
+  next();
+});
+
 
 
 mongoose.connection.on('connected', () => {
@@ -191,6 +202,11 @@ app.use(session({ secret: 'qwerty', cookie: { maxAge: 60000 }}))
 app.use('/', auth(passport));
 app.use('/', routes);
 
+app.get('/*', function(req, res) {
+  res.sendFile(path.join(__dirname, 'build', 'index.html'));
+});
+
+
 app.get('/events', function (req, res) {
   console.log("are we there yet")
   Event.find({}).lean().populate("eventCreator", ["username"]).exec((err, results) => {
@@ -225,6 +241,6 @@ app.post('/filtered-data', function(req, res) {
 
 module.exports = app;
 
-server.listen(1337, '127.0.0.1');
+server.listen(process.env.PORT || 1337);
 
-console.log('Server running at http://127.0.0.1:1337/')
+console.log('Server running at https://powerful-bastion-26209.herokuapp.com/')

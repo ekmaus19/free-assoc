@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card, Input, Modal, Icon, Header,Image, Container, Segment, Sidebar, Menu , Grid, Button} from 'semantic-ui-react'
 
-const url = 'http://localhost:1337'
+const url = 'https://powerful-bastion-26209.herokuapp.com'
 
 const customStyles = {
   content : {
