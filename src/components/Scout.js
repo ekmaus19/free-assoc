@@ -29,6 +29,7 @@ class Scout extends React.Component {
       name: '',
       searching: 'none',
       selectedArtist: [],
+      selectedArtistEvents: [],
     }
   }
 
@@ -93,11 +94,15 @@ class Scout extends React.Component {
     })
   }
 
-  // findEvent=() => {
+  findEvents = (artist) => {
+    this.props.socket.on('connect', () => this.setState({connecting: null}))
+    this.props.socket.on('disconnect', () => this.setState({connecting: true}))
+    this.props.socket.emit('getEvents', {userId: artist._id});
+    this.props.socket.on('getEvents', ({events}) => {
+      this.setState({selectedArtistEvents: events})
+    })
 
-  // }
-
-
+  }
 
   onMediumChange = (e) => {
     this.setState ({
@@ -131,6 +136,7 @@ class Scout extends React.Component {
   }
 
   openViewCardModal(artist) {
+    this.findEvents(artist);
     this.setState({
       modalViewCardIsOpen: true,
       selectedArtist: artist,
@@ -255,12 +261,26 @@ class Scout extends React.Component {
                               </Card.Description>
                           </Card.Content>
                         </Grid.Row>
-                        <Grid columns={2} celled='internally'>
+                        <Grid columns={2} celled='internally' style={{ height: '250px'}}>
                           <Grid.Column floated="left">
-                            <h4>Events</h4>
-                            <Grid.Row>Placeholder</Grid.Row>
-                            <Grid.Row>Placeholder</Grid.Row>
-                            <Grid.Row>Placeholder</Grid.Row>
+                            <h4>Hosted Events</h4>
+                            <div style={{overflowY: 'scroll', height: '220px', overflowX:'hidden'}}>
+                            {this.state.selectedArtistEvents.slice(0,3).map(event => {
+                              return (
+                                <Grid divided='vertically'>
+                                  <Grid.Row>
+                                    <Grid.Column width={6}>
+                                      <Image size="tiny" src={'http://powerful-bastion-26209.herokuapp.com/event/'+ event._id +'/profileimg'} />
+                                    </Grid.Column>
+                                    <Grid.Column width={8}>
+                                      <h4>{event.eventName}</h4>
+                                      {event.venueName}
+                                    </Grid.Column>
+                                  </Grid.Row>
+                                </Grid>
+                              );
+                            })}
+                            </div>
                           </Grid.Column>
                           <Grid.Column floated="right">
                             <Grid.Row style={{height: '50%', borderBottom:  '1px solid #d4d4d5'}}>
