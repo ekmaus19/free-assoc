@@ -129,7 +129,6 @@ app.use((req, res, next) => {
   next();
 });
 
-
 mongoose.connection.on('connected', () => {
   console.log('connected to mongoDB');
 });

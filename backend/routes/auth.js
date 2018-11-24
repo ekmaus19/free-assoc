@@ -99,7 +99,7 @@ router.post('/register/artist', upload.single('selectedFile'),(req, res) => {
   console.log("ARTIST IS ", artist)
   artist.save(((err)=>{
     if(err){
-      res.json({success: false, errors: err.errors})
+      err.errmsg ? res.json({success: false, errmsg: err.errmsg}) : res.json({success: false, errors: err.errors})
     } else {
       res.json({success:true, artist:artist})
     }
@@ -171,23 +171,23 @@ router.post('/register/artist', upload.single('selectedFile'),(req, res) => {
 
     router.post('/login/user', passport.authenticate('user'), (req, res) => {
       req.session.user = req.user; //sets current user
-      console.log("User", req.session)
+      // console.log("User", req.session)
       res.json({
         success: true,
         user: req.user,
       });
-      console.log('user logged in');
+      // console.log('user logged in');
     });
 
     router.post('/login/artist', passport.authenticate('artist'), (req, res) => {
-      console.log('****', req.user)
+      // console.log('****', req.user)
       // req.session.user = req.user; //sets current user
       // console.log("Artist", req.session)
       res.json({
         success: true,
         artist: req.user,
       });
-      console.log('artist logged in');
+      // console.log('artist logged in');
     });
 
     router.get('/logout', (req, res) => {
