@@ -101,8 +101,14 @@ class Scout extends React.Component {
     this.props.socket.on('getEvents', ({events}) => {
       this.setState({selectedArtistEvents: events})
     })
-
+    console.log(artist)
   }
+
+  // getContacts = (artist) => {
+  //   fetch(url+`/contacts/${artist._id}`, (err, res) => {
+  //     this.setState
+  //   }
+  // }
 
   onMediumChange = (e) => {
     this.setState ({
@@ -219,7 +225,7 @@ class Scout extends React.Component {
             <Card.Content extra>
               <a>
                 {/* {this.props.contacts.length} Friends */}
-                <Button basic color="violet" style={{display:'inline', justifyContent:'center',padding:'3px',height:'150%',width:'100px', textAlign:'center', margin:'10px'}} color = 'orange' onClick={() => this.openViewCardModal(artist)}>View Profile</Button>
+                <Button basic style={{display:'inline', justifyContent:'center',padding:'3px',height:'150%',width:'100px', textAlign:'center', margin:'10px'}} color = 'orange' onClick={() => this.openViewCardModal(artist)}>View Profile</Button>
 
                 <Modal
                   onClose={this.closeViewCardModal}
@@ -264,8 +270,8 @@ class Scout extends React.Component {
                         <Grid columns={2} celled='internally' style={{ height: '250px'}}>
                           <Grid.Column floated="left">
                             <h4>Hosted Events</h4>
-                            <div style={{overflowY: 'scroll', height: '220px', overflowX:'hidden'}}>
-                            {this.state.selectedArtistEvents.slice(0,3).map(event => {
+                            <div style={{overflowY: 'scroll', height: '170px', overflowX:'hidden'}}>
+                            {this.state.selectedArtistEvents.map(event => {
                               return (
                                 <Grid divided='vertically'>
                                   <Grid.Row>
@@ -286,8 +292,24 @@ class Scout extends React.Component {
                             <Grid.Row style={{height: '50%', borderBottom:  '1px solid #d4d4d5'}}>
                               <h4>Self Tags</h4>
                             </Grid.Row>
-                            <Grid.Row style={{height: '50%' }}>
+                            <Grid.Row style={{height: '50%'}}>
                               <h4>Friends</h4>
+                              <div style={{ overflowY: 'scroll', overflowX: 'hidden', height: '95%' }}>
+                                {this.state.selectedArtist.connections ? this.state.selectedArtist.connections.map(contact => {
+                                  return (
+                                    <Grid divided='vertically'>
+                                      <Grid.Row>
+                                        <Grid.Column width={6}>
+                                          <Image size="tiny" src={'http://powerful-bastion-26209.herokuapp.com/contacts/'+ contact +'/profileimg'} />
+                                        </Grid.Column>
+                                        <Grid.Column width={8}>
+                                          Placeholder
+                                        </Grid.Column>
+                                      </Grid.Row>
+                                    </Grid>
+                                  );
+                                }): null}
+                              </div>
                             </Grid.Row>
                           </Grid.Column>
                         </Grid>
