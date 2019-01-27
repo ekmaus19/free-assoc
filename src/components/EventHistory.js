@@ -133,7 +133,7 @@ render() {
         <Label basic color='violet' pointing='right' style={{width:'80%',marginRight:'auto'}} >
           Current Events
         </Label>
-        <Checkbox slider style={{marginRight:'30px',marginRight:'30px',padding:'20px'}} onClick={this.toggleSwitch} on={this.state.switched ? this.state.switched : undefined}/>
+        <Checkbox slider style={{marginRight:'30px',marginRight:'30px',padding:'20px'}} onClick={this.toggleSwitch} on={`${this.state.switched ? this.state.switched : undefined}`}/>
         <Label basic color='violet' pointing='left' style={{marginLeft:'auto'}} >
           Past Events
         </Label>

@@ -55,6 +55,7 @@ const delimiters = [KeyCodes.comma, KeyCodes.enter];
         about: '',
         tags: [],
         priceError: 'none',
+        errors: [],
       suggestions:[suggestionsList]
       };
     }
@@ -127,6 +128,12 @@ const delimiters = [KeyCodes.comma, KeyCodes.enter];
       .then(function (result) {
         if (result.data.success) {
           self.props.setMode('T1');
+        } else {
+          let errors = result.data.errors
+          errors = Object.values(errors)
+          errors = errors.map(error => error.message.split('Path ')[1])
+          console.log(errors)
+          self.setState({ errors })
         }
       })
       .catch(err => {
@@ -225,6 +232,10 @@ const delimiters = [KeyCodes.comma, KeyCodes.enter];
     }
 
  }
+
+ dismissErrors = () => {
+   this.setState({ errors: [] })
+ }
   fileSelectedHandler=(event)=>{
     this.setState({
       selectedFile: event.target.files[0]
@@ -232,62 +243,77 @@ const delimiters = [KeyCodes.comma, KeyCodes.enter];
   }
     render() {
       const {tags,suggestions} = this.state
+      const errors = () => {
+        if (this.state.errors.length > 0) {
+        return (
+          <Message
+            negative
+            onDismiss={() => this.dismissErrors()}
+            header='Registeration Errors'
+            list={this.state.errors}
+          />
+          )
+        }
+      }
       return (
-        <Form>
-          <Form.Group style={{display:'flex'}}>
-          <Form.Field required control={Input} label='Event Name' placeholder='Event Name' onChange={this.onEventNameChange} />
-          <Form.Field required control={Input} label='Venue Name' placeholder='Venue Name' onChange={this.onVenueNameChange}/>
-        </Form.Group>
-        <Form.Group inline>
-           <label>Medium</label>
-           <br />
-          <Select label='Medium' style={{width:'100%'}} onChange = {this.onMediumChange} options={options} className = "field" />
-        </Form.Group>
-          From - To
-          <DatesRangeInput
-            inline
-            name="datesRange"
-            placeholder="Date Range"
-            value={this.state.datesRange}
-            iconPosition="left"
-            onChange={this.handleDateChange} />
-            <br />
-          Event Time
-          <TimeRangePicker hourmarkers hourlines timeupdate={this.pickerupdate} style={{height: '500px', width: '500px', marginBottom: '60px'}}/>
+        <div>
+          {errors()}
+          <Form>
+            <Form.Group style={{display:'flex'}}>
+            <Form.Field required control={Input} label='Event Name' placeholder='Event Name' onChange={this.onEventNameChange} />
+            <Form.Field required control={Input} label='Venue Name' placeholder='Venue Name' onChange={this.onVenueNameChange}/>
+          </Form.Group>
+          <Form.Group inline>
+             <label>Medium</label>
              <br />
-            <Form.Field required control={TextArea} label='About' placeholder='Tell us a little more about the event...' onChange={this.onAboutChange} />
-          <br />
-             <Form.Field required control={Input} label='$' placeholder='Price' onChange={this.onPriceChange} value={this.state.price} />
-             <Message
-                error
-                header='Please enter numbers only'
-                style={{display: this.state.priceError}}
-              />
-             <Form.Field required control={Input} label='Street Address' placeholder='Street Address' onChange={this.onAddressChange} />
-             <Form.Field required control={Input} label='City' placeholder='City' onChange={this.onCityChange}/>
-             <Form.Field required control={Input} label='State' placeholder='State'  onChange={this.onStateChange}/>
-             <Form.Field required control={Input} label='Country' placeholder='Country' onChange={this.onCountryChange}/>
-             <div style={{position:'relative', width:'150%', background:'light-grey',  display:'flex', justifyContent:'center'}}>
-                <ReactTags
-                    tags={tags}
-                    suggestions={suggestions[0]}
-                    handleDelete={this.handleDelete}
-                    handleAddition={this.handleAddition}
-                    handleDrag={this.handleDrag}
-                    delimiters={delimiters} />
-            </div>
+            <Select label='Medium' style={{width:'100%'}} onChange = {this.onMediumChange} options={options} className = "field" />
+          </Form.Group>
+            From - To
+            <DatesRangeInput
+              inline
+              name="datesRange"
+              placeholder="Date Range"
+              value={this.state.datesRange}
+              iconPosition="left"
+              onChange={this.handleDateChange} />
+              <br />
+            Event Time
+            <TimeRangePicker hourmarkers hourlines timeupdate={this.pickerupdate} style={{height: '500px', width: '500px', marginBottom: '60px'}}/>
+               <br />
+              <Form.Field required control={TextArea} label='About' placeholder='Tell us a little more about the event...' onChange={this.onAboutChange} />
             <br />
-            <div style={{display:'flex'}} >
-            <Input required style={{marginRight:'auto', width:'100%'}} type='file' onChange={this.fileSelectedHandler} name='selectedFile' />
-            </div>
-            <br />
-            <Button style={{margin:'20px',marginLeft:'auto',marginRight:'auto', alignItems:'center'}} color = 'pink' className = "logout-button"  animated onClick = {this.onCreate}>
-             <Button.Content visible>Create Event Go!</Button.Content>
-                 <Button.Content hidden>
-                     <Icon name='right arrow'   />
-                 </Button.Content>
-             </Button>
-        </Form>
+               <Form.Field required control={Input} label='$' placeholder='Price' onChange={this.onPriceChange} value={this.state.price} />
+               <Message
+                  error
+                  header='Please enter numbers only'
+                  style={{display: this.state.priceError}}
+                />
+               <Form.Field required control={Input} label='Street Address' placeholder='Street Address' onChange={this.onAddressChange} />
+               <Form.Field required control={Input} label='City' placeholder='City' onChange={this.onCityChange}/>
+               <Form.Field required control={Input} label='State' placeholder='State'  onChange={this.onStateChange}/>
+               <Form.Field required control={Input} label='Country' placeholder='Country' onChange={this.onCountryChange}/>
+               <div style={{position:'relative', width:'150%', background:'light-grey',  display:'flex', justifyContent:'center'}}>
+                  <ReactTags
+                      tags={tags}
+                      suggestions={suggestions[0]}
+                      handleDelete={this.handleDelete}
+                      handleAddition={this.handleAddition}
+                      handleDrag={this.handleDrag}
+                      delimiters={delimiters} />
+              </div>
+              <br />
+              <div style={{display:'flex'}} >
+              <Input required style={{marginRight:'auto', width:'100%'}} type='file' onChange={this.fileSelectedHandler} name='selectedFile' />
+              </div>
+              <br />
+              <Button style={{margin:'20px',marginLeft:'auto',marginRight:'auto', alignItems:'center'}} color = 'pink' className = "logout-button"  animated onClick = {this.onCreate}>
+               <Button.Content visible>Create Event Go!</Button.Content>
+                   <Button.Content hidden>
+                       <Icon name='right arrow'   />
+                   </Button.Content>
+               </Button>
+          </Form>
+        </div>
       );
     }
   }

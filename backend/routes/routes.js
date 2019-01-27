@@ -45,6 +45,7 @@ router.post('/fileUpload', upload.single('selectedFile'),function(req,res,next){
   }).save((err,event)=> {
     if (err){
       console.log(err)
+      res.json({sucess: false, errors: err.errors})
     } else{
       console.log('saved')
       res.json({success:true})
