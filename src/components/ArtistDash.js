@@ -93,7 +93,7 @@ const SidebarExampleVisible = (props) => (
     </Sidebar>
 
     <Sidebar.Pusher>
-      <Container style={{paddingTop:'20px',paddingLeft:'30px',paddingRight:'185px'}} basic >
+      <Container style={{paddingTop:'20px',paddingLeft:'30px',paddingRight:'185px'}} basic="true">
         {renderContent(props.mode, props.socket, props.artist, props.setMode, props.contacts, props.contactList)}
 
       </Container>
@@ -160,7 +160,7 @@ class ArtistDash extends Component {
      } else if (this.props.artist.medium === 'performance' && this.props.artist.img === null){
        src = '/img/3.png'
      } else {
-       src = url + this.props.artist._id +'/profileimg'
+       src = `${url}/artist/${this.props.artist._id}/profileimg`
      }
 
     return(
