@@ -120,6 +120,12 @@ router.get('/contacts/:id/profileimg',(req,res)=>{
 //   }
 // });
 
+router.get('/events', (req, res) => {
+  Event.find({}, (err, users) => {
+    res.json(users)
+  })
+})
+
 //get contact list
 router.get('/contacts/:userId', (req, res) => {
   const contacts = []

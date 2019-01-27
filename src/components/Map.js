@@ -692,7 +692,7 @@ findWTFPoint = (latitude, longitude, clickedWTF) => {
                 </div>
               </Tab>)
     } else {
-      return ( <Tab id="event" header="More Info" icon="fa fa-info-circle"><p classN ame="timeLabels">No Event Selected</p></Tab>)
+      return ( <Tab id="event" header="More Info" icon="fa fa-info-circle"><p className="timeLabels">No Event Selected</p></Tab>)
     }
   }
 
@@ -740,8 +740,8 @@ findWTFPoint = (latitude, longitude, clickedWTF) => {
             <button  className={this.state.filterArt ? "buttonArt" : "buttonOff" } onClick={(e) => { this.setState({filterArt: !this.state.filterArt}); }}>A</button>
             <Button onClick={this.findPlace}>Search</Button>
           </Grid.Row> */}
-          <Grid.Row><Button compact small inverted color ="orange" className="buttonFindMe buttonSmaller" onClick={() => this.handleClick()}>Find Me</Button></Grid.Row>
-          <Grid.Row><Button massive basic inverted color="red" className="buttonWTF buttonSmaller" onClick={() => this.handleClickWTF(filterData ? filterData : this.state.data)}>WTF</Button></Grid.Row>
+          <Grid.Row><Button compact small="true" inverted color ="orange" className="buttonFindMe buttonSmaller" onClick={() => this.handleClick()}>Find Me</Button></Grid.Row>
+          <Grid.Row><Button massive="true" basic inverted color="red" className="buttonWTF buttonSmaller" onClick={() => this.handleClickWTF(filterData ? filterData : this.state.data)}>WTF</Button></Grid.Row>
 
           <Grid.Row>
 
@@ -754,7 +754,7 @@ findWTFPoint = (latitude, longitude, clickedWTF) => {
           </Grid.Row>
           <Grid.Row>
             <Sidebar id="sidebar" collapsed={this.state.collapsed} selected={this.state.selected}
-                     onOpen={this.onSidebarOpen.bind(this)} onClose={this.onSidebarClose.bind(this)}>
+                     onOpen={this.onSidebarOpen.bind(this)} onClose={this.onSidebarClose.bind(this)} closeIcon="fa fa-globe">
               <Tab id="home1" header="Find a Place" icon="fa fa-globe">
               <br/>
                 <Input action="Search" className="placeSearhBar placeSearch" placeholder="Find a place..." onChange={this.onSearchChange} onDoubleClick={this.findPlace}/>
@@ -777,7 +777,7 @@ findWTFPoint = (latitude, longitude, clickedWTF) => {
                             value={this.state.date}
                             onChange={this.handleSomeChange}
                             popupPosition="bottom right"
-                            dimmer={false}/>
+                            dimmer="false"/>
                     </Form>
                   </div>
                 </div>
@@ -786,7 +786,7 @@ findWTFPoint = (latitude, longitude, clickedWTF) => {
 
               </Tab>
               {/* <Tab id="music" placeholder="M" icon="fa fa-meh-o"></Tab> */}
-              <Tab header="What do you care about?" icon="fa fa-tags">
+              <Tab header="What do you care about?" icon="fa fa-tags" id="add">
                 {/* <Input action="Search" className="placeSearhBar" placeholder="Search a tag..." onChange={this.onTagsAdd}/> */}
                   <br/>
                 <ReactTags
