@@ -174,7 +174,7 @@ router.get('/pending/received/:userId', (req, res) => {
 
 // send connection invite
 router.post('/connect', (req, res) => {
-  
+
   Artist.findOne({ username: req.body.username }, (err, artist) => {
     if (err) {
       res.send(err)
