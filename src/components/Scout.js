@@ -235,7 +235,7 @@ class Scout extends React.Component {
                 <Modal
                   onClose={this.closeViewCardModal}
                   dimmer={'inverted'}
-                 size={'mini'}
+                 size={'small'}
                   open={this.state.modalViewCardIsOpen}
                   style={customStyles}>
                   <Grid columns={2} celled='internally'>
@@ -276,12 +276,12 @@ class Scout extends React.Component {
                           <Grid.Column floated="left">
                             <h4>Hosted Events</h4>
                             <div style={{overflowY: 'scroll', height: '170px', overflowX:'hidden'}}>
-                            {this.state.selectedArtistEvents.map(event => {
+                            {this.state.selectedArtistEvents.map((event, i) => {
                               return (
-                                <Grid divided='vertically'>
+                                <Grid divided='vertically' key={i}>
                                   <Grid.Row>
                                     <Grid.Column width={6}>
-                                      <Image size="tiny" src={url + '/event/'+ event._id +'/profileimg'} />
+                                      <Image size="tiny" src={`${url}/event/${event._id}/profileimg`} />
                                     </Grid.Column>
                                     <Grid.Column width={8}>
                                       <h4>{event.eventName}</h4>
