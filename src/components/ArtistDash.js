@@ -139,7 +139,6 @@ class ArtistDash extends Component {
       method: 'GET',
     }).then(res => res.json())
     .then(json => {
-      console.log('JSON ---->', json)
       this.setState({
         contacts: json.contacts,
       })

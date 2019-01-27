@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Input, Button, Card, Container,Image, Modal, Row, Col } from 'semantic-ui-react'
+import { Input, Button, Card, Container,Image, Modal, Grid } from 'semantic-ui-react'
 
 
 import url from './backend'
@@ -228,14 +228,14 @@ class Contact extends React.Component {
   render() {
     const renderContacts = () => {
       if (this.props.contacts) {
-        return this.props.contacts.map(contact => {
+        return this.props.contacts.map((contact, i) => {
 
           return (
-            <div>
+            <div key={i}>
             <Card.Group itemsPerRow={4}>
             <Card  >
               <Card.Content>
-                <Image floated='right' size='mini' src={url + '/contacts/'+ contact._id +'/profileimg'} />
+                <Image floated='left' size='mini' src={url + '/contacts/'+ contact._id +'/profileimg'} />
                 <Card.Header>{contact.username}</Card.Header>
                 <Card.Meta>{contact.medium}</Card.Meta>
                 <Card.Description textAlign='left'>
@@ -263,20 +263,29 @@ class Contact extends React.Component {
                       Phone #:
                       </div>
                       <br /><br />
-                      Events:
-                      <div style={{display: 'flex', color: 'black'}}>
-                      {this.state.events.map(event => {
-                        return (
-                          <div>
-                            <p>{event.eventName} - {event.price}</p>
-                            <p>{event.datesRange}</p>
-                            <p>{event.startTime} - {event.endTime}</p>
-                            <p>{event.venueName}</p>
-                            <p>{event.streetAddress}, {event.city}, {event.state}</p>
-                          </div>
-                        )
-                      })}
-                      </div>
+                      <Grid.Column floated="left">
+                        Events:
+                        <div style={{overflowY: 'scroll', height: '170px', overflowX:'hidden'}}>
+                        {this.state.events.map((event, i) => {
+                          return (
+                            <Grid divided='vertically' key={i}>
+                              <Grid.Row>
+                                <Grid.Column width={6}>
+                                  <Image size="tiny" src={`${url}/event/${event._id}/profileimg`} />
+                                </Grid.Column>
+                                <Grid.Column width={8}>
+                                  <h4>{event.eventName}</h4>
+                                  {event.venueName} <br />
+                                  {event.streetAddress}, {event.city} {event.state} <br />
+                                  {event.datesRange} <br />
+                                  {event.startTime} - {event.endTime}
+                                </Grid.Column>
+                              </Grid.Row>
+                            </Grid>
+                          );
+                        })}
+                        </div>
+                      </Grid.Column>
                       <div className='ui two buttons'>
                       <Button basic color='violet' onClick={()=> this.deleteContactModal(contact._id)} >
                        Delete Contact
