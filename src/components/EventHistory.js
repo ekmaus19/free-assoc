@@ -1,6 +1,7 @@
 import React from 'react'
 import Gallery from 'react-grid-gallery';
 import { Checkbox,Card, Button, Icon, Image, Item, Label,Form, Container} from 'semantic-ui-react'
+import url from './backend'
 
 const src = './img/music.jpg'
 
@@ -169,7 +170,7 @@ render() {
                   {event.tags}
                 </a>
               }
-              raised image={'http://powerful-bastion-26209.herokuapp.com/event/'+ event._id +'/profileimg'} />
+              raised image={url + '/event/'+ event._id +'/profileimg'} />
 
             </div>
 

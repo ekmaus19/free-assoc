@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card, Input, Modal, Icon, Header,Image, Container, Segment, Sidebar, Menu , Grid, Button} from 'semantic-ui-react'
 
-const url = 'https://powerful-bastion-26209.herokuapp.com'
+import url from './backend'
 
 const customStyles = {
   content : {
@@ -205,7 +205,7 @@ class Scout extends React.Component {
           {this.state.artists.map((artist,i)=>
           <Card style={{justifyContent:'center', alignItems:'center'}}>
             <Container >
-              <Image style={{marginLeft:'auto',marginRight:'auto',width:'75%', height:'75%',padding:'10px'}} src={'http://powerful-bastion-26209.herokuapp.com/artist/'+ artist._id +'/profileimg'}/>
+              <Image style={{marginLeft:'auto',marginRight:'auto',width:'75%', height:'75%',padding:'10px'}} src={url + '/artist/'+ artist._id +'/profileimg'}/>
             </Container>
             <Card.Content>
               <Card.Header>{artist.firstName} {artist.lastName}</Card.Header>
@@ -238,7 +238,7 @@ class Scout extends React.Component {
                       <Grid.Column textAlign="center" style={{textAlign: 'center'}} width={5}>
                         {/* Left Panel */}
                         <Container >
-                          <Image style={{marginLeft:'auto',marginRight:'auto',width:'65%', height:'65%',padding:'10px'}} src={'http://powerful-bastion-26209.herokuapp.com/artist/'+ this.state.selectedArtist._id +'/profileimg'}/>
+                          <Image style={{marginLeft:'auto',marginRight:'auto',width:'65%', height:'65%',padding:'10px'}} src={url + '/artist/'+ this.state.selectedArtist._id +'/profileimg'}/>
                         </Container>
                         <Card.Content>
                           <Card.Header>{this.state.selectedArtist.firstName} {this.state.selectedArtist.lastName}</Card.Header>
@@ -276,7 +276,7 @@ class Scout extends React.Component {
                                 <Grid divided='vertically'>
                                   <Grid.Row>
                                     <Grid.Column width={6}>
-                                      <Image size="tiny" src={'http://powerful-bastion-26209.herokuapp.com/event/'+ event._id +'/profileimg'} />
+                                      <Image size="tiny" src={url + '/event/'+ event._id +'/profileimg'} />
                                     </Grid.Column>
                                     <Grid.Column width={8}>
                                       <h4>{event.eventName}</h4>
@@ -300,7 +300,7 @@ class Scout extends React.Component {
                                     <Grid divided='vertically'>
                                       <Grid.Row>
                                         <Grid.Column width={6}>
-                                          <Image size="tiny" src={'http://powerful-bastion-26209.herokuapp.com/contacts/'+ contact +'/profileimg'} />
+                                          <Image size="tiny" src={url + '/contacts/'+ contact +'/profileimg'} />
                                         </Grid.Column>
                                         <Grid.Column width={8}>
                                           Placeholder

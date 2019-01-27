@@ -5,9 +5,10 @@ import MainMap from './Map';
 import ContactList from './ContactList';
 import EventHistory from './EventHistory';
 import Scout from './Scout';
+import url from './backend'
 
 
-const url = 'http://powerful-bastion-26209.herokuapp.com'
+// const url = url + ''
 
 // toMap = () => this.props.redirect('Map')
 
@@ -159,7 +160,7 @@ class ArtistDash extends Component {
      } else if (this.props.artist.medium === 'performance' && this.props.artist.img === null){
        src = '/img/3.png'
      } else {
-       src = 'http://powerful-bastion-26209.herokuapp.com/artist/'+ this.props.artist._id +'/profileimg'
+       src = url + this.props.artist._id +'/profileimg'
      }
 
     return(

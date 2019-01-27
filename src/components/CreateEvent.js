@@ -10,6 +10,7 @@ import axios from 'axios';
 import cors from 'cors';
 import suggestionsList from './suggestion_categories'
 // import GOOGLE_API_KEY from '../../env.sh'
+import url from './backend'
 
 var geocoder = require('google-geocoder');
 var geo = geocoder({
@@ -122,7 +123,7 @@ const delimiters = [KeyCodes.comma, KeyCodes.enter];
         formData.append('longitude', result[0].location.lng)
       }
 
-      axios.post('http://powerful-bastion-26209.herokuapp.com/fileUpload', formData)
+      axios.post(url + '/fileUpload', formData)
       .then(function (result) {
         if (result.data.success) {
           self.props.setMode('T1');
@@ -137,7 +138,7 @@ const delimiters = [KeyCodes.comma, KeyCodes.enter];
    // formData.append('selectedFile', selectedFile);
    //   formData.append('latitude', response[0].lat)
    //   formData.append('longitude', response[0].lon)
-   //   return axios.post('http://powerful-bastion-26209.herokuapp.com/fileUpload', formData);
+   //   return axios.post(url + '/fileUpload', formData);
    // })
     // .then((result)=> {
     //   console.log('redirect****')

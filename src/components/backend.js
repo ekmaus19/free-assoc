@@ -1,1 +1,2 @@
-export default URL='http://powerful-bastion-26209.herokuapp.com'
+// export default URL=url + ''
+export default URL='http://localhost:1337'

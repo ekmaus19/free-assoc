@@ -120,7 +120,7 @@ app.use(validator());
 app.use((req, res, next) => {
   res.header(
     "Access-Control-Allow-Origin",
-    "https://powerful-bastion-26209.herokuapp.com"
+    "http://localhost:3000"
   );
   res.header(
     "Access-Control-Allow-Headers",
@@ -185,9 +185,9 @@ passport.use('artist', new LocalStrategy (
         return done(null, false, { message: 'Incorrect username' });
       }
       if (artist.password !== password) {
+        console.log(artist,'#############')
         return done(null, false, { message: 'Incorrect password' });
       }
-      console.log(artist,'#############')
       return done(null, artist);
     });
   },
