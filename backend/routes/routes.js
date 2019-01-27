@@ -156,8 +156,9 @@ router.get('/pending/sent/:userId', (req, res) => {
 //get received invites
 router.get('/pending/received/:userId', (req, res) => {
   Connection.find({invitee: req.params.userId})
-  .populate({ path: 'requester', model: 'Artist' })
+  .populate('requester')
   .exec( (err, connection) => {
+    console.log('Populate', connection)
     if (err) {
       console.log(err)
     }

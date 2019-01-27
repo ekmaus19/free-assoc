@@ -116,15 +116,15 @@ class Scout extends React.Component {
     })
   }
 
-  sendConnection = (artist) => {
-    console.log(artist)
+  sendConnection = (invitee) => {
     fetch(url + `/connect`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        username: artist.username
+        username: invitee.username,
+        requester: this.props.artist._id
       })
     })
     .then(res => res.json())
@@ -257,7 +257,7 @@ class Scout extends React.Component {
 
                           </Card.Description>
                         </Card.Content>
-                        <Button style={{padding:'3px',height:'150%',width:'100px', textAlign:'center', margin:'10px auto auto auto'}} color = 'orange' onClick={() => { console.log(artist); this.sendConnection(artist) }}>Connect</Button>
+                        <Button style={{padding:'3px',height:'150%',width:'100px', textAlign:'center', margin:'10px auto auto auto'}} color = 'orange' onClick={() => this.sendConnection(artist)}>Connect</Button>
                         <Button
                         style={{display:'inline', justifyContent:'flex-end',padding:'3px',height:'150%',width:'100px', textAlign:'center', margin:'10px auto'}}
                         basic color = 'red'
@@ -323,7 +323,7 @@ class Scout extends React.Component {
                   </Grid>
               </Modal>
 
-                <Button style={{display:'inline', justifyContent:'center',padding:'3px',height:'150%',width:'100px', textAlign:'center', margin:'10px'}} color = 'orange' onClick={() => this.sendConnection(artist)}>Connect</Button>
+                <Button style={{display:'inline', justifyContent:'center',padding:'3px',height:'150%',width:'100px', textAlign:'center', margin:'10px'}} color = 'orange' onClick={() => this.sendConnection(artist, this.state.artist)}>Connect</Button>
               </a>
             </Card.Content>
           </Card>

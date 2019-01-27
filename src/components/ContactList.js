@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Input, Button, Card, Container,Image, Modal } from 'semantic-ui-react'
+import { Input, Button, Card, Container,Image, Modal, Row, Col } from 'semantic-ui-react'
 
 
 import url from './backend'
@@ -315,9 +315,12 @@ class Contact extends React.Component {
         return this.state.received.map((received, i) => {
           return (
             <div key = {i} style={{ 'margin' : "1em 0 0 1em"}}>
-              <Image size='mini' src={url + '/artist/'+ received.requester._id +'/profileimg'} />
-              Name: {received.requester.firstName} {received.requester.lastName} <br />
-              Username: {received.requester.username}
+              <div>
+                <div style={{ display: 'inline-block', marginRight: '3px'}}><Image size='mini' src={`${url}/artist/${received.requester._id}/profileimg`} /></div>
+                <div style={{ display: 'inline-block'}}>Name: {received.requester.firstName} {received.requester.lastName} <br />
+                Username: {received.requester.username}</div>
+              </div>
+
               <br />
               <div style={{display:'inline', justifyContent:'center', marginTop:'20px'}}>
                <Button
