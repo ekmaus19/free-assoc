@@ -149,6 +149,7 @@ render() {
               description={event.about}
               extra={
                 <a>
+                  <label>{event.rating > 0 ? `Rating: ${event.rating}/5` : null}</label> <br />
                   <label style={{fontWeight:'bold'}} > Event Price: </label>
                   $ {event.price}
                   <br />

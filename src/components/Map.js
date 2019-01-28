@@ -216,11 +216,11 @@ export default class MainMap extends Component {
 
       var currDate = moment().format('YYYY-MM-DD');
       var currTime = moment().format("HH:mm")
-      console.log(currDate)
+      // console.log(currDate)
       // currDate = moment(String(currDate))
       // console.log("TESTING DATE ", currDate)
 
-      console.log(json[1])
+      // console.log(json[1])
       for(var i=0; i<json.length; i++) {
         if(json[i].latitude && json[i].longitude && json[i].datesRange) {
           json[i].latitude = parseFloat(json[i].latitude)
@@ -523,7 +523,7 @@ findWTFPoint = (latitude, longitude, clickedWTF) => {
       instantGratification: false,
       future: false,
     })
-    console.log(this.state.nowTime)
+    console.log('Today Time',this.state.nowTime)
   }
 
   handleSomeChange = (event, {name, value}) => {
@@ -571,6 +571,7 @@ findWTFPoint = (latitude, longitude, clickedWTF) => {
 
     // copy data and allow the buttons to filter the map
     let filterData = this.state.data.slice()
+    console.log(filterData)
 
 /// figure out the event times: display events happening right now vs events happening later today
 
@@ -579,9 +580,10 @@ findWTFPoint = (latitude, longitude, clickedWTF) => {
         let dud = []
         // find events that are happening right now!!
         // if the current timetime is less than the end time of event AND AFTER start time
+        console.log('filterData', filterData)
         for(var i=0; i<filterData.length; i++) {
-          console.log(String(this.state.nowTime))
-          console.log(filterData[i].datesRange)
+          console.log('Now time', String(this.state.nowTime))
+          console.log('Date Rnage', filterData[i].datesRange)
           if(this.state.nowTime >=filterData[i].datesRange[0] && this.state.nowTime <= filterData[i].datesRange[1]) {
             if(filterData[i].startTime <= this.state.nowHourTime < filterData[i].endTime) {
               dud.push(filterData[i])

@@ -107,7 +107,8 @@ const delimiters = [KeyCodes.comma, KeyCodes.enter];
       country: this.state.country,
       about: this.state.about,
       price: this.state.price,
-      tags: this.state.tags
+      tags: this.state.tags,
+      rating: 0
   }
     const { description, selectedFile} = this.state;
     // e.preventDefault();
