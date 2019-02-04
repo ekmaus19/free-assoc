@@ -1,6 +1,7 @@
 import React from 'react'
 import Gallery from 'react-grid-gallery';
 import { Checkbox,Card, Button, Icon, Image, Item, Label,Form, Container} from 'semantic-ui-react'
+import url from './backend'
 
 const src = './img/music.jpg'
 
@@ -132,7 +133,7 @@ render() {
         <Label basic color='violet' pointing='right' style={{width:'80%',marginRight:'auto'}} >
           Current Events
         </Label>
-        <Checkbox slider style={{marginRight:'30px',marginRight:'30px',padding:'20px'}} onClick={this.toggleSwitch} on={this.state.switched}/>
+        <Checkbox slider style={{marginRight:'30px',marginRight:'30px',padding:'20px'}} onClick={this.toggleSwitch} on={`${this.state.switched ? this.state.switched : undefined}`}/>
         <Label basic color='violet' pointing='left' style={{marginLeft:'auto'}} >
           Past Events
         </Label>
@@ -148,6 +149,7 @@ render() {
               description={event.about}
               extra={
                 <a>
+                  <label>{event.rating > 0 ? `Rating: ${event.rating}/5` : null}</label> <br />
                   <label style={{fontWeight:'bold'}} > Event Price: </label>
                   $ {event.price}
                   <br />
@@ -169,7 +171,7 @@ render() {
                   {event.tags}
                 </a>
               }
-              raised image={'http://powerful-bastion-26209.herokuapp.com/event/'+ event._id +'/profileimg'} />
+              raised image={url + '/event/'+ event._id +'/profileimg'} />
 
             </div>
 

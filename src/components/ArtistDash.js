@@ -5,9 +5,10 @@ import MainMap from './Map';
 import ContactList from './ContactList';
 import EventHistory from './EventHistory';
 import Scout from './Scout';
+import url from './backend'
 
 
-const url = 'http://powerful-bastion-26209.herokuapp.com'
+// const url = url + ''
 
 // toMap = () => this.props.redirect('Map')
 
@@ -92,7 +93,7 @@ const SidebarExampleVisible = (props) => (
     </Sidebar>
 
     <Sidebar.Pusher>
-      <Container style={{paddingTop:'20px',paddingLeft:'30px',paddingRight:'185px'}} basic >
+      <Container style={{paddingTop:'20px',paddingLeft:'30px',paddingRight:'185px'}} basic="true">
         {renderContent(props.mode, props.socket, props.artist, props.setMode, props.contacts, props.contactList)}
 
       </Container>
@@ -138,7 +139,6 @@ class ArtistDash extends Component {
       method: 'GET',
     }).then(res => res.json())
     .then(json => {
-      console.log('JSON ---->', json)
       this.setState({
         contacts: json.contacts,
       })
@@ -159,7 +159,7 @@ class ArtistDash extends Component {
      } else if (this.props.artist.medium === 'performance' && this.props.artist.img === null){
        src = '/img/3.png'
      } else {
-       src = 'http://powerful-bastion-26209.herokuapp.com/artist/'+ this.props.artist._id +'/profileimg'
+       src = `${url}/artist/${this.props.artist._id}/profileimg`
      }
 
     return(

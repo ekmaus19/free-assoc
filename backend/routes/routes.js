@@ -45,6 +45,7 @@ router.post('/fileUpload', upload.single('selectedFile'),function(req,res,next){
   }).save((err,event)=> {
     if (err){
       console.log(err)
+      res.json({sucess: false, errors: err.errors})
     } else{
       console.log('saved')
       res.json({success:true})
@@ -120,6 +121,12 @@ router.get('/contacts/:id/profileimg',(req,res)=>{
 //   }
 // });
 
+router.get('/events', (req, res) => {
+  Event.find({}, (err, users) => {
+    res.json(users)
+  })
+})
+
 //get contact list
 router.get('/contacts/:userId', (req, res) => {
   const contacts = []
@@ -156,8 +163,9 @@ router.get('/pending/sent/:userId', (req, res) => {
 //get received invites
 router.get('/pending/received/:userId', (req, res) => {
   Connection.find({invitee: req.params.userId})
-  .populate({ path: 'requester', model: 'Artist' })
+  .populate('requester')
   .exec( (err, connection) => {
+    console.log('Populate', connection)
     if (err) {
       console.log(err)
     }
@@ -174,7 +182,7 @@ router.get('/pending/received/:userId', (req, res) => {
 
 // send connection invite
 router.post('/connect', (req, res) => {
-  
+
   Artist.findOne({ username: req.body.username }, (err, artist) => {
     if (err) {
       res.send(err)

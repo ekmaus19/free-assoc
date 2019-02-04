@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card, Input, Modal, Icon, Header,Image, Container, Segment, Sidebar, Menu , Grid, Button} from 'semantic-ui-react'
 
-const url = 'https://powerful-bastion-26209.herokuapp.com'
+import url from './backend'
 
 const customStyles = {
   content : {
@@ -84,7 +84,7 @@ class Scout extends React.Component {
           findArtistErr: '',
           searching: 'none'
         })
-        console.log("success")
+        // console.log("success")
       } else {
         this.setState({ findArtistErr: json.error, searching: 'none'});
       }
@@ -116,28 +116,32 @@ class Scout extends React.Component {
     })
   }
 
-  sendConnection = (artist) => {
-    fetch(url + `/connect/${this.props.artist._id}`, {
+  sendConnection = (invitee) => {
+    fetch(url + `/connect`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        artist: artist
+        username: invitee.username,
+        requester: this.props.artist._id
       })
     })
     .then(res => res.json())
     .then(json => {
-      console.log('JSON ----->', json)
+      // console.log('JSON ----->', json)
       if (json.success) {
         this.setState({
           connection: json.connection,
         })
         alert('Invite sent!')
+      } else {
+        alert('Oh no, something went wrong')
       }
     })
     .catch((err) => {
       throw err
+      alert('Something went wrong')
     })
   }
 
@@ -176,8 +180,9 @@ class Scout extends React.Component {
         <div style={{display:'inline', marginBotton:'20px'}}>
         <select
           className="ui dropdown"
-          onChange={(e) => this.setState({medium: e.target.value})}>
-          <option value="" disabled selected style={{ color: '#c0c0c0' }}>Search By Medium</option>
+          onChange={(e) => this.setState({medium: e.target.value})}
+          defaultValue="">
+          <option value="" disabled style={{ color: '#c0c0c0' }}>Search By Medium</option>
           <option value="music">Music</option>
           <option value="art">Art</option>
           <option value="performance">Performance</option>
@@ -203,9 +208,9 @@ class Scout extends React.Component {
           <Card.Group itemsPerRow={4}>
 
           {this.state.artists.map((artist,i)=>
-          <Card style={{justifyContent:'center', alignItems:'center'}}>
+          <Card style={{justifyContent:'center', alignItems:'center'}} key={i}>
             <Container >
-              <Image style={{marginLeft:'auto',marginRight:'auto',width:'75%', height:'75%',padding:'10px'}} src={'http://powerful-bastion-26209.herokuapp.com/artist/'+ artist._id +'/profileimg'}/>
+              <Image style={{marginLeft:'auto',marginRight:'auto',width:'75%', height:'75%',padding:'10px'}} src={url + '/artist/'+ artist._id +'/profileimg'}/>
             </Container>
             <Card.Content>
               <Card.Header>{artist.firstName} {artist.lastName}</Card.Header>
@@ -230,7 +235,7 @@ class Scout extends React.Component {
                 <Modal
                   onClose={this.closeViewCardModal}
                   dimmer={'inverted'}
-                 size={'medium'}
+                 size={'small'}
                   open={this.state.modalViewCardIsOpen}
                   style={customStyles}>
                   <Grid columns={2} celled='internally'>
@@ -238,7 +243,7 @@ class Scout extends React.Component {
                       <Grid.Column textAlign="center" style={{textAlign: 'center'}} width={5}>
                         {/* Left Panel */}
                         <Container >
-                          <Image style={{marginLeft:'auto',marginRight:'auto',width:'65%', height:'65%',padding:'10px'}} src={'http://powerful-bastion-26209.herokuapp.com/artist/'+ this.state.selectedArtist._id +'/profileimg'}/>
+                          <Image style={{marginLeft:'auto',marginRight:'auto',width:'65%', height:'65%',padding:'10px'}} src={url + '/artist/'+ this.state.selectedArtist._id +'/profileimg'}/>
                         </Container>
                         <Card.Content>
                           <Card.Header>{this.state.selectedArtist.firstName} {this.state.selectedArtist.lastName}</Card.Header>
@@ -259,7 +264,7 @@ class Scout extends React.Component {
                         onClick={() => this.closeViewCardModal()}>Close</Button>
                       </Grid.Column>
                       <Grid.Column width={11} rows={3}>
-                        <Grid.Row style={{ borderBottom: '1px solid #d4d4d5', height: 'auto'}} textAlign="center" verticalAlign="center">
+                        <Grid.Row style={{ borderBottom: '1px solid #d4d4d5', height: 'auto'}} textAlign="center" verticalAlign="middle">
                           {/* Top Panel */}
                           <Card.Content>
                               <Card.Description>
@@ -271,12 +276,12 @@ class Scout extends React.Component {
                           <Grid.Column floated="left">
                             <h4>Hosted Events</h4>
                             <div style={{overflowY: 'scroll', height: '170px', overflowX:'hidden'}}>
-                            {this.state.selectedArtistEvents.map(event => {
+                            {this.state.selectedArtistEvents.map((event, i) => {
                               return (
-                                <Grid divided='vertically'>
+                                <Grid divided='vertically' key={i}>
                                   <Grid.Row>
                                     <Grid.Column width={6}>
-                                      <Image size="tiny" src={'http://powerful-bastion-26209.herokuapp.com/event/'+ event._id +'/profileimg'} />
+                                      <Image size="tiny" src={`${url}/event/${event._id}/profileimg`} />
                                     </Grid.Column>
                                     <Grid.Column width={8}>
                                       <h4>{event.eventName}</h4>
@@ -295,12 +300,12 @@ class Scout extends React.Component {
                             <Grid.Row style={{height: '50%'}}>
                               <h4>Friends</h4>
                               <div style={{ overflowY: 'scroll', overflowX: 'hidden', height: '95%' }}>
-                                {this.state.selectedArtist.connections ? this.state.selectedArtist.connections.map(contact => {
+                                {this.state.selectedArtist.connections ? this.state.selectedArtist.connections.map((contact, i) => {
                                   return (
-                                    <Grid divided='vertically'>
+                                    <Grid divided='vertically' key={i}>
                                       <Grid.Row>
                                         <Grid.Column width={6}>
-                                          <Image size="tiny" src={'http://powerful-bastion-26209.herokuapp.com/contacts/'+ contact +'/profileimg'} />
+                                          <Image size="tiny" src={url + '/contacts/'+ contact +'/profileimg'} />
                                         </Grid.Column>
                                         <Grid.Column width={8}>
                                           Placeholder
@@ -318,7 +323,7 @@ class Scout extends React.Component {
                   </Grid>
               </Modal>
 
-                <Button style={{display:'inline', justifyContent:'center',padding:'3px',height:'150%',width:'100px', textAlign:'center', margin:'10px'}} color = 'orange' onClick={() => this.sendConnection(artist)}>Connect</Button>
+                <Button style={{display:'inline', justifyContent:'center',padding:'3px',height:'150%',width:'100px', textAlign:'center', margin:'10px'}} color = 'orange' onClick={() => this.sendConnection(artist, this.state.artist)}>Connect</Button>
               </a>
             </Card.Content>
           </Card>
