@@ -50,7 +50,7 @@ class Scout extends React.Component {
       console.log('JSON ----->', json)
       if (json.success) {
         this.setState({
-          artists: json.artist,
+          artists: json.artists,
           findArtistErr: '',
           searching: 'none'
         })
