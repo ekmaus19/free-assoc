@@ -120,7 +120,7 @@ app.use(validator());
 app.use((req, res, next) => {
   res.header(
     "Access-Control-Allow-Origin",
-    "https://powerful-bastion-26209.herokuapp.com"
+    "https://dl5kq0lhnuasf.cloudfront.net"
   );
   res.header(
     "Access-Control-Allow-Headers",
